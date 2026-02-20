@@ -1,0 +1,32 @@
+=== LEVEL 59 - POINTERS [3/3] *** FINAL BOSS *** ===
+=== Function Pointers & Putting It All Together    ===
+FILE: rendu/lvl59/task.c
+
+Implement a function-dispatch system using function pointers:
+
+  int ft_add(int a, int b) { return a + b; }
+  int ft_sub(int a, int b) { return a - b; }
+  int ft_mul(int a, int b) { return a * b; }
+
+  typedef int (*t_op)(int, int);
+  t_op ops[3] = {ft_add, ft_sub, ft_mul};
+
+Apply each to (10, 3):
+  ft_add(10, 3) = 13
+  ft_sub(10, 3) = 7
+  ft_mul(10, 3) = 30
+
+Then write:
+  void ft_map(int *arr, int n, int (*fn)(int))
+  that applies fn to each element in-place.
+
+Apply a "double_it(int x) { return x * 2; }" to {1,2,3,4,5}:
+  Print result: 2 4 6 8 10
+
+Expected output:
+  ft_add(10, 3) = 13
+  ft_sub(10, 3) = 7
+  ft_mul(10, 3) = 30
+  2 4 6 8 10
+
+  You have completed the C Mastery Exam. You are ready.

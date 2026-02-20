@@ -1,2 +1,17 @@
-Assignment: array_max
-Goal: Create an array of 5 ints. Write the largest number to stdout.
+=== LEVEL 7 - OUTPUT [2/3] : ft_putnbr ===
+FILE: rendu/lvl7/task.c
+
+WITHOUT printf, write a function:
+  void ft_putnbr(int n)
+that uses write() to print an integer.
+
+In main call it for: 0, 42, -7, 100 (each on own line)
+
+Expected output:
+  0
+  42
+  -7
+  100
+
+Tip: n % 10 gives last digit. Add '0' to convert to char.
+     Handle negative: print '-' then negate n.

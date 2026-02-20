@@ -1,0 +1,16 @@
+=== LEVEL 44 - BREAK/CONTINUE [3/3] : Nested Loop Control ===
+FILE: rendu/lvl44/task.c
+
+Print pairs (i,j) where i and j are 1-5 and i*j is a perfect square.
+Use continue to skip non-perfect-squares.
+
+Expected output (include all valid pairs):
+  (1,1)=1
+  (1,4)=4
+  (2,2)=4
+  (3,3)=9
+  (4,4)=16
+  (5,5)=25
+
+Tip: Check if (int)sqrt(x) * (int)sqrt(x) == x
+     Include <math.h> and compile with -lm

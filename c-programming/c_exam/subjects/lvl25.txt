@@ -1,0 +1,15 @@
+=== LEVEL 25 - OPERATORS [2/3] : Assignment & Compound ===
+FILE: rendu/lvl25/task.c
+
+Start with int x = 16. Apply and print after EACH:
+  x += 4   -> 20
+  x -= 5   -> 15
+  x *= 3   -> 45
+  x /= 9   -> 5
+  x %= 3   -> 2
+  x <<= 2  -> 8
+
+Expected output (first 3 lines checked):
+  x += 4  : 20
+  x -= 5  : 15
+  x *= 3  : 45

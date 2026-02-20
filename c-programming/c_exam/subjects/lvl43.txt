@@ -1,0 +1,20 @@
+=== LEVEL 43 - BREAK/CONTINUE [2/3] : Filter with Continue ===
+FILE: rendu/lvl43/task.c
+
+Process {-3, 7, -1, 0, 5, -8, 2, 9, -4, 6}:
+  - skip (continue) negatives and zero
+  - print positives with their index:
+      [1]: 7
+      [4]: 5
+      [6]: 2
+      [7]: 9
+      [9]: 6
+  - print: Sum of positives: 29
+
+Expected output:
+  [1]: 7
+  [4]: 5
+  [6]: 2
+  [7]: 9
+  [9]: 6
+  Sum of positives: 29

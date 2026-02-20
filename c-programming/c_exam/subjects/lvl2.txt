@@ -1,7 +1,16 @@
-Assignment: odd_only
-----------------------------------------------------------------------
-📍 WHERE TO FIND THIS:  subjects/lvl2.txt
-📍 WHERE TO WORK:       rendu/task.c
-📍 WHERE TO DEBUG:      traces/trace_lvl2.txt
+=== LEVEL 2 - C INTRO [3/3] : GCC Compilation Pipeline ===
+FILE: rendu/lvl2/task.c
 
-Goal: Input an integer. If it's ODD, write "O\n". If it's EVEN, write nothing.
+Print the 4 stages of GCC compilation using write():
+  1. Preprocessing
+  2. Compilation
+  3. Assembly
+  4. Linking
+
+Expected output:
+  1. Preprocessing
+  2. Compilation
+  3. Assembly
+  4. Linking
+
+Tip: These map to: cpp -> cc1 -> as -> ld

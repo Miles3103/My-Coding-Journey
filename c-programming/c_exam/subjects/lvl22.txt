@@ -1,0 +1,19 @@
+=== LEVEL 22 - CONSTANTS [2/3] : Enum Constants ===
+FILE: rendu/lvl22/task.c
+
+typedef enum e_day { MON=1, TUE, WED, THU, FRI, SAT, SUN } t_day;
+
+Write char *day_name(t_day d) returning the day name.
+Loop MON to SUN and print:
+  1: Monday
+  2: Tuesday
+  3: Wednesday
+  4: Thursday
+  5: Friday
+  6: Saturday
+  7: Sunday
+
+Expected output (first 3 lines checked):
+  1: Monday
+  2: Tuesday
+  3: Wednesday

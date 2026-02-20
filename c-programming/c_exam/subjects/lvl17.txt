@@ -1,0 +1,17 @@
+=== LEVEL 17 - DATA TYPES [3/3] : Unsigned vs Signed ===
+FILE: rendu/lvl17/task.c
+
+  1. signed char sc = -1; unsigned char uc = (unsigned char)sc;
+     Print:
+       signed char:   -1
+       unsigned char: 255
+
+  2. unsigned int ui = 0; ui = ui - 1;
+     Print: unsigned underflow: 4294967295
+
+Expected output:
+  signed char:   -1
+  unsigned char: 255
+  unsigned underflow: 4294967295
+
+Tip: Unsigned types wrap around (well-defined in C).

@@ -1,3 +1,13 @@
-Assignment: ft_putstr
-Goal: Write a function that takes a string and writes it to stdout.
-Submit: A main that calls your function with "Hello 42\n".
+=== LEVEL 4 - SYNTAX [2/3] : Multiple Functions ===
+FILE: rendu/lvl4/task.c
+
+Write THREE separate functions (max 5 lines each):
+  greet()    -> prints "Hello"
+  farewell() -> prints "Goodbye"
+  main()     -> calls greet(), then farewell()
+
+Expected output:
+  Hello
+  Goodbye
+
+Tip: Small focused functions = good C style.

@@ -1,0 +1,22 @@
+=== LEVEL 23 - CONSTANTS [3/3] : Macro Functions ===
+FILE: rendu/lvl23/task.c
+
+Write macros (not functions):
+  #define MAX(a, b)   largest of a, b
+  #define MIN(a, b)   smallest of a, b
+  #define ABS(x)      absolute value
+  #define SQUARE(x)   x squared
+
+Test in main:
+  MAX(3, 7)   = 7
+  MIN(3, 7)   = 3
+  ABS(-5)     = 5
+  SQUARE(4)   = 16
+
+Expected output:
+  MAX(3, 7)   = 7
+  MIN(3, 7)   = 3
+  ABS(-5)     = 5
+  SQUARE(4)   = 16
+
+Tip: Wrap args in () e.g. #define SQUARE(x) ((x)*(x))

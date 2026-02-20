@@ -1,0 +1,15 @@
+=== LEVEL 37 - WHILE LOOP [2/3] : do...while Validation ===
+FILE: rendu/lvl37/task.c
+
+Using do...while, process each value in:
+  int inputs[] = {-1, 0, 200, 50, -5, 42};
+
+Print "Valid: X" if 1-100, else "Invalid: X"
+
+Expected output:
+  Invalid: -1
+  Invalid: 0
+  Invalid: 200
+  Valid: 50
+  Invalid: -5
+  Valid: 42

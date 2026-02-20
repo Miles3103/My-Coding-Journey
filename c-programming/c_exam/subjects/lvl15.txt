@@ -1,0 +1,13 @@
+=== LEVEL 15 - DATA TYPES [1/3] : sizeof Explorer ===
+FILE: rendu/lvl15/task.c
+
+Print the size of every fundamental C type using sizeof.
+Use printf with %zu format specifier.
+
+Expected output (at minimum these lines):
+  char:      1 bytes
+  int:       4 bytes
+  float:     4 bytes
+  double:    8 bytes
+
+Tip: printf("char: %zu bytes\n", sizeof(char));

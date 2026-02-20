@@ -1,3 +1,13 @@
-Assignment: alphabet_loop
-Goal: Write a program that prints the lowercase alphabet 'a-z' followed by '\n'.
-Constraint: You must use a loop.
+=== LEVEL 3 - SYNTAX [1/3] : Program Structure ===
+FILE: rendu/lvl3/task.c
+
+Write a well-structured C program that:
+  1. Has a file header comment (author, date, description)
+  2. Has a helper function ft_print(char *s) using write()
+     that prints the string + newline
+  3. Calls ft_print("Syntax is power") from main
+
+Expected output:
+  Syntax is power
+
+Tip: Function must be declared BEFORE main or use a prototype.

@@ -1,3 +1,12 @@
-Assignment: rev_print
-Goal: Input a word. Write it to the screen in reverse followed by a newline.
-Example: "abc" -> "cba\n"
+=== LEVEL 5 - SYNTAX [3/3] : Prototypes ===
+FILE: rendu/lvl5/task.c
+
+Demonstrate function prototypes:
+  1. Write prototype at top: int add(int a, int b);
+  2. Define add() AFTER main
+  3. In main: compute add(7, 8), print: Result: 15
+
+Expected output:
+  Result: 15
+
+Tip: Prototype tells the compiler the signature before definition.

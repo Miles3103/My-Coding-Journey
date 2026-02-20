@@ -1,0 +1,20 @@
+=== LEVEL 12 - VARIABLES [1/3] : Declaration & Init ===
+FILE: rendu/lvl12/task.c
+
+Declare ONE variable of each type:
+  char   letter    = 'X'
+  int    count     = 2025
+  float  pi_approx = 3.14f
+  double precise   = 2.718281828
+
+Print each with printf:
+  letter: X
+  count: 2025
+  pi_approx: 3.14
+  precise: 2.718282
+
+Expected output:
+  letter: X
+  count: 2025
+  pi_approx: 3.14
+  precise: 2.718282

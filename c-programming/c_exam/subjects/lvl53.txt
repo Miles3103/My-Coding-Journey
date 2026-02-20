@@ -1,0 +1,15 @@
+=== LEVEL 53 - USER INPUT [3/3] : Multi-line Reader ===
+FILE: rendu/lvl53/task.c
+
+Read exactly 3 lines from stdin using read() char by char.
+For each line print its length and content:
+  Line 1 (len=5): hello
+  Line 2 (len=5): world
+  Line 3 (len=2): 42
+
+Test: piped input "hello\nworld\n42\n"
+
+Expected output:
+  Line 1 (len=5): hello
+  Line 2 (len=5): world
+  Line 3 (len=2): 42

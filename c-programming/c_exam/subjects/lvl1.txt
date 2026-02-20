@@ -1,8 +1,16 @@
-Assignment: single_char
-----------------------------------------------------------------------
-📍 WHERE TO FIND THIS:  subjects/lvl1.txt
-📍 WHERE TO WORK:       rendu/task.c
-📍 WHERE TO DEBUG:      traces/trace_lvl1.txt
+=== LEVEL 1 - C INTRO [2/3] : Return Values ===
+FILE: rendu/lvl1/task.c
 
-Goal: Read one character from stdin and write it back twice.
-Example: Input 'a' -> Output 'aa'
+Write a C program that:
+  1. Prints "Program starting" using write()
+  2. Prints "Program done" using write()
+  3. Returns 0 from main
+
+Add a comment at the top:
+  /* Q: What does returning 0 mean? What does returning 1 mean? */
+
+Expected output:
+  Program starting
+  Program done
+
+Tip: Non-zero return = error code (Unix convention).

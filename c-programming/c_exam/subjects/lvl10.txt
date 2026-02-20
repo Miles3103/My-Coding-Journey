@@ -1,0 +1,20 @@
+=== LEVEL 10 - COMMENTS [2/3] : Documenting Functions ===
+FILE: rendu/lvl10/task.c
+
+Write TWO functions, each with a full doc-comment:
+  @param  - what the parameter is
+  @return - what the function returns
+  @desc   - what it does
+
+Function 1: int ft_strlen(char *s)   -- returns length
+Function 2: int ft_isalpha(char c)   -- 1 if letter, 0 if not
+
+Test in main:
+  ft_strlen("hello")  -> Length: 5
+  ft_isalpha('3')     -> IsAlpha: 0
+  ft_isalpha('z')     -> IsAlpha: 1
+
+Expected output:
+  Length: 5
+  IsAlpha: 0
+  IsAlpha: 1

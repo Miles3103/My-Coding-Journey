@@ -1,0 +1,21 @@
+=== LEVEL 54 - MEMORY ADDRESS [1/3] : Address Explorer ===
+FILE: rendu/lvl54/task.c
+
+Declare variables in different memory segments:
+  int global_var = 1;   (global/data)
+  In main:
+  int stack_var = 2;    (stack)
+  int *heap_var = malloc(sizeof(int)); *heap_var = 3;  (heap)
+
+Print addresses:
+  global: 0x[addr]
+  stack:  0x[addr]
+  heap:   0x[addr]
+
+Include <stdlib.h>. Free heap_var after use.
+Grader checks format, not exact addresses.
+
+Expected output format:
+  global: 0x[hex]
+  stack:  0x[hex]
+  heap:   0x[hex]

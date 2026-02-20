@@ -1,0 +1,19 @@
+=== LEVEL 20 - TYPE CONVERSION [3/3] : ASCII & Char Math ===
+FILE: rendu/lvl20/task.c
+
+  1. Convert uppercase A, M, Z to lowercase by adding 32:
+       A -> a
+       M -> m
+       Z -> z
+  2. Convert char digits to int values:
+       '5' -> 5
+       '9' -> 9
+
+Expected output:
+  A -> a
+  M -> m
+  Z -> z
+  '5' -> 5
+  '9' -> 9
+
+Tip: 'A'=65, 'a'=97. '0'=48. Digit value = c - '0'.

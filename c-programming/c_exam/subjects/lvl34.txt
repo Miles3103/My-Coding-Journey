@@ -1,0 +1,17 @@
+=== LEVEL 34 - SWITCH [2/3] : Fall-Through ===
+FILE: rendu/lvl34/task.c
+
+Write ft_char_type(char c) using intentional fall-through
+for vowels. Print type of character:
+  'a','e','i','o','u' -> vowel
+  other a-z           -> consonant
+  0-9                 -> digit
+  else                -> other
+
+Test: 'a' 'b' '5' '!'
+
+Expected output:
+  a: vowel
+  b: consonant
+  5: digit
+  !: other

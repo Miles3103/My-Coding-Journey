@@ -1,0 +1,13 @@
+=== LEVEL 41 - FOR LOOP [3/3] : Prime Number Sieve ===
+FILE: rendu/lvl41/task.c
+
+Write: int ft_is_prime(int n)
+Returns 1 if prime, 0 otherwise.
+
+Print all primes 2-50 space-separated, then Count:
+
+Expected output:
+  2 3 5 7 11 13 17 19 23 29 31 37 41 43 47
+  Count: 15
+
+Tip: Loop from 2 to n/2. If any divides n, not prime.

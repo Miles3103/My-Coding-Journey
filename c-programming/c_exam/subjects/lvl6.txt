@@ -1,3 +1,18 @@
-Assignment: pointer_swap
-Goal: Write a function 'void swap(int *a, int *b)' that swaps the values.
-Submit: Main that initializes a=1, b=2, calls swap, then writes the values.
+=== LEVEL 6 - OUTPUT [1/3] : write() Mastery ===
+FILE: rendu/lvl6/task.c
+
+Using ONLY write(), print:
+  *** HEADER ***
+  (blank line)
+  Content here
+  (blank line)
+  *** FOOTER ***
+
+Expected output:
+  *** HEADER ***
+
+  Content here
+
+  *** FOOTER ***
+
+Tip: A blank line = just "\n" written to stdout.

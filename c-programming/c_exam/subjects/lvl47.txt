@@ -1,0 +1,16 @@
+=== LEVEL 47 - ARRAYS [3/3] : 2D Arrays & Matrix ===
+FILE: rendu/lvl47/task.c
+
+int m[3][3] = {{1,2,3},{4,5,6},{7,8,9}};
+
+Write:
+  void print_matrix(int m[3][3])
+  int  matrix_sum(int m[3][3])    -- sum all elements
+  int  matrix_trace(int m[3][3])  -- sum diagonal (1+5+9)
+
+Expected output:
+  1 2 3
+  4 5 6
+  7 8 9
+  Sum: 45
+  Trace: 15
