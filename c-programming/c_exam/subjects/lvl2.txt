@@ -1,0 +1,7 @@
+Assignment: manual_newline
+----------------------------------------------------------------------
+Goal: Print 'A' followed by a newline '\n' using two separate write calls.
+How to do it:
+1. write(1, "A", 1);
+2. write(1, "\n", 1);
+Submit: rendu/task.c

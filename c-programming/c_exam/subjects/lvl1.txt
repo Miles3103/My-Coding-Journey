@@ -1,0 +1,8 @@
+Assignment: write_char
+----------------------------------------------------------------------
+Goal: Take a character from the user and write it back to the screen.
+How to do it:
+1. Include <unistd.h>.
+2. Use read(0, &c, 1) to get one character from stdin (fd 0).
+3. Use write(1, &c, 1) to print it.
+Submit: rendu/task.c

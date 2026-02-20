@@ -1,0 +1,8 @@
+Assignment: low_level_hello
+----------------------------------------------------------------------
+Goal: Print "C is fun\n" using the write function.
+How to do it:
+1. Include <unistd.h>.
+2. Syntax: write(1, "string", length);
+3. Note: "C is fun\n" is 9 characters long.
+Submit: rendu/task.c

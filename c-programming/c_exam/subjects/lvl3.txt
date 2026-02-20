@@ -1,0 +1,8 @@
+Assignment: countdown
+----------------------------------------------------------------------
+Goal: Input 'n'. Print numbers from n down to 1.
+How to do it:
+1. Use a 'for' or 'while' loop.
+2. Initialize your loop variable at 'n'.
+3. Decrement (i--) in each step until i reaches 1.
+Submit: rendu/task.c

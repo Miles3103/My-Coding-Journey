@@ -1,0 +1,8 @@
+Assignment: string_len
+----------------------------------------------------------------------
+Goal: Input a word and print its length.
+How to do it:
+1. Include <string.h>.
+2. Create a char array (buffer) to hold the word.
+3. Use scanf("%s", str) and then the strlen() function.
+Submit: rendu/task.c

@@ -1,0 +1,9 @@
+Assignment: pointer_mutate
+----------------------------------------------------------------------
+Goal: Change a variable's value using only a pointer.
+How to do it:
+1. Create 'int x = 10;'.
+2. Create a pointer: 'int *ptr = &x;'.
+3. "Dereference" the pointer to change the value: '*ptr = 1337;'.
+4. Print x.
+Submit: rendu/task.c
