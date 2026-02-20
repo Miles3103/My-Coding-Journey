@@ -1,5 +1,0 @@
-Type,Description,Syntax Example
-Array,Fixed-size collection of same types,int arr[10];
-String,Array of characters ending in \0,"char str[] = ""Hi"";"
-Pointer,Holds a memory address,int *p = &x;
-Function,Block of code returning a type,int func();

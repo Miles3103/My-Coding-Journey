@@ -1,4 +1,0 @@
-Feature,for loop,while loop
-Best Use,"When iterations are known (e.g., ""10 times"")","When condition depends on logic (e.g., ""until user quits"")"
-Syntax,Compact (all logic in header),Spread out (logic inside body)
-Readability,High for counting/arrays,High for complex logical conditions

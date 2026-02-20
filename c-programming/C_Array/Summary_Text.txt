@@ -1,5 +1,0 @@
-Feature,Description
-Index,The position of an element (starts at 0).
-Element,The actual value stored at a position.
-Size,The total number of elements an array can hold.
-Type,"All elements must be the same (all int, all float, etc.)."

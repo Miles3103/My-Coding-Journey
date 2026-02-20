@@ -1,5 +1,0 @@
-Keyword,Format,Bytes,Range/Usage
-char,%c,1,Characters or small integers (-128 to 127)
-int,%d,4,Standard whole numbers
-float,%f,4,Real numbers (6-7 decimal places)
-double,%lf,8,Large real numbers (15 decimal places)

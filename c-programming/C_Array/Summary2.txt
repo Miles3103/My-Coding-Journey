@@ -1,4 +1,0 @@
-Concept,Code,Meaning
-Total Memory,sizeof(arr),Total bytes used by the whole array.
-Element Memory,sizeof(arr[0]),Bytes used by a single item.
-Element Count,sizeof(arr) / sizeof(arr[0]),"The actual number of ""slots"" in the array."
