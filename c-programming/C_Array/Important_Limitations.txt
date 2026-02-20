@@ -1,0 +1,5 @@
+mportant Limitations
+
+    Decay to Pointers: When you pass an array to a function, it "decays" into a pointer. Inside that function, sizeof will return the size of the pointer (usually 8 bytes on 64-bit systems), not the array. You must always pass the size as a separate argument to functions.
+
+    Static Size: You cannot resize an array once it is declared. If you need more space, you would need to use dynamic memory allocation (malloc).

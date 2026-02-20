@@ -1,0 +1,23 @@
+Why do we care about Addresses?
+
+You’ve already been using memory addresses without realizing it!
+
+    scanf: When you write scanf("%d", &age);, you are telling the function exactly where in memory to put the user's input.
+
+    Efficiency: Instead of copying a massive array or structure (which takes time and memory), you can just send the memory address of where it starts.
+
+    Pointers: A pointer is simply a variable that stores a memory address.
+
+3. The Relationship: Variable vs. Address
+
+Think of a variable as a container.
+Concept	Description	C Syntax
+Variable Name	The label on the container	age
+Value	What is inside the container	25
+Memory Address	Where the container is located	&age
+
+Hardware Reality
+
+When you run your code, the operating system assigns a block of RAM to your program. The addresses you see (like 0x7ff...) are Virtual Addresses. Each time you run the program, these addresses might change because the OS places the program in a different "empty" spot in your RAM.
+
+    Note: Always use %p and cast your address to (void *) in printf to ensure it displays correctly across different systems.

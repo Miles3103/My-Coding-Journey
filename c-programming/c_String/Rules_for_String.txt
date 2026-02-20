@@ -1,0 +1,7 @@
+Important Rules for Strings
+
+    The Null Terminator (\0): Without this, printf won't know where the string ends and will keep printing random data from your memory until it crashes.
+
+    Array Bounds: Always make sure your char array is large enough to hold the text plus the null character.
+
+    Comparison: You cannot use if (str1 == str2). This compares the memory addresses, not the text. Always use strcmp().

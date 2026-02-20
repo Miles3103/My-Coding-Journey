@@ -1,0 +1,5 @@
+Function,Description,Logic
+strlen(s),Length,Returns count of chars before \0.
+"strcpy(d, s)",Copy,Overwrites d with s.
+"strcat(d, s)",Join,Adds s to the end of d.
+"strcmp(s1, s2)",Compare,Returns 0 for an exact match.

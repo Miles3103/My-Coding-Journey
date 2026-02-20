@@ -1,0 +1,5 @@
+Function,Purpose,Example
+strlen(),Returns the length (excluding \0),"strlen(""Hi"") -> 2"
+strcat(),Concatenates (joins) two strings,"strcat(s1, s2)"
+strcpy(),Copies one string to another,"strcpy(dest, src)"
+strcmp(),Compares two strings (returns 0 if equal),"strcmp(s1, s2)"

@@ -1,0 +1,7 @@
+Important Rules for Arrays
+
+    Zero-Indexed: The first element is always at [0], not [1].
+
+    Fixed Size: In standard C, once an array is declared with a size (e.g., int arr[10]), you cannot change its size later.
+
+    Out of Bounds: C does not stop you from trying to access my_numbers[100] even if the array only has 4 elements. This is a common bug that leads to "Undefined Behavior" or crashes.
