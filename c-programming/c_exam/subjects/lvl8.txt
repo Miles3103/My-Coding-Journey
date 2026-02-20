@@ -1,0 +1,2 @@
+Assignment: ft_strlen_manual
+Goal: Write your own strlen function. Write the length of "Miles3103" to screen.

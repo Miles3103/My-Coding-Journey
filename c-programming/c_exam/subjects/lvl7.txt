@@ -1,0 +1,2 @@
+Assignment: array_max
+Goal: Create an array of 5 ints. Write the largest number to stdout.

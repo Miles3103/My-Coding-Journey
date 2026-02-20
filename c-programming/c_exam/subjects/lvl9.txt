@@ -1,0 +1,2 @@
+Assignment: memory_map
+Goal: Create a variable. Print its hex address using a pointer and write().
