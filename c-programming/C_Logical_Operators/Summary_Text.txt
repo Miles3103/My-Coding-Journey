@@ -1,0 +1,4 @@
+Operator,Name,Description,Example
+&&,AND,True if both are true,(5 > 2 && 10 < 20) → True
+**`,,`**,OR
+!,NOT,Reverses the result,!(5 > 2) → False

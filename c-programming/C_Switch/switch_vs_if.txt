@@ -1,0 +1,5 @@
+Feature,switch,if-else
+Data Types,int or char only,Any data type
+Logic,Checks for equality only,"Can check ranges (e.g., x > 10)"
+Readability,High for many specific values,Can get messy with deep nesting
+Performance,Faster for large numbers of cases,Slightly slower for many conditions

@@ -1,0 +1,7 @@
+Important Rules to Remember
+
+    Indentation: While C doesn't strictly require it, always indent your code inside the braces {} for readability.
+
+    Braces: If your block only has one line of code, the braces {} are optional, but it is best practice to always include them to prevent bugs.
+
+    Zero vs Non-Zero: Remember that if (-5) is technically "True" in C because it is not zero!
