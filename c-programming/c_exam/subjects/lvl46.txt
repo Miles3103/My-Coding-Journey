@@ -1,0 +1,9 @@
+=== LEVEL 46 ─ ARRAYS [2/3] : Bubble Sort ===
+FILE: rendu/ft_bubblesort/ft_bubblesort.c
+
+Implement: void ft_bubble_sort(int *arr, int n)
+Sort {64, 34, 25, 12, 22, 11, 90} in ascending order.
+
+Expected output:
+  Before: 64 34 25 12 22 11 90
+  After:  11 12 22 25 34 64 90

@@ -1,0 +1,13 @@
+=== LEVEL 37 ─ WHILE LOOP [2/3] : do...while Validation ===
+FILE: rendu/ft_dowhile/ft_dowhile.c
+
+Using do...while, process values: {-1, 0, 200, 50, -5, 42}
+Print "Valid: X" if 1-100 inclusive, else "Invalid: X"
+
+Expected output:
+  Invalid: -1
+  Invalid: 0
+  Invalid: 200
+  Valid: 50
+  Invalid: -5
+  Valid: 42

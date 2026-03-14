@@ -1,0 +1,12 @@
+=== LEVEL 38 ─ WHILE LOOP [3/3] : Digit Sum & Reverse ===
+FILE: rendu/ft_digitsum/ft_digitsum.c
+
+Write:
+  int ft_digit_sum(int n)  -- sum of all digits
+  int ft_reverse(int n)    -- reverse the digits
+
+Expected output:
+  digit_sum(12345)  = 15
+  digit_sum(9999)   = 36
+  ft_reverse(12345) = 54321
+  ft_reverse(100)   = 1

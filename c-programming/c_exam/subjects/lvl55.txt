@@ -1,0 +1,12 @@
+=== LEVEL 55 ─ MEMORY ADDRESS [2/3] : Pass by Reference ===
+FILE: rendu/ft_passref/ft_passref.c
+
+Demonstrate pass-by-value vs pass-by-reference:
+  void double_val(int n)   -- modifies local copy only
+  void double_ref(int *n)  -- modifies caller's variable
+
+Start with x = 5.
+
+Expected output:
+  After double_val: 5
+  After double_ref: 10

@@ -1,0 +1,14 @@
+=== LEVEL 58 ─ POINTERS [2/3] : Pointer to Pointer ===
+FILE: rendu/ft_ptrtoptr/ft_ptrtoptr.c
+
+  int x = 42;
+  int *p = &x;
+  int **pp = &p;
+
+Print all three ways to access x, then modify x through **pp.
+
+Expected output:
+  x    = 42
+  *p   = 42
+  **pp = 42
+  After **pp = 99: x = 99

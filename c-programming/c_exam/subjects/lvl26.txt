@@ -1,0 +1,18 @@
+=== LEVEL 26 ─ OPERATORS [3/3] : Ternary & Precedence ===
+FILE: rendu/ft_ternary/ft_ternary.c
+
+Write using ONLY ternary operators:
+  const char *ft_classify(int n) -> "negative"/"zero"/"positive"
+  int ft_abs(int n)               -> n < 0 ? -n : n
+
+Test:
+  ft_classify(-5) -> -5: negative
+  ft_classify(0)  -> 0: zero
+  ft_classify(3)  -> 3: positive
+  ft_abs(-42)     -> abs(-42): 42
+
+Expected output:
+  -5: negative
+  0: zero
+  3: positive
+  abs(-42): 42

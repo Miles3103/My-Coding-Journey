@@ -1,0 +1,9 @@
+=== LEVEL 41 ─ FOR LOOP [3/3] : Prime Number Sieve ===
+FILE: rendu/ft_prime/ft_prime.c
+
+Write: int ft_is_prime(int n)
+Print all primes from 2 to 50 (space-separated), then the count.
+
+Expected output:
+  2 3 5 7 11 13 17 19 23 29 31 37 41 43 47
+  Count: 15

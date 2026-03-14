@@ -1,0 +1,13 @@
+=== LEVEL 50 ─ STRINGS [3/3] : Number <-> String Conversion ===
+FILE: rendu/ft_numconv/ft_numconv.c
+
+Implement:
+  int   ft_atoi(char *s)   -- string to int
+  char *ft_itoa(int n)     -- int to string (malloc allowed)
+
+Expected output:
+  atoi("42"):    42
+  atoi("-100"):  -100
+  atoi("0"):     0
+  itoa(12345):   12345
+  itoa(-7):      -7

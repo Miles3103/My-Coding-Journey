@@ -1,0 +1,13 @@
+=== LEVEL 51 ─ USER INPUT [1/3] : read() Buffer ===
+FILE: rendu/ft_readbuf/ft_readbuf.c
+
+Using ONLY read() and write():
+  Read up to 32 chars from stdin.
+  Null-terminate the buffer.
+  Strip trailing newline if present.
+  Print: "You entered: " followed by the string.
+
+Test with piped input: echo "Hello42" | ./ft_readbuf
+
+Expected output:
+  You entered: Hello42

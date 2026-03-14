@@ -1,0 +1,12 @@
+=== LEVEL 56 ─ MEMORY ADDRESS [3/3] : ft_swap via Pointers ===
+FILE: rendu/ft_swapptr/ft_swapptr.c
+
+Write:
+  void ft_swap(int *a, int *b)
+  void ft_swap_str(char **a, char **b)
+
+Expected output:
+  Before swap: a=10, b=20
+  After swap:  a=20, b=10
+  Before swap: s1=hello, s2=world
+  After swap:  s1=world, s2=hello

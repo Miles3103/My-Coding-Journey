@@ -1,0 +1,15 @@
+=== LEVEL 45 ─ ARRAYS [1/3] : Array Statistics ===
+FILE: rendu/ft_stats/ft_stats.c
+
+arr[] = {4, 7, 2, 9, 1, 5, 8, 3, 6, 10}
+Write:
+  int   ft_min(int *arr, int n)
+  int   ft_max(int *arr, int n)
+  int   ft_sum(int *arr, int n)
+  float ft_avg(int *arr, int n)
+
+Expected output:
+  Min: 1
+  Max: 10
+  Sum: 55
+  Avg: 5.50

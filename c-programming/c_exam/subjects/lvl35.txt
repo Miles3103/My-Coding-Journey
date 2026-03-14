@@ -1,0 +1,18 @@
+=== LEVEL 35 ─ SWITCH [3/3] : State Machine ===
+FILE: rendu/ft_statemachine/ft_statemachine.c
+
+typedef enum { RED, YELLOW, GREEN } t_light;
+
+Write: t_light next_light(t_light current)
+Cycle: RED -> GREEN -> YELLOW -> RED
+
+Simulate 6 transitions starting from RED.
+Print the current light BEFORE each transition.
+
+Expected output (exactly):
+  RED
+  GREEN
+  YELLOW
+  RED
+  GREEN
+  YELLOW

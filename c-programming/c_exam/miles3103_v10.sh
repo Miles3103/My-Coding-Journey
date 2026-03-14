@@ -1,168 +1,229 @@
 #!/bin/bash
 # **************************************************************************** #
 #                                                                              #
-#  Project: Miles3103 C Low-Level Mastery Shell v9.0                           #
-#  Coverage: C Intro → Pointers (Deep Mastery Edition)                         #
-#  Total Levels: 60  (3 per topic x 20 topics)                                 #
-#  Changes v9: Custom filenames per level + Score tracking                     #
+#  Project : Miles3103 C Low-Level Mastery Shell v10.0                        #
+#  Coverage: C Intro → Pointers (Deep Mastery Edition)                        #
+#  Total   : 60 Levels  (3 per topic × 20 topics)                             #
+#  Changes : v10 — Bug fixes, color UI, strict grading, better hints          #
 #                                                                              #
 # **************************************************************************** #
 
+# ══════════════════════════════════════════════════════════════════
+#  TERMINAL COLORS
+# ══════════════════════════════════════════════════════════════════
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+CYAN='\033[0;36m'
+BLUE='\033[0;34m'
+MAGENTA='\033[0;35m'
+WHITE='\033[1;37m'
+GRAY='\033[0;90m'
+BOLD='\033[1m'
+DIM='\033[2m'
+RESET='\033[0m'
+
+# ══════════════════════════════════════════════════════════════════
+#  INIT
+# ══════════════════════════════════════════════════════════════════
 mkdir -p subjects rendu traces
-if [ ! -f .level ]; then echo 0 > .level; fi
-if [ ! -f .score ]; then echo 0 > .score; fi
-if [ ! -f .passed ]; then touch .passed; fi
+[ ! -f .level  ] && echo 0 > .level
+[ ! -f .score  ] && echo 0 > .score
+[ ! -f .passed ] && touch .passed
 
 MAX_LEVEL=59
 
 # ══════════════════════════════════════════════════════════════════
-#  FILENAME MAP
+#  FILENAME MAP  (indexed array — bash 4+ required)
 # ══════════════════════════════════════════════════════════════════
-get_dirname() {
-    local fname=$(get_filename $1)
-    echo "${fname%.c}"
-}
+FILENAMES=(
+    "ft_hello.c"        # 0
+    "ft_return.c"       # 1
+    "ft_pipeline.c"     # 2
+    "ft_structure.c"    # 3
+    "ft_functions.c"    # 4
+    "ft_prototype.c"    # 5
+    "ft_write.c"        # 6
+    "ft_putnbr.c"       # 7
+    "ft_print_combo.c"  # 8
+    "ft_comments.c"     # 9
+    "ft_doccomment.c"   # 10
+    "ft_bugfix.c"       # 11
+    "ft_variables.c"    # 12
+    "ft_scope.c"        # 13
+    "ft_swap.c"         # 14
+    "ft_sizeof.c"       # 15
+    "ft_limits.c"       # 16
+    "ft_unsigned.c"     # 17
+    "ft_implicit.c"     # 18
+    "ft_percent.c"      # 19
+    "ft_ascii.c"        # 20
+    "ft_define.c"       # 21
+    "ft_enum.c"         # 22
+    "ft_macros.c"       # 23
+    "ft_bitwise.c"      # 24
+    "ft_compound.c"     # 25
+    "ft_ternary.c"      # 26
+    "ft_truth_table.c"  # 27
+    "ft_shortcircuit.c" # 28
+    "ft_password.c"     # 29
+    "ft_grade.c"        # 30
+    "ft_fizzbuzz.c"     # 31
+    "ft_leap.c"         # 32
+    "ft_calc.c"         # 33
+    "ft_chartype.c"     # 34
+    "ft_statemachine.c" # 35
+    "ft_collatz.c"      # 36
+    "ft_dowhile.c"      # 37
+    "ft_digitsum.c"     # 38
+    "ft_fibonacci.c"    # 39
+    "ft_patterns.c"     # 40
+    "ft_prime.c"        # 41
+    "ft_find.c"         # 42
+    "ft_filter.c"       # 43
+    "ft_nested.c"       # 44
+    "ft_stats.c"        # 45
+    "ft_bubblesort.c"   # 46
+    "ft_matrix.c"       # 47
+    "ft_strfuncs.c"     # 48
+    "ft_strmanip.c"     # 49
+    "ft_numconv.c"      # 50
+    "ft_readbuf.c"      # 51
+    "ft_parseinput.c"   # 52
+    "ft_multiline.c"    # 53
+    "ft_memaddr.c"      # 54
+    "ft_passref.c"      # 55
+    "ft_swapptr.c"      # 56
+    "ft_ptrarith.c"     # 57
+    "ft_ptrtoptr.c"     # 58
+    "ft_funcptr.c"      # 59
+)
 
-get_filename() {
-    local filenames=(
-        "ft_hello.c"          # 0
-        "ft_return.c"         # 1
-        "ft_pipeline.c"       # 2
-        "ft_structure.c"      # 3
-        "ft_functions.c"      # 4
-        "ft_prototype.c"      # 5
-        "ft_write.c"          # 6
-        "ft_putnbr.c"         # 7
-        "ft_print_combo.c"    # 8
-        "ft_comments.c"       # 9
-        "ft_doccomment.c"     # 10
-        "ft_bugfix.c"         # 11
-        "ft_variables.c"      # 12
-        "ft_scope.c"          # 13
-        "ft_swap.c"           # 14
-        "ft_sizeof.c"         # 15
-        "ft_limits.c"         # 16
-        "ft_unsigned.c"       # 17
-        "ft_implicit.c"       # 18
-        "ft_percent.c"        # 19
-        "ft_ascii.c"          # 20
-        "ft_define.c"         # 21
-        "ft_enum.c"           # 22
-        "ft_macros.c"         # 23
-        "ft_bitwise.c"        # 24
-        "ft_compound.c"       # 25
-        "ft_ternary.c"        # 26
-        "ft_truth_table.c"    # 27
-        "ft_shortcircuit.c"   # 28
-        "ft_password.c"       # 29
-        "ft_grade.c"          # 30
-        "ft_fizzbuzz.c"       # 31
-        "ft_leap.c"           # 32
-        "ft_calc.c"           # 33
-        "ft_chartype.c"       # 34
-        "ft_statemachine.c"   # 35
-        "ft_collatz.c"        # 36
-        "ft_dowhile.c"        # 37
-        "ft_digitsum.c"       # 38
-        "ft_fibonacci.c"      # 39
-        "ft_patterns.c"       # 40
-        "ft_prime.c"          # 41
-        "ft_find.c"           # 42
-        "ft_filter.c"         # 43
-        "ft_nested.c"         # 44
-        "ft_stats.c"          # 45
-        "ft_bubblesort.c"     # 46
-        "ft_matrix.c"         # 47
-        "ft_strfuncs.c"       # 48
-        "ft_strmanip.c"       # 49
-        "ft_numconv.c"        # 50
-        "ft_readbuf.c"        # 51
-        "ft_parseinput.c"     # 52
-        "ft_multiline.c"      # 53
-        "ft_memaddr.c"        # 54
-        "ft_passref.c"        # 55
-        "ft_swapptr.c"        # 56
-        "ft_ptrarith.c"       # 57
-        "ft_ptrtoptr.c"       # 58
-        "ft_funcptr.c"        # 59
-    )
-    echo "${filenames[$1]}"
-}
+TOPICS=(
+    "C Intro"    "C Intro"    "C Intro"
+    "Syntax"     "Syntax"     "Syntax"
+    "Output"     "Output"     "Output"
+    "Comments"   "Comments"   "Comments"
+    "Variables"  "Variables"  "Variables"
+    "Data Types" "Data Types" "Data Types"
+    "Type Conv." "Type Conv." "Type Conv."
+    "Constants"  "Constants"  "Constants"
+    "Operators"  "Operators"  "Operators"
+    "Booleans"   "Booleans"   "Booleans"
+    "If...Else"  "If...Else"  "If...Else"
+    "Switch"     "Switch"     "Switch"
+    "While Loop" "While Loop" "While Loop"
+    "For Loop"   "For Loop"   "For Loop"
+    "Break/Cont" "Break/Cont" "Break/Cont"
+    "Arrays"     "Arrays"     "Arrays"
+    "Strings"    "Strings"    "Strings"
+    "User Input" "User Input" "User Input"
+    "Mem. Addr." "Mem. Addr." "Mem. Addr."
+    "Pointers"   "Pointers"   "Pointers"
+)
+
+get_filename() { echo "${FILENAMES[$1]}"; }
+get_dirname()  { local f="${FILENAMES[$1]}"; echo "${f%.c}"; }
+get_topic()    { echo "${TOPICS[$1]}"; }
 
 # ══════════════════════════════════════════════════════════════════
-#  SCORE FUNCTIONS
+#  SCORE HELPERS
 # ══════════════════════════════════════════════════════════════════
-add_score() {
-    local points=$1
-    local current=$(cat .score)
-    echo $((current + points)) > .score
-}
+get_score()     { cat .score; }
+get_level()     { cat .level; }
+add_score()     { echo $(( $(get_score) + $1 )) > .score; }
+already_passed(){ grep -qx "$1" .passed 2>/dev/null; }
+mark_passed()   { echo "$1" >> .passed; }
 
-get_score() {
-    cat .score
-}
-
-already_passed() {
-    grep -qx "$1" .passed 2>/dev/null
-}
-
-mark_passed() {
-    echo "$1" >> .passed
-}
-
-show_score_bar() {
-    local score=$(get_score)
-    local max_score=$((MAX_LEVEL + 1))  # 60 levels * 1 point each
-    local filled=$(( score > 20 ? 20 : score ))
+score_bar() {
+    local score=$1 width=${2:-20}
+    local filled=$(( score * width / 60 ))
     local bar=""
-    for i in $(seq 1 20); do
-        if [ $i -le $filled ]; then bar="${bar}█"; else bar="${bar}░"; fi
+    for i in $(seq 1 $width); do
+        [ $i -le $filled ] && bar="${bar}█" || bar="${bar}░"
     done
-    echo "  Score   : $score / 60 pts  [${bar}]"
+    echo "$bar"
 }
 
+get_rank() {
+    local s=$1
+    if   [ $s -ge 54 ]; then echo "★★★ C MASTER"
+    elif [ $s -ge 42 ]; then echo "★★☆ Advanced Programmer"
+    elif [ $s -ge 24 ]; then echo "★☆☆ Intermediate Coder"
+    elif [ $s -ge 12 ]; then echo "☆☆☆ Junior Developer"
+    else                     echo "☆☆☆ Apprentice"
+    fi
+}
+
+# ══════════════════════════════════════════════════════════════════
+#  SCOREBOARD
+# ══════════════════════════════════════════════════════════════════
 show_scoreboard() {
-    echo ""
-    echo "+============================================================+"
-    echo "|                    SCORE BOARD                            |"
-    echo "+============================================================+"
     local score=$(get_score)
-    local level=$(cat .level)
+    local level=$(get_level)
     local pct=$(( score * 100 / 60 ))
-    echo "  Total Score : $score / 60 points"
-    echo "  Completion  : $pct%"
-    echo "  Levels Done : $level / 60"
+    local bar=$(score_bar $score 30)
+    local rank=$(get_rank $score)
+
     echo ""
-    if [ $score -ge 60 ]; then
-        echo "  RANK: ★★★ C MASTER ★★★"
-    elif [ $score -ge 45 ]; then
-        echo "  RANK: ★★☆ Advanced Programmer"
-    elif [ $score -ge 30 ]; then
-        echo "  RANK: ★☆☆ Intermediate Coder"
-    elif [ $score -ge 15 ]; then
-        echo "  RANK: ☆☆☆ Junior Developer"
-    else
-        echo "  RANK: ☆☆☆ Apprentice"
-    fi
-    echo ""
-    echo "  Cleared levels:"
+    echo -e "${BOLD}${CYAN}╔══════════════════════════════════════════════════════════╗${RESET}"
+    echo -e "${BOLD}${CYAN}║                   ◆  SCOREBOARD  ◆                      ║${RESET}"
+    echo -e "${BOLD}${CYAN}╠══════════════════════════════════════════════════════════╣${RESET}"
+    printf "${CYAN}║${RESET}  Total Score  : ${BOLD}${GREEN}%-4s${RESET} / 60 points                          ${CYAN}║${RESET}\n" "$score"
+    printf "${CYAN}║${RESET}  Progress     : ${BOLD}${YELLOW}%-3s${RESET}%%                                       ${CYAN}║${RESET}\n" "$pct"
+    printf "${CYAN}║${RESET}  Levels Done  : ${BOLD}%-3s${RESET} / 60                                  ${CYAN}║${RESET}\n" "$level"
+    printf "${CYAN}║${RESET}  Bar          : [${GREEN}%-30s${RESET}]               ${CYAN}║${RESET}\n" "$bar"
+    printf "${CYAN}║${RESET}  Rank         : ${BOLD}${MAGENTA}%-30s${RESET}          ${CYAN}║${RESET}\n" "$rank"
+    echo -e "${CYAN}╠══════════════════════════════════════════════════════════╣${RESET}"
     if [ -s .passed ]; then
-        local passed_list=$(sort -n .passed | tr '\n' ' ')
-        echo "  [ $passed_list]"
+        local passed_list
+        passed_list=$(sort -n .passed | tr '\n' ' ')
+        echo -e "${CYAN}║${RESET}  Cleared: ${GREEN}$passed_list${RESET}"
     else
-        echo "  (none yet)"
+        echo -e "${CYAN}║${RESET}  No levels cleared yet."
     fi
-    echo "+============================================================+"
+    echo -e "${BOLD}${CYAN}╚══════════════════════════════════════════════════════════╝${RESET}"
+    echo ""
     read -p "  Press Enter to continue..."
 }
 
+# ══════════════════════════════════════════════════════════════════
+#  PROGRESS DISPLAY
+# ══════════════════════════════════════════════════════════════════
+show_progress() {
+    local level=$(get_level)
+    local score=$(get_score)
+    local fname=$(get_filename $level)
+    local topic=$(get_topic $level)
+    local subtask=$(( (level % 3) + 1 ))
+    local sbar=$(score_bar $score)
+    local rank=$(get_rank $score)
 
+    # 60-char progress bar
+    local pbar=""
+    for i in $(seq 0 $MAX_LEVEL); do
+        if   [ $i -lt $level  ]; then pbar="${pbar}${GREEN}#${RESET}"
+        elif [ $i -eq $level  ]; then pbar="${pbar}${YELLOW}>${RESET}"
+        else                          pbar="${pbar}${DIM}.${RESET}"
+        fi
+    done
+
+    echo -e "  ${BOLD}Topic   :${RESET} ${CYAN}$topic${RESET}  (task ${subtask}/3)"
+    echo -e "  ${BOLD}Level   :${RESET} ${YELLOW}$level${RESET} / $MAX_LEVEL"
+    echo -e "  ${BOLD}File    :${RESET} ${WHITE}$fname${RESET}"
+    echo -e "  ${BOLD}Progress:${RESET} [${pbar}]"
+    echo -e "  ${BOLD}Score   :${RESET} ${GREEN}$score${RESET}/60 pts  [${GREEN}$(score_bar $score)${RESET}]"
+    echo -e "  ${BOLD}Rank    :${RESET} ${MAGENTA}$rank${RESET}"
+}
+
+# ══════════════════════════════════════════════════════════════════
+#  SUBJECT GENERATION
+# ══════════════════════════════════════════════════════════════════
 generate_subjects() {
 
-# LEVEL 0
-cat << 'EOF' > subjects/lvl0.txt
-=== LEVEL 0 - C INTRO [1/3] : Your First Program ===
-FILE: rendu/lvl0/ft_hello.c
+cat > subjects/lvl0.txt << 'EOF'
+=== LEVEL 0 ─ C INTRO [1/3] : Your First Program ===
+FILE: rendu/ft_hello/ft_hello.c
 
 Write a complete C program that prints:
   Hello, C World!
@@ -179,9 +240,9 @@ Expected output:
 Tip: write(1, "Hello, C World!\n", 16);
 EOF
 
-cat << 'EOF' > subjects/lvl1.txt
-=== LEVEL 1 - C INTRO [2/3] : Return Values ===
-FILE: rendu/lvl1/ft_return.c
+cat > subjects/lvl1.txt << 'EOF'
+=== LEVEL 1 ─ C INTRO [2/3] : Return Values ===
+FILE: rendu/ft_return/ft_return.c
 
 Write a C program that:
   1. Prints "Program starting" using write()
@@ -198,9 +259,9 @@ Expected output:
 Tip: Non-zero return = error code (Unix convention).
 EOF
 
-cat << 'EOF' > subjects/lvl2.txt
-=== LEVEL 2 - C INTRO [3/3] : GCC Compilation Pipeline ===
-FILE: rendu/lvl2/ft_pipeline.c
+cat > subjects/lvl2.txt << 'EOF'
+=== LEVEL 2 ─ C INTRO [3/3] : GCC Compilation Pipeline ===
+FILE: rendu/ft_pipeline/ft_pipeline.c
 
 Print the 4 stages of GCC compilation using write():
   1. Preprocessing
@@ -217,9 +278,9 @@ Expected output:
 Tip: These map to: cpp -> cc1 -> as -> ld
 EOF
 
-cat << 'EOF' > subjects/lvl3.txt
-=== LEVEL 3 - SYNTAX [1/3] : Program Structure ===
-FILE: rendu/lvl3/ft_structure.c
+cat > subjects/lvl3.txt << 'EOF'
+=== LEVEL 3 ─ SYNTAX [1/3] : Program Structure ===
+FILE: rendu/ft_structure/ft_structure.c
 
 Write a well-structured C program that:
   1. Has a file header comment (author, date, description)
@@ -233,9 +294,9 @@ Expected output:
 Tip: Function must be declared BEFORE main or use a prototype.
 EOF
 
-cat << 'EOF' > subjects/lvl4.txt
-=== LEVEL 4 - SYNTAX [2/3] : Multiple Functions ===
-FILE: rendu/lvl4/ft_functions.c
+cat > subjects/lvl4.txt << 'EOF'
+=== LEVEL 4 ─ SYNTAX [2/3] : Multiple Functions ===
+FILE: rendu/ft_functions/ft_functions.c
 
 Write THREE separate functions (max 5 lines each):
   greet()    -> prints "Hello"
@@ -249,9 +310,9 @@ Expected output:
 Tip: Small focused functions = good C style.
 EOF
 
-cat << 'EOF' > subjects/lvl5.txt
-=== LEVEL 5 - SYNTAX [3/3] : Prototypes ===
-FILE: rendu/lvl5/ft_prototype.c
+cat > subjects/lvl5.txt << 'EOF'
+=== LEVEL 5 ─ SYNTAX [3/3] : Prototypes ===
+FILE: rendu/ft_prototype/ft_prototype.c
 
 Demonstrate function prototypes:
   1. Write prototype at top: int add(int a, int b);
@@ -264,9 +325,9 @@ Expected output:
 Tip: Prototype tells the compiler the signature before definition.
 EOF
 
-cat << 'EOF' > subjects/lvl6.txt
-=== LEVEL 6 - OUTPUT [1/3] : write() Mastery ===
-FILE: rendu/lvl6/ft_write.c
+cat > subjects/lvl6.txt << 'EOF'
+=== LEVEL 6 ─ OUTPUT [1/3] : write() Mastery ===
+FILE: rendu/ft_write/ft_write.c
 
 Using ONLY write(), print:
   *** HEADER ***
@@ -285,9 +346,9 @@ Expected output:
 Tip: A blank line = just "\n" written to stdout.
 EOF
 
-cat << 'EOF' > subjects/lvl7.txt
-=== LEVEL 7 - OUTPUT [2/3] : ft_putnbr ===
-FILE: rendu/lvl7/ft_putnbr.c
+cat > subjects/lvl7.txt << 'EOF'
+=== LEVEL 7 ─ OUTPUT [2/3] : ft_putnbr ===
+FILE: rendu/ft_putnbr/ft_putnbr.c
 
 WITHOUT printf, write a function:
   void ft_putnbr(int n)
@@ -303,11 +364,12 @@ Expected output:
 
 Tip: n % 10 gives last digit. Add '0' to convert to char.
      Handle negative: print '-' then negate n.
+     Edge case: INT_MIN needs special handling.
 EOF
 
-cat << 'EOF' > subjects/lvl8.txt
-=== LEVEL 8 - OUTPUT [3/3] : ft_print_combo ===
-FILE: rendu/lvl8/ft_print_combo.c
+cat > subjects/lvl8.txt << 'EOF'
+=== LEVEL 8 ─ OUTPUT [3/3] : ft_print_combo ===
+FILE: rendu/ft_print_combo/ft_print_combo.c
 
 Write ft_print_combo() that prints via write():
   - All lowercase letters a to z (space-separated)
@@ -322,9 +384,9 @@ Expected output:
 Tip: Use char variable in a loop. 'a' + i gives letter.
 EOF
 
-cat << 'EOF' > subjects/lvl9.txt
-=== LEVEL 9 - COMMENTS [1/3] : Comment Styles ===
-FILE: rendu/lvl9/ft_comments.c
+cat > subjects/lvl9.txt << 'EOF'
+=== LEVEL 9 ─ COMMENTS [1/3] : Comment Styles ===
+FILE: rendu/ft_comments/ft_comments.c
 
 Write a C program demonstrating ALL comment types:
   1. File header block comment (/* ... */)
@@ -339,9 +401,9 @@ Expected output:
 Tip: Good comments explain WHY, not WHAT.
 EOF
 
-cat << 'EOF' > subjects/lvl10.txt
-=== LEVEL 10 - COMMENTS [2/3] : Documenting Functions ===
-FILE: rendu/lvl10/ft_doccomment.c
+cat > subjects/lvl10.txt << 'EOF'
+=== LEVEL 10 ─ COMMENTS [2/3] : Documenting Functions ===
+FILE: rendu/ft_doccomment/ft_doccomment.c
 
 Write TWO functions, each with a full doc-comment:
   @param  - what the parameter is
@@ -362,9 +424,9 @@ Expected output:
   IsAlpha: 1
 EOF
 
-cat << 'EOF' > subjects/lvl11.txt
-=== LEVEL 11 - COMMENTS [3/3] : Commented Debugging ===
-FILE: rendu/lvl11/ft_bugfix.c
+cat > subjects/lvl11.txt << 'EOF'
+=== LEVEL 11 ─ COMMENTS [3/3] : Commented Debugging ===
+FILE: rendu/ft_bugfix/ft_bugfix.c
 
 Write a program with a BUGGY version commented out
 and a FIXED version active. Comment explaining the bug.
@@ -379,9 +441,9 @@ Expected output:
   Sum: 10
 EOF
 
-cat << 'EOF' > subjects/lvl12.txt
-=== LEVEL 12 - VARIABLES [1/3] : Declaration & Init ===
-FILE: rendu/lvl12/ft_variables.c
+cat > subjects/lvl12.txt << 'EOF'
+=== LEVEL 12 ─ VARIABLES [1/3] : Declaration & Init ===
+FILE: rendu/ft_variables/ft_variables.c
 
 Declare ONE variable of each type:
   char   letter    = 'X'
@@ -400,11 +462,14 @@ Expected output:
   count: 2025
   pi_approx: 3.14
   precise: 2.718282
+
+Tip: printf("pi_approx: %.2f\n", pi_approx);
+     printf("precise: %f\n", precise);
 EOF
 
-cat << 'EOF' > subjects/lvl13.txt
-=== LEVEL 13 - VARIABLES [2/3] : Scope & Lifetime ===
-FILE: rendu/lvl13/ft_scope.c
+cat > subjects/lvl13.txt << 'EOF'
+=== LEVEL 13 ─ VARIABLES [2/3] : Scope & Lifetime ===
+FILE: rendu/ft_scope/ft_scope.c
 
 Demonstrate variable scope:
   - Global int g = 100
@@ -419,9 +484,9 @@ Expected output:
 Tip: Local variables shadow globals within their scope.
 EOF
 
-cat << 'EOF' > subjects/lvl14.txt
-=== LEVEL 14 - VARIABLES [3/3] : Swap Without Temp ===
-FILE: rendu/lvl14/ft_swap.c
+cat > subjects/lvl14.txt << 'EOF'
+=== LEVEL 14 ─ VARIABLES [3/3] : Swap Without Temp ===
+FILE: rendu/ft_swap/ft_swap.c
 
 Swap two integers WITHOUT a temporary variable.
 Use XOR swap or arithmetic swap.
@@ -436,25 +501,25 @@ Tip XOR swap: a ^= b; b ^= a; a ^= b;
 Tip arith:    a = a+b; b = a-b; a = a-b;
 EOF
 
-cat << 'EOF' > subjects/lvl15.txt
-=== LEVEL 15 - DATA TYPES [1/3] : sizeof Explorer ===
-FILE: rendu/lvl15/ft_sizeof.c
+cat > subjects/lvl15.txt << 'EOF'
+=== LEVEL 15 ─ DATA TYPES [1/3] : sizeof Explorer ===
+FILE: rendu/ft_sizeof/ft_sizeof.c
 
 Print the size of every fundamental C type using sizeof.
 Use printf with %zu format specifier.
 
-Expected output (at minimum these lines):
+Expected output (these exact lines, in this order):
   char:      1 bytes
   int:       4 bytes
   float:     4 bytes
   double:    8 bytes
 
-Tip: printf("char: %zu bytes\n", sizeof(char));
+Tip: printf("char:      %zu bytes\n", sizeof(char));
 EOF
 
-cat << 'EOF' > subjects/lvl16.txt
-=== LEVEL 16 - DATA TYPES [2/3] : Limits & Overflow ===
-FILE: rendu/lvl16/ft_limits.c
+cat > subjects/lvl16.txt << 'EOF'
+=== LEVEL 16 ─ DATA TYPES [2/3] : Limits & Overflow ===
+FILE: rendu/ft_limits/ft_limits.c
 
 Include <limits.h> and print:
   INT_MAX:  2147483647
@@ -463,7 +528,7 @@ Include <limits.h> and print:
   CHAR_MIN: -128
 
 Then demonstrate overflow:
-  int overflow = 2147483647 + 1;
+  int overflow = INT_MAX + 1;
   Print: Overflow result: -2147483648
 
 Expected output:
@@ -472,11 +537,13 @@ Expected output:
   CHAR_MAX: 127
   CHAR_MIN: -128
   Overflow result: -2147483648
+
+Tip: Cast to avoid UB: (int)((unsigned int)INT_MAX + 1)
 EOF
 
-cat << 'EOF' > subjects/lvl17.txt
-=== LEVEL 17 - DATA TYPES [3/3] : Unsigned vs Signed ===
-FILE: rendu/lvl17/ft_unsigned.c
+cat > subjects/lvl17.txt << 'EOF'
+=== LEVEL 17 ─ DATA TYPES [3/3] : Unsigned vs Signed ===
+FILE: rendu/ft_unsigned/ft_unsigned.c
 
   1. signed char sc = -1; unsigned char uc = (unsigned char)sc;
      Print:
@@ -492,9 +559,9 @@ Expected output:
   unsigned underflow: 4294967295
 EOF
 
-cat << 'EOF' > subjects/lvl18.txt
-=== LEVEL 18 - TYPE CONVERSION [1/3] : Implicit Conversion ===
-FILE: rendu/lvl18/ft_implicit.c
+cat > subjects/lvl18.txt << 'EOF'
+=== LEVEL 18 ─ TYPE CONVERSION [1/3] : Implicit Conversion ===
+FILE: rendu/ft_implicit/ft_implicit.c
 
   1. int i = 65; char c = i; print c as char -> 'A'
   2. char ch = 'z'; int n = ch; print n -> 122
@@ -508,12 +575,12 @@ Expected output:
   cast before division: 2.500000
 EOF
 
-cat << 'EOF' > subjects/lvl19.txt
-=== LEVEL 19 - TYPE CONVERSION [2/3] : Explicit Casting ===
-FILE: rendu/lvl19/ft_percent.c
+cat > subjects/lvl19.txt << 'EOF'
+=== LEVEL 19 ─ TYPE CONVERSION [2/3] : Explicit Casting ===
+FILE: rendu/ft_percent/ft_percent.c
 
 Write: int ft_percent(int part, int total)
-Returns the integer percentage.
+Returns the integer percentage (truncated).
 Example: ft_percent(1, 3) = 33
 
 Test in main:
@@ -529,11 +596,13 @@ Expected output:
   1 of 4   = 25%
   3 of 4   = 75%
   1 of 7   = 14%
+
+Tip: return (int)((double)part / total * 100);
 EOF
 
-cat << 'EOF' > subjects/lvl20.txt
-=== LEVEL 20 - TYPE CONVERSION [3/3] : ASCII & Char Math ===
-FILE: rendu/lvl20/ft_ascii.c
+cat > subjects/lvl20.txt << 'EOF'
+=== LEVEL 20 ─ TYPE CONVERSION [3/3] : ASCII & Char Math ===
+FILE: rendu/ft_ascii/ft_ascii.c
 
   1. Convert uppercase A, M, Z to lowercase by adding 32:
        A -> a
@@ -551,9 +620,9 @@ Expected output:
   '9' -> 9
 EOF
 
-cat << 'EOF' > subjects/lvl21.txt
-=== LEVEL 21 - CONSTANTS [1/3] : #define vs const ===
-FILE: rendu/lvl21/ft_define.c
+cat > subjects/lvl21.txt << 'EOF'
+=== LEVEL 21 ─ CONSTANTS [1/3] : #define vs const ===
+FILE: rendu/ft_define/ft_define.c
 
   - #define BUFFER_SIZE 1024
   - #define PI 3.14159265
@@ -573,28 +642,32 @@ Expected output:
   SEPARATOR: -
 EOF
 
-cat << 'EOF' > subjects/lvl22.txt
-=== LEVEL 22 - CONSTANTS [2/3] : Enum Constants ===
-FILE: rendu/lvl22/ft_enum.c
+cat > subjects/lvl22.txt << 'EOF'
+=== LEVEL 22 ─ CONSTANTS [2/3] : Enum Constants ===
+FILE: rendu/ft_enum/ft_enum.c
 
 typedef enum e_day { MON=1, TUE, WED, THU, FRI, SAT, SUN } t_day;
 
-Write char *day_name(t_day d) returning the day name.
+Write const char *day_name(t_day d) returning the day name string.
 Loop MON to SUN and print:
   1: Monday
   2: Tuesday
   ...
   7: Sunday
 
-Expected output (first 3 lines checked):
+Expected output (all 7 lines):
   1: Monday
   2: Tuesday
   3: Wednesday
+  4: Thursday
+  5: Friday
+  6: Saturday
+  7: Sunday
 EOF
 
-cat << 'EOF' > subjects/lvl23.txt
-=== LEVEL 23 - CONSTANTS [3/3] : Macro Functions ===
-FILE: rendu/lvl23/ft_macros.c
+cat > subjects/lvl23.txt << 'EOF'
+=== LEVEL 23 ─ CONSTANTS [3/3] : Macro Functions ===
+FILE: rendu/ft_macros/ft_macros.c
 
 Write macros (not functions):
   #define MAX(a, b)   largest of a, b
@@ -617,9 +690,9 @@ Expected output:
 Tip: Wrap args in () e.g. #define SQUARE(x) ((x)*(x))
 EOF
 
-cat << 'EOF' > subjects/lvl24.txt
-=== LEVEL 24 - OPERATORS [1/3] : Bitwise Operations ===
-FILE: rendu/lvl24/ft_bitwise.c
+cat > subjects/lvl24.txt << 'EOF'
+=== LEVEL 24 ─ OPERATORS [1/3] : Bitwise Operations ===
+FILE: rendu/ft_bitwise/ft_bitwise.c
 
 With a = 10 (0b1010) and b = 12 (0b1100):
   a & b  = 8
@@ -638,31 +711,34 @@ Expected output:
   a >> 1 = 5
 EOF
 
-cat << 'EOF' > subjects/lvl25.txt
-=== LEVEL 25 - OPERATORS [2/3] : Assignment & Compound ===
-FILE: rendu/lvl25/ft_compound.c
+cat > subjects/lvl25.txt << 'EOF'
+=== LEVEL 25 ─ OPERATORS [2/3] : Assignment & Compound ===
+FILE: rendu/ft_compound/ft_compound.c
 
 Start with int x = 16. Apply and print after EACH:
-  x += 4   -> 20
-  x -= 5   -> 15
-  x *= 3   -> 45
-  x /= 9   -> 5
-  x %= 3   -> 2
-  x <<= 2  -> 8
+  x += 4   -> x += 4  : 20
+  x -= 5   -> x -= 5  : 15
+  x *= 3   -> x *= 3  : 45
+  x /= 9   -> x /= 9  : 5
+  x %= 3   -> x %= 3  : 2
+  x <<= 2  -> x <<= 2 : 8
 
-Expected output (first 3 lines checked):
+Expected output:
   x += 4  : 20
   x -= 5  : 15
   x *= 3  : 45
+  x /= 9  : 5
+  x %= 3  : 2
+  x <<= 2 : 8
 EOF
 
-cat << 'EOF' > subjects/lvl26.txt
-=== LEVEL 26 - OPERATORS [3/3] : Ternary & Precedence ===
-FILE: rendu/lvl26/ft_ternary.c
+cat > subjects/lvl26.txt << 'EOF'
+=== LEVEL 26 ─ OPERATORS [3/3] : Ternary & Precedence ===
+FILE: rendu/ft_ternary/ft_ternary.c
 
 Write using ONLY ternary operators:
-  char *ft_classify(int n) -> "negative"/"zero"/"positive"
-  int ft_abs(int n)        -> n < 0 ? -n : n
+  const char *ft_classify(int n) -> "negative"/"zero"/"positive"
+  int ft_abs(int n)               -> n < 0 ? -n : n
 
 Test:
   ft_classify(-5) -> -5: negative
@@ -677,44 +753,47 @@ Expected output:
   abs(-42): 42
 EOF
 
-cat << 'EOF' > subjects/lvl27.txt
-=== LEVEL 27 - BOOLEANS [1/3] : Truth Tables ===
-FILE: rendu/lvl27/ft_truth_table.c
+cat > subjects/lvl27.txt << 'EOF'
+=== LEVEL 27 ─ BOOLEANS [1/3] : Truth Tables ===
+FILE: rendu/ft_truth_table/ft_truth_table.c
 
 Include <stdbool.h>. Print the full truth table for &&, ||, !:
 
-Expected output (exact):
+Expected output (exact spacing):
   A=0 B=0: AND=0 OR=0  NOT_A=1
   A=0 B=1: AND=0 OR=1  NOT_A=1
   A=1 B=0: AND=0 OR=1  NOT_A=0
   A=1 B=1: AND=1 OR=1  NOT_A=0
 EOF
 
-cat << 'EOF' > subjects/lvl28.txt
-=== LEVEL 28 - BOOLEANS [2/3] : Short-Circuit Evaluation ===
-FILE: rendu/lvl28/ft_shortcircuit.c
+cat > subjects/lvl28.txt << 'EOF'
+=== LEVEL 28 ─ BOOLEANS [2/3] : Short-Circuit Evaluation ===
+FILE: rendu/ft_shortcircuit/ft_shortcircuit.c
 
 Write two functions with side effects:
   int check_a() { printf("check_a called\n"); return 0; }
   int check_b() { printf("check_b called\n"); return 1; }
 
 Test:
-  Print "Test 1:" then: check_a() && check_b()
-  Print "Test 2:" then: check_b() || check_a()
+  Print "Test 1:" then evaluate: check_a() && check_b()
+  Print "Test 2:" then evaluate: check_b() || check_a()
 
 Expected output:
   Test 1:
   check_a called
   Test 2:
   check_b called
+
+Note: check_b() is NOT called in Test 1 (short-circuit),
+      check_a() is NOT called in Test 2 (short-circuit).
 EOF
 
-cat << 'EOF' > subjects/lvl29.txt
-=== LEVEL 29 - BOOLEANS [3/3] : Boolean in Practice ===
-FILE: rendu/lvl29/ft_password.c
+cat > subjects/lvl29.txt << 'EOF'
+=== LEVEL 29 ─ BOOLEANS [3/3] : Boolean in Practice ===
+FILE: rendu/ft_password/ft_password.c
 
 Write: int ft_is_valid_password(char *password)
-Returns 1 if ALL true:
+Returns 1 if ALL conditions true:
   - Length >= 8
   - Has at least one uppercase letter
   - Has at least one digit
@@ -733,9 +812,9 @@ Expected output:
   longbutnodigit: invalid
 EOF
 
-cat << 'EOF' > subjects/lvl30.txt
-=== LEVEL 30 - IF...ELSE [1/3] : Grade Calculator ===
-FILE: rendu/lvl30/ft_grade.c
+cat > subjects/lvl30.txt << 'EOF'
+=== LEVEL 30 ─ IF...ELSE [1/3] : Grade Calculator ===
+FILE: rendu/ft_grade/ft_grade.c
 
 Write: char ft_grade(int score)
   score >= 90 -> 'A'
@@ -752,13 +831,13 @@ Expected output:
   40: F
 EOF
 
-cat << 'EOF' > subjects/lvl31.txt
-=== LEVEL 31 - IF...ELSE [2/3] : FizzBuzz ===
-FILE: rendu/lvl31/ft_fizzbuzz.c
+cat > subjects/lvl31.txt << 'EOF'
+=== LEVEL 31 ─ IF...ELSE [2/3] : FizzBuzz ===
+FILE: rendu/ft_fizzbuzz/ft_fizzbuzz.c
 
 FizzBuzz from 1 to 20.
 
-Expected output (first 8 lines):
+Expected output (first 8 lines shown, all 20 required):
   1
   2
   Fizz
@@ -768,14 +847,18 @@ Expected output (first 8 lines):
   7
   8
 
-Tip: Check 15 (FizzBuzz) BEFORE checking 3 or 5 alone!
+Tip: Check divisible by 15 (FizzBuzz) BEFORE 3 or 5 alone!
 EOF
 
-cat << 'EOF' > subjects/lvl32.txt
-=== LEVEL 32 - IF...ELSE [3/3] : Leap Year ===
-FILE: rendu/lvl32/ft_leap.c
+cat > subjects/lvl32.txt << 'EOF'
+=== LEVEL 32 ─ IF...ELSE [3/3] : Leap Year ===
+FILE: rendu/ft_leap/ft_leap.c
 
 Write: int ft_is_leap(int year)
+Rules:
+  - Divisible by 4   -> leap
+  - EXCEPT divisible by 100 -> NOT leap
+  - EXCEPT divisible by 400 -> IS leap
 
 Expected output:
   2000: leap
@@ -784,9 +867,9 @@ Expected output:
   2023: not leap
 EOF
 
-cat << 'EOF' > subjects/lvl33.txt
-=== LEVEL 33 - SWITCH [1/3] : Calculator ===
-FILE: rendu/lvl33/ft_calc.c
+cat > subjects/lvl33.txt << 'EOF'
+=== LEVEL 33 ─ SWITCH [1/3] : Calculator ===
+FILE: rendu/ft_calc/ft_calc.c
 
 Write: int ft_calc(int a, char op, int b)
 Switch on op: '+' '-' '*' '/'
@@ -800,9 +883,9 @@ Expected output:
   10 / 0 = 0
 EOF
 
-cat << 'EOF' > subjects/lvl34.txt
-=== LEVEL 34 - SWITCH [2/3] : Fall-Through ===
-FILE: rendu/lvl34/ft_chartype.c
+cat > subjects/lvl34.txt << 'EOF'
+=== LEVEL 34 ─ SWITCH [2/3] : Fall-Through ===
+FILE: rendu/ft_chartype/ft_chartype.c
 
 Write ft_char_type(char c) using intentional fall-through for vowels.
   'a','e','i','o','u' -> vowel
@@ -817,18 +900,19 @@ Expected output:
   !: other
 EOF
 
-cat << 'EOF' > subjects/lvl35.txt
-=== LEVEL 35 - SWITCH [3/3] : State Machine ===
-FILE: rendu/lvl35/ft_statemachine.c
+cat > subjects/lvl35.txt << 'EOF'
+=== LEVEL 35 ─ SWITCH [3/3] : State Machine ===
+FILE: rendu/ft_statemachine/ft_statemachine.c
 
 typedef enum { RED, YELLOW, GREEN } t_light;
 
-Write: char *next_light(t_light current)
-  RED -> GREEN -> YELLOW -> RED
+Write: t_light next_light(t_light current)
+Cycle: RED -> GREEN -> YELLOW -> RED
 
-Simulate 6 transitions from RED:
+Simulate 6 transitions starting from RED.
+Print the current light BEFORE each transition.
 
-Expected output:
+Expected output (exactly):
   RED
   GREEN
   YELLOW
@@ -837,11 +921,15 @@ Expected output:
   YELLOW
 EOF
 
-cat << 'EOF' > subjects/lvl36.txt
-=== LEVEL 36 - WHILE LOOP [1/3] : Collatz Conjecture ===
-FILE: rendu/lvl36/ft_collatz.c
+cat > subjects/lvl36.txt << 'EOF'
+=== LEVEL 36 ─ WHILE LOOP [1/3] : Collatz Conjecture ===
+FILE: rendu/ft_collatz/ft_collatz.c
 
-Collatz from n = 6. Print each step, then: Steps: 8
+Collatz from n = 6:
+  If even: n = n / 2
+  If odd:  n = n * 3 + 1
+Print each value until you reach 1.
+Then print: Steps: X (count transitions, not the starting number)
 
 Expected output:
   6
@@ -856,12 +944,12 @@ Expected output:
   Steps: 8
 EOF
 
-cat << 'EOF' > subjects/lvl37.txt
-=== LEVEL 37 - WHILE LOOP [2/3] : do...while Validation ===
-FILE: rendu/lvl37/ft_dowhile.c
+cat > subjects/lvl37.txt << 'EOF'
+=== LEVEL 37 ─ WHILE LOOP [2/3] : do...while Validation ===
+FILE: rendu/ft_dowhile/ft_dowhile.c
 
-Using do...while, process: {-1, 0, 200, 50, -5, 42}
-Print "Valid: X" if 1-100, else "Invalid: X"
+Using do...while, process values: {-1, 0, 200, 50, -5, 42}
+Print "Valid: X" if 1-100 inclusive, else "Invalid: X"
 
 Expected output:
   Invalid: -1
@@ -872,13 +960,13 @@ Expected output:
   Valid: 42
 EOF
 
-cat << 'EOF' > subjects/lvl38.txt
-=== LEVEL 38 - WHILE LOOP [3/3] : Digit Sum & Reverse ===
-FILE: rendu/lvl38/ft_digitsum.c
+cat > subjects/lvl38.txt << 'EOF'
+=== LEVEL 38 ─ WHILE LOOP [3/3] : Digit Sum & Reverse ===
+FILE: rendu/ft_digitsum/ft_digitsum.c
 
 Write:
-  int ft_digit_sum(int n)
-  int ft_reverse(int n)
+  int ft_digit_sum(int n)  -- sum of all digits
+  int ft_reverse(int n)    -- reverse the digits
 
 Expected output:
   digit_sum(12345)  = 15
@@ -887,23 +975,23 @@ Expected output:
   ft_reverse(100)   = 1
 EOF
 
-cat << 'EOF' > subjects/lvl39.txt
-=== LEVEL 39 - FOR LOOP [1/3] : Fibonacci Sequence ===
-FILE: rendu/lvl39/ft_fibonacci.c
+cat > subjects/lvl39.txt << 'EOF'
+=== LEVEL 39 ─ FOR LOOP [1/3] : Fibonacci Sequence ===
+FILE: rendu/ft_fibonacci/ft_fibonacci.c
 
-Print first 10 Fibonacci numbers, space-separated:
+Print first 10 Fibonacci numbers, space-separated, newline at end.
 
-Expected output:
+Expected output (exact):
   0 1 1 2 3 5 8 13 21 34
 EOF
 
-cat << 'EOF' > subjects/lvl40.txt
-=== LEVEL 40 - FOR LOOP [2/3] : Nested Loops & Patterns ===
-FILE: rendu/lvl40/ft_patterns.c
+cat > subjects/lvl40.txt << 'EOF'
+=== LEVEL 40 ─ FOR LOOP [2/3] : Nested Loops & Patterns ===
+FILE: rendu/ft_patterns/ft_patterns.c
 
-Print a right-triangle then inverted triangle:
+Print a right-triangle (growing) then inverted triangle (shrinking):
 
-Expected output:
+Expected output (exactly):
   *
   **
   ***
@@ -916,23 +1004,25 @@ Expected output:
   *
 EOF
 
-cat << 'EOF' > subjects/lvl41.txt
-=== LEVEL 41 - FOR LOOP [3/3] : Prime Number Sieve ===
-FILE: rendu/lvl41/ft_prime.c
+cat > subjects/lvl41.txt << 'EOF'
+=== LEVEL 41 ─ FOR LOOP [3/3] : Prime Number Sieve ===
+FILE: rendu/ft_prime/ft_prime.c
 
 Write: int ft_is_prime(int n)
-Print all primes 2-50 space-separated, then Count:
+Print all primes from 2 to 50 (space-separated), then the count.
 
 Expected output:
   2 3 5 7 11 13 17 19 23 29 31 37 41 43 47
   Count: 15
 EOF
 
-cat << 'EOF' > subjects/lvl42.txt
-=== LEVEL 42 - BREAK/CONTINUE [1/3] : Search & Stop ===
-FILE: rendu/lvl42/ft_find.c
+cat > subjects/lvl42.txt << 'EOF'
+=== LEVEL 42 ─ BREAK/CONTINUE [1/3] : Search & Stop ===
+FILE: rendu/ft_find/ft_find.c
 
-Write: int ft_find(int *arr, int size, int target) -- use break.
+Write: int ft_find(int *arr, int size, int target)
+Returns the index, or -1 if not found. Use break to stop early.
+
 arr = {5, 12, 3, 8, 42, 7, 19}
 
 Expected output:
@@ -941,12 +1031,14 @@ Expected output:
   Find 99: Not found
 EOF
 
-cat << 'EOF' > subjects/lvl43.txt
-=== LEVEL 43 - BREAK/CONTINUE [2/3] : Filter with Continue ===
-FILE: rendu/lvl43/ft_filter.c
+cat > subjects/lvl43.txt << 'EOF'
+=== LEVEL 43 ─ BREAK/CONTINUE [2/3] : Filter with Continue ===
+FILE: rendu/ft_filter/ft_filter.c
 
 Process {-3, 7, -1, 0, 5, -8, 2, 9, -4, 6}:
   Skip negatives and zero with continue.
+  Print index (0-based) and value for positives.
+  Print sum of positives at end.
 
 Expected output:
   [1]: 7
@@ -957,12 +1049,14 @@ Expected output:
   Sum of positives: 29
 EOF
 
-cat << 'EOF' > subjects/lvl44.txt
-=== LEVEL 44 - BREAK/CONTINUE [3/3] : Nested Loop Control ===
-FILE: rendu/lvl44/ft_nested.c
+cat > subjects/lvl44.txt << 'EOF'
+=== LEVEL 44 ─ BREAK/CONTINUE [3/3] : Nested Loop Control ===
+FILE: rendu/ft_nested/ft_nested.c
 
 Print pairs (i,j) where i and j are 1-5 and i*j is a perfect square.
 Include <math.h>, compile with -lm.
+
+Hint: sqrt(n) is an integer if (int)sqrt(n)*(int)sqrt(n) == n
 
 Expected output:
   (1,1)=1
@@ -973,12 +1067,16 @@ Expected output:
   (5,5)=25
 EOF
 
-cat << 'EOF' > subjects/lvl45.txt
-=== LEVEL 45 - ARRAYS [1/3] : Array Statistics ===
-FILE: rendu/lvl45/ft_stats.c
+cat > subjects/lvl45.txt << 'EOF'
+=== LEVEL 45 ─ ARRAYS [1/3] : Array Statistics ===
+FILE: rendu/ft_stats/ft_stats.c
 
 arr[] = {4, 7, 2, 9, 1, 5, 8, 3, 6, 10}
-Write ft_min, ft_max, ft_sum, ft_avg.
+Write:
+  int   ft_min(int *arr, int n)
+  int   ft_max(int *arr, int n)
+  int   ft_sum(int *arr, int n)
+  float ft_avg(int *arr, int n)
 
 Expected output:
   Min: 1
@@ -987,24 +1085,28 @@ Expected output:
   Avg: 5.50
 EOF
 
-cat << 'EOF' > subjects/lvl46.txt
-=== LEVEL 46 - ARRAYS [2/3] : Bubble Sort ===
-FILE: rendu/lvl46/ft_bubblesort.c
+cat > subjects/lvl46.txt << 'EOF'
+=== LEVEL 46 ─ ARRAYS [2/3] : Bubble Sort ===
+FILE: rendu/ft_bubblesort/ft_bubblesort.c
 
 Implement: void ft_bubble_sort(int *arr, int n)
-Sort {64, 34, 25, 12, 22, 11, 90} ascending.
+Sort {64, 34, 25, 12, 22, 11, 90} in ascending order.
 
 Expected output:
   Before: 64 34 25 12 22 11 90
   After:  11 12 22 25 34 64 90
 EOF
 
-cat << 'EOF' > subjects/lvl47.txt
-=== LEVEL 47 - ARRAYS [3/3] : 2D Arrays & Matrix ===
-FILE: rendu/lvl47/ft_matrix.c
+cat > subjects/lvl47.txt << 'EOF'
+=== LEVEL 47 ─ ARRAYS [3/3] : 2D Arrays & Matrix ===
+FILE: rendu/ft_matrix/ft_matrix.c
 
 int m[3][3] = {{1,2,3},{4,5,6},{7,8,9}};
-Write print_matrix, matrix_sum, matrix_trace.
+
+Write:
+  void print_matrix(int m[3][3])
+  int  matrix_sum(int m[3][3])       -- sum of all elements
+  int  matrix_trace(int m[3][3])     -- sum of diagonal (1+5+9)
 
 Expected output:
   1 2 3
@@ -1014,12 +1116,15 @@ Expected output:
   Trace: 15
 EOF
 
-cat << 'EOF' > subjects/lvl48.txt
-=== LEVEL 48 - STRINGS [1/3] : String Functions from Scratch ===
-FILE: rendu/lvl48/ft_strfuncs.c
+cat > subjects/lvl48.txt << 'EOF'
+=== LEVEL 48 ─ STRINGS [1/3] : String Functions from Scratch ===
+FILE: rendu/ft_strfuncs/ft_strfuncs.c
 
 WITHOUT <string.h>, implement:
-  ft_strlen, ft_strcpy, ft_strcmp, ft_strchr
+  int   ft_strlen(char *s)
+  char *ft_strcpy(char *dst, char *src)
+  int   ft_strcmp(char *s1, char *s2)
+  char *ft_strchr(char *s, char c)
 
 Expected output:
   strlen: 5
@@ -1029,11 +1134,15 @@ Expected output:
   strchr: llo
 EOF
 
-cat << 'EOF' > subjects/lvl49.txt
-=== LEVEL 49 - STRINGS [2/3] : String Manipulation ===
-FILE: rendu/lvl49/ft_strmanip.c
+cat > subjects/lvl49.txt << 'EOF'
+=== LEVEL 49 ─ STRINGS [2/3] : String Manipulation ===
+FILE: rendu/ft_strmanip/ft_strmanip.c
 
-Implement: ft_toupper_str, ft_tolower_str, ft_reverse_str, ft_count_words
+Implement:
+  void ft_toupper_str(char *s)    -- in-place uppercase
+  void ft_tolower_str(char *s)    -- in-place lowercase
+  void ft_reverse_str(char *s)    -- in-place reverse
+  int  ft_count_words(char *s)    -- count space-separated words
 
 Expected output:
   upper: HELLO WORLD
@@ -1042,11 +1151,13 @@ Expected output:
   words: 4
 EOF
 
-cat << 'EOF' > subjects/lvl50.txt
-=== LEVEL 50 - STRINGS [3/3] : Number <-> String Conversion ===
-FILE: rendu/lvl50/ft_numconv.c
+cat > subjects/lvl50.txt << 'EOF'
+=== LEVEL 50 ─ STRINGS [3/3] : Number <-> String Conversion ===
+FILE: rendu/ft_numconv/ft_numconv.c
 
-Implement: ft_atoi, ft_itoa
+Implement:
+  int   ft_atoi(char *s)   -- string to int
+  char *ft_itoa(int n)     -- int to string (malloc allowed)
 
 Expected output:
   atoi("42"):    42
@@ -1056,24 +1167,27 @@ Expected output:
   itoa(-7):      -7
 EOF
 
-cat << 'EOF' > subjects/lvl51.txt
-=== LEVEL 51 - USER INPUT [1/3] : read() Buffer ===
-FILE: rendu/lvl51/ft_readbuf.c
+cat > subjects/lvl51.txt << 'EOF'
+=== LEVEL 51 ─ USER INPUT [1/3] : read() Buffer ===
+FILE: rendu/ft_readbuf/ft_readbuf.c
 
 Using ONLY read() and write():
-  Read up to 32 chars, null-terminate, strip newline, print back.
+  Read up to 32 chars from stdin.
+  Null-terminate the buffer.
+  Strip trailing newline if present.
+  Print: "You entered: " followed by the string.
 
-Test: piped input "Hello42"
+Test with piped input: echo "Hello42" | ./ft_readbuf
 
 Expected output:
   You entered: Hello42
 EOF
 
-cat << 'EOF' > subjects/lvl52.txt
-=== LEVEL 52 - USER INPUT [2/3] : Parsing Input ===
-FILE: rendu/lvl52/ft_parseinput.c
+cat > subjects/lvl52.txt << 'EOF'
+=== LEVEL 52 ─ USER INPUT [2/3] : Parsing Input ===
+FILE: rendu/ft_parseinput/ft_parseinput.c
 
-Read a line, count uppercase, lowercase, digits, spaces.
+Read a line from stdin, count uppercase, lowercase, digits, spaces.
 Test input: "Hello World 42"
 
 Expected output:
@@ -1083,12 +1197,15 @@ Expected output:
   Spaces: 2
 EOF
 
-cat << 'EOF' > subjects/lvl53.txt
-=== LEVEL 53 - USER INPUT [3/3] : Multi-line Reader ===
-FILE: rendu/lvl53/ft_multiline.c
+cat > subjects/lvl53.txt << 'EOF'
+=== LEVEL 53 ─ USER INPUT [3/3] : Multi-line Reader ===
+FILE: rendu/ft_multiline/ft_multiline.c
 
-Read exactly 3 lines. For each print length and content.
-Test: "hello\nworld\n42\n"
+Read exactly 3 lines from stdin using a loop with read().
+For each line print: "Line N (len=X): content"
+(length excludes the newline)
+
+Test with: printf "hello\nworld\n42\n"
 
 Expected output:
   Line 1 (len=5): hello
@@ -1096,34 +1213,42 @@ Expected output:
   Line 3 (len=2): 42
 EOF
 
-cat << 'EOF' > subjects/lvl54.txt
-=== LEVEL 54 - MEMORY ADDRESS [1/3] : Address Explorer ===
-FILE: rendu/lvl54/ft_memaddr.c
+cat > subjects/lvl54.txt << 'EOF'
+=== LEVEL 54 ─ MEMORY ADDRESS [1/3] : Address Explorer ===
+FILE: rendu/ft_memaddr/ft_memaddr.c
 
-Print addresses of global, stack, and heap variables.
+Print addresses of:
+  - A global variable   (label: global)
+  - A stack variable    (label: stack)
+  - A heap variable     (label: heap, use malloc)
+Free the heap allocation.
 
-Expected output format:
-  global: 0x[hex]
-  stack:  0x[hex]
-  heap:   0x[hex]
+Expected output format (addresses will vary):
+  global: 0x[hex address]
+  stack:  0x[hex address]
+  heap:   0x[hex address]
+
+Tip: printf("global: %p\n", (void*)&g);
 EOF
 
-cat << 'EOF' > subjects/lvl55.txt
-=== LEVEL 55 - MEMORY ADDRESS [2/3] : Pass by Reference ===
-FILE: rendu/lvl55/ft_passref.c
+cat > subjects/lvl55.txt << 'EOF'
+=== LEVEL 55 ─ MEMORY ADDRESS [2/3] : Pass by Reference ===
+FILE: rendu/ft_passref/ft_passref.c
 
 Demonstrate pass-by-value vs pass-by-reference:
-  void double_val(int n)   -- won't affect caller
-  void double_ref(int *n)  -- WILL affect caller
+  void double_val(int n)   -- modifies local copy only
+  void double_ref(int *n)  -- modifies caller's variable
+
+Start with x = 5.
 
 Expected output:
   After double_val: 5
   After double_ref: 10
 EOF
 
-cat << 'EOF' > subjects/lvl56.txt
-=== LEVEL 56 - MEMORY ADDRESS [3/3] : ft_swap via Pointers ===
-FILE: rendu/lvl56/ft_swapptr.c
+cat > subjects/lvl56.txt << 'EOF'
+=== LEVEL 56 ─ MEMORY ADDRESS [3/3] : ft_swap via Pointers ===
+FILE: rendu/ft_swapptr/ft_swapptr.c
 
 Write:
   void ft_swap(int *a, int *b)
@@ -1136,11 +1261,12 @@ Expected output:
   After swap:  s1=world, s2=hello
 EOF
 
-cat << 'EOF' > subjects/lvl57.txt
-=== LEVEL 57 - POINTERS [1/3] : Pointer Arithmetic ===
-FILE: rendu/lvl57/ft_ptrarith.c
+cat > subjects/lvl57.txt << 'EOF'
+=== LEVEL 57 ─ POINTERS [1/3] : Pointer Arithmetic ===
+FILE: rendu/ft_ptrarith/ft_ptrarith.c
 
 Navigate int arr[] = {10,20,30,40,50} using ONLY pointer arithmetic.
+(No arr[i] subscript allowed)
 
 Expected output:
   *p     = 10
@@ -1152,13 +1278,15 @@ Expected output:
   bytes apart:      4
 EOF
 
-cat << 'EOF' > subjects/lvl58.txt
-=== LEVEL 58 - POINTERS [2/3] : Pointer to Pointer ===
-FILE: rendu/lvl58/ft_ptrtoptr.c
+cat > subjects/lvl58.txt << 'EOF'
+=== LEVEL 58 ─ POINTERS [2/3] : Pointer to Pointer ===
+FILE: rendu/ft_ptrtoptr/ft_ptrtoptr.c
 
   int x = 42;
   int *p = &x;
   int **pp = &p;
+
+Print all three ways to access x, then modify x through **pp.
 
 Expected output:
   x    = 42
@@ -1167,11 +1295,20 @@ Expected output:
   After **pp = 99: x = 99
 EOF
 
-cat << 'EOF' > subjects/lvl59.txt
-=== LEVEL 59 - POINTERS [3/3] *** FINAL BOSS *** ===
-FILE: rendu/lvl59/ft_funcptr.c
+cat > subjects/lvl59.txt << 'EOF'
+=== LEVEL 59 ─ POINTERS [3/3] ★ FINAL BOSS ★ ===
+FILE: rendu/ft_funcptr/ft_funcptr.c
 
-Function pointer dispatch + ft_map with function pointers.
+Part 1 — Function pointer dispatch table:
+  int ft_add(int a, int b)  { return a + b; }
+  int ft_sub(int a, int b)  { return a - b; }
+  int ft_mul(int a, int b)  { return a * b; }
+
+  Store them in an array of function pointers and call each.
+
+Part 2 — ft_map:
+  void ft_map(int *arr, int n, int (*f)(int))
+  Apply a doubling function to {1,2,3,4,5}.
 
 Expected output:
   ft_add(10, 3) = 13
@@ -1182,353 +1319,534 @@ Expected output:
   You have completed the C Mastery Exam. You are ready.
 EOF
 
-}
-generate_subjects
-
+}  # end generate_subjects
 
 # ══════════════════════════════════════════════════════════════════
 #  GRADER
 # ══════════════════════════════════════════════════════════════════
 grade_me() {
-    LEVEL=$(cat .level)
-    FNAME=$(get_filename $LEVEL)
-    TASK_DIR="rendu/$(get_dirname $LEVEL)"
-    TRACE="traces/trace_$(get_dirname $LEVEL).txt"
+    local LEVEL
+    LEVEL=$(get_level)
+    local FNAME
+    FNAME=$(get_filename "$LEVEL")
+    local DNAME
+    DNAME=$(get_dirname "$LEVEL")
+    local TASK_DIR="rendu/$DNAME"
+    local TRACE="traces/trace_${DNAME}.txt"
     mkdir -p "$TASK_DIR"
 
     echo ""
-    echo "+--------------------------------------------------+"
-    printf "|  Grading Level %-3s  File: %-24s |\n" "$LEVEL" "$FNAME"
-    echo "+--------------------------------------------------+"
+    echo -e "${BOLD}${CYAN}┌─────────────────────────────────────────────────────────┐${RESET}"
+    printf   "${CYAN}│${RESET}  ${BOLD}Grading Level %-3s${RESET}  File: ${WHITE}%-28s${RESET}${CYAN}│${RESET}\n" "$LEVEL" "$FNAME"
+    echo -e "${BOLD}${CYAN}└─────────────────────────────────────────────────────────┘${RESET}"
 
-    if [ ! -f "$TASK_DIR/$FNAME" ]; then
-        echo "ERROR: $TASK_DIR/$FNAME not found."
-        echo "Create your file there and run grademe again."
+    local SRC="$TASK_DIR/$FNAME"
+    if [ ! -f "$SRC" ]; then
+        echo -e "${RED}  ✗ ERROR:${RESET} $SRC not found."
+        echo -e "  Create your file there and run ${BOLD}grademe${RESET} again."
         return 1
     fi
 
-    gcc -Wall -Wextra -Werror "$TASK_DIR/$FNAME" -o eval_bin -lm 2>"$TRACE"
+    echo -ne "${GRAY}  Compiling...${RESET}"
+    gcc -Wall -Wextra -Werror "$SRC" -o eval_bin -lm 2>"$TRACE"
     if [ $? -ne 0 ]; then
-        echo "COMPILE ERROR -- check: $TRACE"
+        echo -e "\r${RED}  ✗ COMPILE ERROR${RESET}"
+        echo ""
         cat "$TRACE"
+        echo -e "${GRAY}  Trace saved: $TRACE${RESET}"
         return 1
     fi
+    echo -e "\r${GREEN}  ✓ Compiled OK${RESET}"
 
-    PASS=0
-    OUTPUT=""
+    local PASS=0
+    local OUTPUT=""
 
     case $LEVEL in
         0)  OUTPUT=$(./eval_bin 2>/dev/null)
             [[ "$OUTPUT" == "Hello, C World!" ]] && PASS=1 ;;
+
         1)  OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "Program starting" && echo "$OUTPUT" | grep -q "Program done" && PASS=1 ;;
+            echo "$OUTPUT" | grep -q "Program starting" &&
+            echo "$OUTPUT" | grep -q "Program done" && PASS=1 ;;
+
         2)  OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "Preprocessing" && echo "$OUTPUT" | grep -q "Compilation" && \
-            echo "$OUTPUT" | grep -q "Assembly" && echo "$OUTPUT" | grep -q "Linking" && PASS=1 ;;
+            echo "$OUTPUT" | grep -q "Preprocessing" &&
+            echo "$OUTPUT" | grep -q "Compilation" &&
+            echo "$OUTPUT" | grep -q "Assembly" &&
+            echo "$OUTPUT" | grep -q "Linking" && PASS=1 ;;
+
         3)  OUTPUT=$(./eval_bin 2>/dev/null)
             [[ "$OUTPUT" == "Syntax is power" ]] && PASS=1 ;;
+
         4)  OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "Hello" && echo "$OUTPUT" | grep -q "Goodbye" && PASS=1 ;;
+            echo "$OUTPUT" | grep -q "Hello" &&
+            echo "$OUTPUT" | grep -q "Goodbye" && PASS=1 ;;
+
         5)  OUTPUT=$(./eval_bin 2>/dev/null)
             [[ "$OUTPUT" == "Result: 15" ]] && PASS=1 ;;
+
         6)  OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "HEADER" && echo "$OUTPUT" | grep -q "Content here" && \
+            echo "$OUTPUT" | grep -q "HEADER" &&
+            echo "$OUTPUT" | grep -q "Content here" &&
             echo "$OUTPUT" | grep -q "FOOTER" && PASS=1 ;;
+
         7)  OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -qx "0" && echo "$OUTPUT" | grep -qx "42" && \
-            echo "$OUTPUT" | grep -qx "\-7" && echo "$OUTPUT" | grep -qx "100" && PASS=1 ;;
+            echo "$OUTPUT" | grep -qx "0" &&
+            echo "$OUTPUT" | grep -qx "42" &&
+            echo "$OUTPUT" | grep -qx "\-7" &&
+            echo "$OUTPUT" | grep -qx "100" && PASS=1 ;;
+
         8)  OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "a b c" && echo "$OUTPUT" | grep -q "0 1 2" && PASS=1 ;;
+            echo "$OUTPUT" | grep -q "^a b c d e f" &&
+            echo "$OUTPUT" | grep -q "^0 1 2 3 4 5" && PASS=1 ;;
+
         9)  OUTPUT=$(./eval_bin 2>/dev/null)
             [[ "$OUTPUT" == "Comments guide future you" ]] && PASS=1 ;;
+
         10) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "Length: 5" && echo "$OUTPUT" | grep -q "IsAlpha: 0" && \
+            echo "$OUTPUT" | grep -q "Length: 5" &&
+            echo "$OUTPUT" | grep -q "IsAlpha: 0" &&
             echo "$OUTPUT" | grep -q "IsAlpha: 1" && PASS=1 ;;
+
         11) OUTPUT=$(./eval_bin 2>/dev/null)
             [[ "$OUTPUT" == "Sum: 10" ]] && PASS=1 ;;
+
         12) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "letter: X" && echo "$OUTPUT" | grep -q "count: 2025" && \
-            echo "$OUTPUT" | grep -q "pi_approx: 3.14" && PASS=1 ;;
+            echo "$OUTPUT" | grep -q "letter: X" &&
+            echo "$OUTPUT" | grep -q "count: 2025" &&
+            echo "$OUTPUT" | grep -q "pi_approx: 3.14" &&
+            echo "$OUTPUT" | grep -q "precise: 2.718282" && PASS=1 ;;
+
         13) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "local g = 999" && echo "$OUTPUT" | grep -q "global g = 100" && PASS=1 ;;
+            echo "$OUTPUT" | grep -q "local g = 999" &&
+            echo "$OUTPUT" | grep -q "global g = 100" && PASS=1 ;;
+
         14) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "Before: a=5, b=9" && echo "$OUTPUT" | grep -q "After:  a=9, b=5" && PASS=1 ;;
+            echo "$OUTPUT" | grep -q "Before: a=5, b=9" &&
+            echo "$OUTPUT" | grep -q "After:  a=9, b=5" && PASS=1 ;;
+
         15) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "char" && echo "$OUTPUT" | grep -q "int" && \
-            echo "$OUTPUT" | grep -q "float" && echo "$OUTPUT" | grep -q "double" && PASS=1 ;;
+            echo "$OUTPUT" | grep -q "char:" &&
+            echo "$OUTPUT" | grep -q "int:" &&
+            echo "$OUTPUT" | grep -q "float:" &&
+            echo "$OUTPUT" | grep -q "double:" && PASS=1 ;;
+
         16) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "INT_MAX:  2147483647" && echo "$OUTPUT" | grep -q "INT_MIN:  -2147483648" && \
-            echo "$OUTPUT" | grep -q "Overflow result:" && PASS=1 ;;
+            echo "$OUTPUT" | grep -q "INT_MAX:  2147483647" &&
+            echo "$OUTPUT" | grep -q "INT_MIN:  -2147483648" &&
+            echo "$OUTPUT" | grep -q "CHAR_MAX: 127" &&
+            echo "$OUTPUT" | grep -q "CHAR_MIN: -128" &&
+            echo "$OUTPUT" | grep -q "Overflow result: -2147483648" && PASS=1 ;;
+
         17) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "signed char:   -1" && echo "$OUTPUT" | grep -q "unsigned char: 255" && \
+            echo "$OUTPUT" | grep -q "signed char:   -1" &&
+            echo "$OUTPUT" | grep -q "unsigned char: 255" &&
             echo "$OUTPUT" | grep -q "unsigned underflow: 4294967295" && PASS=1 ;;
+
         18) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "char from int: A" && echo "$OUTPUT" | grep -q "int from char: 122" && \
+            echo "$OUTPUT" | grep -q "char from int: A" &&
+            echo "$OUTPUT" | grep -q "int from char: 122" &&
+            echo "$OUTPUT" | grep -q "2.000000" &&
             echo "$OUTPUT" | grep -q "2.500000" && PASS=1 ;;
+
         19) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "1 of 3   = 33%" && echo "$OUTPUT" | grep -q "3 of 4   = 75%" && PASS=1 ;;
+            echo "$OUTPUT" | grep -q "1 of 3   = 33%" &&
+            echo "$OUTPUT" | grep -q "2 of 3   = 66%" &&
+            echo "$OUTPUT" | grep -q "1 of 4   = 25%" &&
+            echo "$OUTPUT" | grep -q "3 of 4   = 75%" &&
+            echo "$OUTPUT" | grep -q "1 of 7   = 14%" && PASS=1 ;;
+
         20) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "A -> a" && echo "$OUTPUT" | grep -q "Z -> z" && \
-            echo "$OUTPUT" | grep -q "'5' -> 5" && PASS=1 ;;
+            echo "$OUTPUT" | grep -q "A -> a" &&
+            echo "$OUTPUT" | grep -q "M -> m" &&
+            echo "$OUTPUT" | grep -q "Z -> z" &&
+            echo "$OUTPUT" | grep -q "'5' -> 5" &&
+            echo "$OUTPUT" | grep -q "'9' -> 9" && PASS=1 ;;
+
         21) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "BUFFER_SIZE: 1024" && echo "$OUTPUT" | grep -q "PI: 3.14159265" && \
-            echo "$OUTPUT" | grep -q "MAX_USERS: 100" && PASS=1 ;;
+            echo "$OUTPUT" | grep -q "BUFFER_SIZE: 1024" &&
+            echo "$OUTPUT" | grep -q "PI: 3.14159265" &&
+            echo "$OUTPUT" | grep -q "MAX_USERS: 100" &&
+            echo "$OUTPUT" | grep -q "SEPARATOR: -" && PASS=1 ;;
+
         22) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "1: Monday" && echo "$OUTPUT" | grep -q "3: Wednesday" && PASS=1 ;;
+            echo "$OUTPUT" | grep -q "1: Monday" &&
+            echo "$OUTPUT" | grep -q "2: Tuesday" &&
+            echo "$OUTPUT" | grep -q "3: Wednesday" &&
+            echo "$OUTPUT" | grep -q "7: Sunday" && PASS=1 ;;
+
         23) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "MAX(3, 7)   = 7" && echo "$OUTPUT" | grep -q "ABS(-5)     = 5" && \
+            echo "$OUTPUT" | grep -q "MAX(3, 7)   = 7" &&
+            echo "$OUTPUT" | grep -q "MIN(3, 7)   = 3" &&
+            echo "$OUTPUT" | grep -q "ABS(-5)     = 5" &&
             echo "$OUTPUT" | grep -q "SQUARE(4)   = 16" && PASS=1 ;;
+
         24) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "a & b  = 8" && echo "$OUTPUT" | grep -q "a | b  = 14" && \
-            echo "$OUTPUT" | grep -q "a ^ b  = 6" && PASS=1 ;;
+            echo "$OUTPUT" | grep -q "a & b  = 8" &&
+            echo "$OUTPUT" | grep -q "a | b  = 14" &&
+            echo "$OUTPUT" | grep -q "a ^ b  = 6" &&
+            echo "$OUTPUT" | grep -q "~a     = -11" &&
+            echo "$OUTPUT" | grep -q "a << 1 = 20" &&
+            echo "$OUTPUT" | grep -q "a >> 1 = 5" && PASS=1 ;;
+
         25) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "x += 4  : 20" && echo "$OUTPUT" | grep -q "x -= 5  : 15" && PASS=1 ;;
+            echo "$OUTPUT" | grep -q "x += 4  : 20" &&
+            echo "$OUTPUT" | grep -q "x -= 5  : 15" &&
+            echo "$OUTPUT" | grep -q "x *= 3  : 45" &&
+            echo "$OUTPUT" | grep -q "x /= 9  : 5" &&
+            echo "$OUTPUT" | grep -q "x %= 3  : 2" &&
+            echo "$OUTPUT" | grep -q "x <<= 2 : 8" && PASS=1 ;;
+
         26) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "negative" && echo "$OUTPUT" | grep -q "zero" && \
-            echo "$OUTPUT" | grep -q "positive" && echo "$OUTPUT" | grep -q "abs(-42): 42" && PASS=1 ;;
+            echo "$OUTPUT" | grep -q "negative" &&
+            echo "$OUTPUT" | grep -q "zero" &&
+            echo "$OUTPUT" | grep -q "positive" &&
+            echo "$OUTPUT" | grep -q "abs(-42): 42" && PASS=1 ;;
+
         27) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "A=0 B=0: AND=0 OR=0  NOT_A=1" && \
-            echo "$OUTPUT" | grep -q "A=1 B=1: AND=1 OR=1  NOT_A=0" && PASS=1 ;;
+            echo "$OUTPUT" | grep -qF "A=0 B=0: AND=0 OR=0  NOT_A=1" &&
+            echo "$OUTPUT" | grep -qF "A=0 B=1: AND=0 OR=1  NOT_A=1" &&
+            echo "$OUTPUT" | grep -qF "A=1 B=0: AND=0 OR=1  NOT_A=0" &&
+            echo "$OUTPUT" | grep -qF "A=1 B=1: AND=1 OR=1  NOT_A=0" && PASS=1 ;;
+
         28) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "check_a called" && echo "$OUTPUT" | grep -q "check_b called" && PASS=1 ;;
+            echo "$OUTPUT" | grep -q "check_a called" &&
+            echo "$OUTPUT" | grep -q "check_b called" &&
+            # check_b must NOT appear under Test 1 AND check_a must NOT under Test 2
+            ! (echo "$OUTPUT" | grep -A2 "Test 1:" | grep -q "check_b called") &&
+            ! (echo "$OUTPUT" | grep -A2 "Test 2:" | grep -q "check_a called") && PASS=1 ;;
+
         29) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "hello: invalid" && echo "$OUTPUT" | grep -q "Hello1!!: valid" && \
-            echo "$OUTPUT" | grep -q "SHORT1A: invalid" && PASS=1 ;;
+            echo "$OUTPUT" | grep -q "hello: invalid" &&
+            echo "$OUTPUT" | grep -q "Hello1!!: valid" &&
+            echo "$OUTPUT" | grep -q "SHORT1A: invalid" &&
+            echo "$OUTPUT" | grep -q "longbutnodigit: invalid" && PASS=1 ;;
+
         30) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "95: A" && echo "$OUTPUT" | grep -q "83: B" && \
+            echo "$OUTPUT" | grep -q "95: A" &&
+            echo "$OUTPUT" | grep -q "83: B" &&
+            echo "$OUTPUT" | grep -q "71: C" &&
+            echo "$OUTPUT" | grep -q "65: D" &&
             echo "$OUTPUT" | grep -q "40: F" && PASS=1 ;;
+
         31) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "Fizz" && echo "$OUTPUT" | grep -q "Buzz" && \
-            echo "$OUTPUT" | grep -q "FizzBuzz" && PASS=1 ;;
+            echo "$OUTPUT" | grep -q "Fizz" &&
+            echo "$OUTPUT" | grep -q "Buzz" &&
+            echo "$OUTPUT" | grep -q "FizzBuzz" &&
+            # Verify line 3 is Fizz (number 3), line 5 is Buzz
+            [[ "$(echo "$OUTPUT" | sed -n '3p')" == "Fizz" ]] &&
+            [[ "$(echo "$OUTPUT" | sed -n '5p')" == "Buzz" ]] &&
+            [[ "$(echo "$OUTPUT" | sed -n '15p')" == "FizzBuzz" ]] && PASS=1 ;;
+
         32) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "2000: leap" && echo "$OUTPUT" | grep -q "1900: not leap" && \
-            echo "$OUTPUT" | grep -q "2024: leap" && echo "$OUTPUT" | grep -q "2023: not leap" && PASS=1 ;;
+            echo "$OUTPUT" | grep -q "2000: leap" &&
+            echo "$OUTPUT" | grep -q "1900: not leap" &&
+            echo "$OUTPUT" | grep -q "2024: leap" &&
+            echo "$OUTPUT" | grep -q "2023: not leap" && PASS=1 ;;
+
         33) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "10 + 3 = 13" && echo "$OUTPUT" | grep -q "10 / 0 = 0" && PASS=1 ;;
+            echo "$OUTPUT" | grep -q "10 + 3 = 13" &&
+            echo "$OUTPUT" | grep -q "10 - 3 = 7" &&
+            echo "$OUTPUT" | grep -q "10 \* 3 = 30" &&
+            echo "$OUTPUT" | grep -q "10 / 3 = 3" &&
+            echo "$OUTPUT" | grep -q "10 / 0 = 0" && PASS=1 ;;
+
         34) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "a: vowel" && echo "$OUTPUT" | grep -q "b: consonant" && \
-            echo "$OUTPUT" | grep -q "5: digit" && echo "$OUTPUT" | grep -q "!: other" && PASS=1 ;;
+            echo "$OUTPUT" | grep -q "a: vowel" &&
+            echo "$OUTPUT" | grep -q "b: consonant" &&
+            echo "$OUTPUT" | grep -q "5: digit" &&
+            echo "$OUTPUT" | grep -q "!: other" && PASS=1 ;;
+
         35) OUTPUT=$(./eval_bin 2>/dev/null)
-            EXPECTED=$'RED\nGREEN\nYELLOW\nRED\nGREEN\nYELLOW'
+            local EXPECTED
+            EXPECTED=$(printf "RED\nGREEN\nYELLOW\nRED\nGREEN\nYELLOW")
             [[ "$OUTPUT" == "$EXPECTED" ]] && PASS=1 ;;
+
         36) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -qx "6" && echo "$OUTPUT" | grep -qx "1" && \
-            echo "$OUTPUT" | grep -q "Steps: 8" && PASS=1 ;;
+            local EXPECTED
+            EXPECTED=$(printf "6\n3\n10\n5\n16\n8\n4\n2\n1\nSteps: 8")
+            [[ "$OUTPUT" == "$EXPECTED" ]] && PASS=1 ;;
+
         37) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "Invalid: -1" && echo "$OUTPUT" | grep -q "Valid: 50" && \
+            echo "$OUTPUT" | grep -q "Invalid: -1" &&
+            echo "$OUTPUT" | grep -q "Invalid: 0" &&
+            echo "$OUTPUT" | grep -q "Invalid: 200" &&
+            echo "$OUTPUT" | grep -q "Valid: 50" &&
+            echo "$OUTPUT" | grep -q "Invalid: -5" &&
             echo "$OUTPUT" | grep -q "Valid: 42" && PASS=1 ;;
+
         38) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "digit_sum(12345)  = 15" && \
-            echo "$OUTPUT" | grep -q "ft_reverse(12345) = 54321" && PASS=1 ;;
+            echo "$OUTPUT" | grep -qF "digit_sum(12345)  = 15" &&
+            echo "$OUTPUT" | grep -qF "digit_sum(9999)   = 36" &&
+            echo "$OUTPUT" | grep -qF "ft_reverse(12345) = 54321" &&
+            echo "$OUTPUT" | grep -qF "ft_reverse(100)   = 1" && PASS=1 ;;
+
         39) OUTPUT=$(./eval_bin 2>/dev/null)
             [[ "$OUTPUT" == "0 1 1 2 3 5 8 13 21 34" ]] && PASS=1 ;;
+
         40) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -qx "\*" && echo "$OUTPUT" | grep -qx "\*\*\*\*\*" && PASS=1 ;;
+            local EXPECTED
+            EXPECTED=$(printf "*\n**\n***\n****\n*****\n*****\n****\n***\n**\n*")
+            [[ "$OUTPUT" == "$EXPECTED" ]] && PASS=1 ;;
+
         41) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "2 3 5 7 11" && echo "$OUTPUT" | grep -q "47" && \
+            echo "$OUTPUT" | grep -q "^2 3 5 7 11 13 17 19 23 29 31 37 41 43 47$" &&
             echo "$OUTPUT" | grep -q "Count: 15" && PASS=1 ;;
+
         42) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "Found at index 3" && echo "$OUTPUT" | grep -q "Found at index 4" && \
+            echo "$OUTPUT" | grep -q "Found at index 3" &&
+            echo "$OUTPUT" | grep -q "Found at index 4" &&
             echo "$OUTPUT" | grep -q "Not found" && PASS=1 ;;
+
         43) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "\[1\]: 7" && echo "$OUTPUT" | grep -q "Sum of positives: 29" && PASS=1 ;;
+            echo "$OUTPUT" | grep -q "\[1\]: 7" &&
+            echo "$OUTPUT" | grep -q "\[4\]: 5" &&
+            echo "$OUTPUT" | grep -q "\[6\]: 2" &&
+            echo "$OUTPUT" | grep -q "\[7\]: 9" &&
+            echo "$OUTPUT" | grep -q "\[9\]: 6" &&
+            echo "$OUTPUT" | grep -q "Sum of positives: 29" && PASS=1 ;;
+
         44) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "(1,1)=1" && echo "$OUTPUT" | grep -q "(3,3)=9" && PASS=1 ;;
+            echo "$OUTPUT" | grep -q "(1,1)=1" &&
+            echo "$OUTPUT" | grep -q "(1,4)=4" &&
+            echo "$OUTPUT" | grep -q "(2,2)=4" &&
+            echo "$OUTPUT" | grep -q "(3,3)=9" &&
+            echo "$OUTPUT" | grep -q "(4,4)=16" &&
+            echo "$OUTPUT" | grep -q "(5,5)=25" && PASS=1 ;;
+
         45) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "Min: 1" && echo "$OUTPUT" | grep -q "Max: 10" && \
-            echo "$OUTPUT" | grep -q "Sum: 55" && echo "$OUTPUT" | grep -q "Avg: 5.50" && PASS=1 ;;
+            echo "$OUTPUT" | grep -q "Min: 1" &&
+            echo "$OUTPUT" | grep -q "Max: 10" &&
+            echo "$OUTPUT" | grep -q "Sum: 55" &&
+            echo "$OUTPUT" | grep -q "Avg: 5.50" && PASS=1 ;;
+
         46) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "Before: 64 34 25" && echo "$OUTPUT" | grep -q "After:  11 12 22" && PASS=1 ;;
+            echo "$OUTPUT" | grep -qF "Before: 64 34 25 12 22 11 90" &&
+            echo "$OUTPUT" | grep -qF "After:  11 12 22 25 34 64 90" && PASS=1 ;;
+
         47) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "1 2 3" && echo "$OUTPUT" | grep -q "Sum: 45" && \
+            echo "$OUTPUT" | grep -q "^1 2 3$" &&
+            echo "$OUTPUT" | grep -q "^4 5 6$" &&
+            echo "$OUTPUT" | grep -q "^7 8 9$" &&
+            echo "$OUTPUT" | grep -q "Sum: 45" &&
             echo "$OUTPUT" | grep -q "Trace: 15" && PASS=1 ;;
+
         48) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "strlen: 5" && echo "$OUTPUT" | grep -q "strcpy: world" && \
-            echo "$OUTPUT" | grep -q "strcmp equal: 0" && echo "$OUTPUT" | grep -q "strchr: llo" && PASS=1 ;;
+            echo "$OUTPUT" | grep -q "strlen: 5" &&
+            echo "$OUTPUT" | grep -q "strcpy: world" &&
+            echo "$OUTPUT" | grep -q "strcmp equal: 0" &&
+            echo "$OUTPUT" | grep -q "strchr: llo" && PASS=1 ;;
+
         49) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "upper: HELLO WORLD" && echo "$OUTPUT" | grep -q "lower: hello world" && \
-            echo "$OUTPUT" | grep -q "reverse: edcba" && echo "$OUTPUT" | grep -q "words: 4" && PASS=1 ;;
+            echo "$OUTPUT" | grep -q "upper: HELLO WORLD" &&
+            echo "$OUTPUT" | grep -q "lower: hello world" &&
+            echo "$OUTPUT" | grep -q "reverse: edcba" &&
+            echo "$OUTPUT" | grep -q "words: 4" && PASS=1 ;;
+
         50) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q 'atoi("42"):    42' && echo "$OUTPUT" | grep -q 'atoi("-100"):  -100' && \
-            echo "$OUTPUT" | grep -q "itoa(12345):   12345" && PASS=1 ;;
+            echo "$OUTPUT" | grep -qF 'atoi("42"):    42' &&
+            echo "$OUTPUT" | grep -qF 'atoi("-100"):  -100' &&
+            echo "$OUTPUT" | grep -qF 'atoi("0"):     0' &&
+            echo "$OUTPUT" | grep -qF 'itoa(12345):   12345' &&
+            echo "$OUTPUT" | grep -qF 'itoa(-7):      -7' && PASS=1 ;;
+
         51) OUTPUT=$(echo "Hello42" | ./eval_bin 2>/dev/null)
             echo "$OUTPUT" | grep -q "You entered: Hello42" && PASS=1 ;;
+
         52) OUTPUT=$(printf "Hello World 42\n" | ./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "Uppercase: 2" && echo "$OUTPUT" | grep -q "Lowercase: 8" && \
-            echo "$OUTPUT" | grep -q "Digits: 2" && echo "$OUTPUT" | grep -q "Spaces: 2" && PASS=1 ;;
+            echo "$OUTPUT" | grep -q "Uppercase: 2" &&
+            echo "$OUTPUT" | grep -q "Lowercase: 8" &&
+            echo "$OUTPUT" | grep -q "Digits: 2" &&
+            echo "$OUTPUT" | grep -q "Spaces: 2" && PASS=1 ;;
+
         53) OUTPUT=$(printf "hello\nworld\n42\n" | ./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "Line 1 (len=5): hello" && \
-            echo "$OUTPUT" | grep -q "Line 2 (len=5): world" && \
+            echo "$OUTPUT" | grep -q "Line 1 (len=5): hello" &&
+            echo "$OUTPUT" | grep -q "Line 2 (len=5): world" &&
             echo "$OUTPUT" | grep -q "Line 3 (len=2): 42" && PASS=1 ;;
+
         54) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "global: 0x" && echo "$OUTPUT" | grep -q "stack:  0x" && \
+            echo "$OUTPUT" | grep -q "global: 0x" &&
+            echo "$OUTPUT" | grep -q "stack:  0x" &&
             echo "$OUTPUT" | grep -q "heap:   0x" && PASS=1 ;;
+
         55) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "After double_val: 5" && echo "$OUTPUT" | grep -q "After double_ref: 10" && PASS=1 ;;
+            echo "$OUTPUT" | grep -q "After double_val: 5" &&
+            echo "$OUTPUT" | grep -q "After double_ref: 10" && PASS=1 ;;
+
         56) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "After swap:  a=20, b=10" && \
+            echo "$OUTPUT" | grep -q "Before swap: a=10, b=20" &&
+            echo "$OUTPUT" | grep -q "After swap:  a=20, b=10" &&
+            echo "$OUTPUT" | grep -q "Before swap: s1=hello, s2=world" &&
             echo "$OUTPUT" | grep -q "After swap:  s1=world, s2=hello" && PASS=1 ;;
+
         57) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "\*p     = 10" && echo "$OUTPUT" | grep -q "\*(p+4) = 50" && \
+            echo "$OUTPUT" | grep -qF "*p     = 10" &&
+            echo "$OUTPUT" | grep -qF "*(p+4) = 50" &&
+            echo "$OUTPUT" | grep -q "int units apart:  1" &&
             echo "$OUTPUT" | grep -q "bytes apart:      4" && PASS=1 ;;
+
         58) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "x    = 42" && echo "$OUTPUT" | grep -q "\*\*pp = 42" && \
-            echo "$OUTPUT" | grep -q "After \*\*pp = 99: x = 99" && PASS=1 ;;
+            echo "$OUTPUT" | grep -q "x    = 42" &&
+            echo "$OUTPUT" | grep -qF "**pp = 42" &&
+            echo "$OUTPUT" | grep -qF "After **pp = 99: x = 99" && PASS=1 ;;
+
         59) OUTPUT=$(./eval_bin 2>/dev/null)
-            echo "$OUTPUT" | grep -q "ft_add(10, 3) = 13" && echo "$OUTPUT" | grep -q "ft_mul(10, 3) = 30" && \
-            echo "$OUTPUT" | grep -q "2 4 6 8 10" && PASS=1 ;;
+            echo "$OUTPUT" | grep -q "ft_add(10, 3) = 13" &&
+            echo "$OUTPUT" | grep -q "ft_sub(10, 3) = 7" &&
+            echo "$OUTPUT" | grep -q "ft_mul(10, 3) = 30" &&
+            echo "$OUTPUT" | grep -q "2 4 6 8 10" &&
+            echo "$OUTPUT" | grep -q "You have completed" && PASS=1 ;;
+
         *)  PASS=1 ;;
     esac
 
     echo ""
-    echo "-- Output ------------------------------------------"
-    echo "$OUTPUT"
-    echo "----------------------------------------------------"
+    echo -e "${GRAY}┌── Output ──────────────────────────────────────────────────┐${RESET}"
+    echo "$OUTPUT" | while IFS= read -r line; do
+        printf "${GRAY}│${RESET} %s\n" "$line"
+    done
+    echo -e "${GRAY}└────────────────────────────────────────────────────────────┘${RESET}"
     echo ""
-    echo "$OUTPUT" >> "$TRACE"
+
+    # Save trace
+    { echo "=== Level $LEVEL | $(date) ==="; echo "$OUTPUT"; } >> "$TRACE"
 
     if [ $PASS -eq 1 ]; then
-        # Award points (only once per level)
-        if ! already_passed $LEVEL; then
+        local SCORE_MSG
+        if ! already_passed "$LEVEL"; then
             add_score 1
-            mark_passed $LEVEL
-            SCORE_MSG="  +1 point awarded!  Score: $(get_score)/60"
+            mark_passed "$LEVEL"
+            SCORE_MSG="  ${GREEN}+1 point awarded!${RESET}  Score: ${BOLD}$(get_score)/60${RESET}"
         else
-            SCORE_MSG="  (already cleared, no extra point)"
+            SCORE_MSG="  ${GRAY}(already cleared — no extra point)${RESET}"
         fi
 
-        echo "OK  LEVEL $LEVEL CLEARED!  [ $FNAME ]"
-        echo "$SCORE_MSG"
-        NEXT=$((LEVEL + 1))
+        echo -e "${GREEN}  ✓ PASS${RESET}  Level ${BOLD}$LEVEL${RESET} cleared!  [ ${WHITE}$FNAME${RESET} ]"
+        echo -e "$SCORE_MSG"
+
+        local NEXT=$(( LEVEL + 1 ))
         echo $NEXT > .level
 
         if [ $NEXT -gt $MAX_LEVEL ]; then
             echo ""
-            echo "+==================================================+"
-            echo "|   EXAM COMPLETE -- C MASTERY ACHIEVED            |"
-            echo "|   FINAL SCORE: $(get_score) / 60                           |"
-            echo "|   60 levels done. You covered:                   |"
-            echo "|   Intro, Syntax, Output, Comments, Variables,    |"
-            echo "|   Data Types, Type Conversion, Constants,        |"
-            echo "|   Operators, Booleans, If/Else, Switch,          |"
-            echo "|   While, For, Break/Continue, Arrays, Strings,   |"
-            echo "|   User Input, Memory Addresses, Pointers         |"
-            echo "+==================================================+"
+            echo -e "${BOLD}${GREEN}"
+            echo "  ╔══════════════════════════════════════════════════════╗"
+            echo "  ║          EXAM COMPLETE — C MASTERY ACHIEVED         ║"
+            printf "  ║          FINAL SCORE: %-3s / 60                      ║\n" "$(get_score)"
+            echo "  ║                                                      ║"
+            echo "  ║  Topics mastered:                                    ║"
+            echo "  ║  Intro · Syntax · Output · Comments · Variables      ║"
+            echo "  ║  Data Types · Type Conv · Constants · Operators      ║"
+            echo "  ║  Booleans · If/Else · Switch · While · For           ║"
+            echo "  ║  Break/Continue · Arrays · Strings · Input           ║"
+            echo "  ║  Memory Addresses · Pointers                         ║"
+            echo "  ╚══════════════════════════════════════════════════════╝"
+            echo -e "${RESET}"
             rm -f eval_bin
             exit 0
         fi
         echo ""
-        read -p "   Press Enter for Level $NEXT..."
+        read -p "  Press Enter for Level $NEXT..."
     else
-        echo "FAIL  Output did not match expected."
-        echo "   Check the subject carefully. Trace: $TRACE"
-        echo "   Score: $(get_score)/60"
+        echo -e "${RED}  ✗ FAIL${RESET}  Output did not match expected."
+        echo -e "  Study the subject carefully. Trace: ${GRAY}$TRACE${RESET}"
+        echo -e "  Score: ${BOLD}$(get_score)/60${RESET}"
+        echo ""
+        read -p "  Press Enter to continue..."
     fi
     rm -f eval_bin
 }
 
-
 # ══════════════════════════════════════════════════════════════════
-#  TOPIC LABELS
+#  SHOW SUBJECT
 # ══════════════════════════════════════════════════════════════════
-get_topic() {
-    local topics=("C Intro" "C Intro" "C Intro"
-                  "Syntax" "Syntax" "Syntax"
-                  "Output" "Output" "Output"
-                  "Comments" "Comments" "Comments"
-                  "Variables" "Variables" "Variables"
-                  "Data Types" "Data Types" "Data Types"
-                  "Type Conv." "Type Conv." "Type Conv."
-                  "Constants" "Constants" "Constants"
-                  "Operators" "Operators" "Operators"
-                  "Booleans" "Booleans" "Booleans"
-                  "If...Else" "If...Else" "If...Else"
-                  "Switch" "Switch" "Switch"
-                  "While Loop" "While Loop" "While Loop"
-                  "For Loop" "For Loop" "For Loop"
-                  "Break/Cont" "Break/Cont" "Break/Cont"
-                  "Arrays" "Arrays" "Arrays"
-                  "Strings" "Strings" "Strings"
-                  "User Input" "User Input" "User Input"
-                  "Mem. Addr." "Mem. Addr." "Mem. Addr."
-                  "Pointers" "Pointers" "Pointers")
-    echo "${topics[$1]}"
+show_subject() {
+    local LEVEL
+    LEVEL=$(get_level)
+    local FILE="subjects/lvl${LEVEL}.txt"
+    if [ -f "$FILE" ]; then
+        echo ""
+        echo -e "${BOLD}${CYAN}══ SUBJECT: Level $LEVEL ══════════════════════════════════${RESET}"
+        # Highlight expected output lines
+        while IFS= read -r line; do
+            if echo "$line" | grep -q "Expected output"; then
+                echo -e "${BOLD}${YELLOW}$line${RESET}"
+            elif echo "$line" | grep -q "^  Tip:"; then
+                echo -e "${CYAN}$line${RESET}"
+            elif echo "$line" | grep -q "^  FILE:"; then
+                echo -e "${GREEN}$line${RESET}"
+            else
+                echo "$line"
+            fi
+        done < "$FILE"
+        echo ""
+    fi
 }
 
-show_progress() {
-    LEVEL=$(cat .level)
-    FNAME=$(get_filename $LEVEL)
-    TOPIC=$(get_topic $LEVEL)
-    SUBTASK=$(( (LEVEL % 3) + 1 ))
-    SCORE=$(get_score)
-
-    # Progress bar (30 chars wide)
-    BAR=""
-    for i in $(seq 0 $MAX_LEVEL); do
-        if [ $i -lt $LEVEL ]; then
-            BAR="${BAR}#"
-        elif [ $i -eq $LEVEL ]; then
-            BAR="${BAR}>"
-        else
-            BAR="${BAR}."
-        fi
-    done
-
-    # Score bar (20 chars wide)
-    SBAR=""
-    SFILLED=$(( SCORE > 20 ? 20 : SCORE ))
-    for i in $(seq 1 20); do
-        if [ $i -le $SFILLED ]; then SBAR="${SBAR}█"; else SBAR="${SBAR}░"; fi
-    done
-
-    echo "  Topic   : $TOPIC (task $SUBTASK/3)"
-    echo "  Level   : $LEVEL / $MAX_LEVEL"
-    echo "  File    : $FNAME"
-    echo "  Progress: [${BAR}]"
-    echo "  Score   : $SCORE / 60 pts  [${SBAR}]"
-
-    # Rank display
-    if   [ $SCORE -ge 54 ]; then echo "  Rank    : ★★★ C MASTER"
-    elif [ $SCORE -ge 42 ]; then echo "  Rank    : ★★☆ Advanced Programmer"
-    elif [ $SCORE -ge 24 ]; then echo "  Rank    : ★☆☆ Intermediate Coder"
-    elif [ $SCORE -ge 12 ]; then echo "  Rank    : ☆☆☆ Junior Developer"
-    else                         echo "  Rank    : ☆☆☆ Apprentice"
+# ══════════════════════════════════════════════════════════════════
+#  GOTO COMMAND (jump to a specific level)
+# ══════════════════════════════════════════════════════════════════
+goto_level() {
+    local target=$1
+    if [[ ! "$target" =~ ^[0-9]+$ ]] || [ "$target" -gt $MAX_LEVEL ]; then
+        echo -e "${RED}  Invalid level. Use 0-$MAX_LEVEL${RESET}"
+        return
     fi
+    echo "$target" > .level
+    echo -e "  ${YELLOW}Jumped to level $target.${RESET}"
+    sleep 1
+}
+
+# ══════════════════════════════════════════════════════════════════
+#  HELP
+# ══════════════════════════════════════════════════════════════════
+show_help() {
+    echo ""
+    echo -e "${BOLD}${WHITE}  COMMANDS${RESET}"
+    echo -e "  ${GREEN}grademe${RESET}      — compile & test your solution"
+    echo -e "  ${CYAN}hint${RESET}         — re-read the current subject"
+    echo -e "  ${CYAN}score${RESET}        — show full scoreboard"
+    echo -e "  ${YELLOW}skip${RESET}         — skip level (no credit)"
+    echo -e "  ${YELLOW}goto N${RESET}       — jump to level N"
+    echo -e "  ${RED}reset${RESET}        — restart level counter (score kept)"
+    echo -e "  ${RED}resetscore${RESET}   — full reset (level + score)"
+    echo -e "  ${GRAY}exit${RESET}         — quit (progress saved)"
+    echo ""
+    read -p "  Press Enter..."
 }
 
 # ══════════════════════════════════════════════════════════════════
 #  MAIN LOOP
 # ══════════════════════════════════════════════════════════════════
+generate_subjects
+
 while true; do
-    LEVEL=$(cat .level)
+    LEVEL=$(get_level)
     FNAME=$(get_filename $LEVEL)
+
     clear
-    echo "+============================================================+"
-    echo "|    MILES3103 -- C MASTERY EXAM v9.0  (60 Levels)         |"
-    echo "+============================================================+"
+    echo -e "${BOLD}${CYAN}╔══════════════════════════════════════════════════════════╗${RESET}"
+    echo -e "${BOLD}${CYAN}║      MILES3103 — C MASTERY EXAM v10.0  (60 Levels)      ║${RESET}"
+    echo -e "${BOLD}${CYAN}╚══════════════════════════════════════════════════════════╝${RESET}"
+    echo ""
     show_progress
     echo ""
 
-    if [ $LEVEL -gt $MAX_LEVEL ] || [ ! -f "subjects/lvl$LEVEL.txt" ]; then
-        echo "ALL LEVELS COMPLETE -- You are a C programmer now."
+    if [ "$LEVEL" -gt "$MAX_LEVEL" ] || [ ! -f "subjects/lvl${LEVEL}.txt" ]; then
+        echo -e "${GREEN}  ALL LEVELS COMPLETE — You are a C programmer now.${RESET}"
         show_scoreboard
         exit 0
     fi
 
-    cat "subjects/lvl$LEVEL.txt"
-    echo ""
-    echo "------------------------------------------------------------"
-    echo "  Your file : rendu/$(get_dirname $LEVEL)/$FNAME"
-    echo "  Trace log : traces/trace_lvl$LEVEL.txt"
-    echo "------------------------------------------------------------"
-    echo "  grademe   -- compile & test your solution"
-    echo "  score     -- show full scoreboard"
-    echo "  skip      -- skip this level (no credit)"
-    echo "  reset     -- restart from level 0"
-    echo "  hint      -- re-read the subject"
-    echo "  exit      -- quit (progress saved)"
-    echo "------------------------------------------------------------"
-    echo -n "  exam[lvl$LEVEL | score:$(get_score)/60]> "
+    show_subject
+
+    echo -e "${GRAY}  ────────────────────────────────────────────────────────${RESET}"
+    echo -e "  ${BOLD}Your file :${RESET} ${WHITE}rendu/$(get_dirname $LEVEL)/$FNAME${RESET}"
+    echo -e "  ${BOLD}Trace log :${RESET} ${GRAY}traces/trace_$(get_dirname $LEVEL).txt${RESET}"
+    echo -e "${GRAY}  ────────────────────────────────────────────────────────${RESET}"
+    echo -e "  ${GREEN}grademe${RESET} · ${CYAN}hint${RESET} · ${CYAN}score${RESET} · ${YELLOW}skip${RESET} · ${YELLOW}goto N${RESET} · ${RED}reset${RESET} · ${GRAY}exit${RESET} · ${WHITE}help${RESET}"
+    echo -e "${GRAY}  ────────────────────────────────────────────────────────${RESET}"
+    echo -ne "  ${BOLD}${CYAN}exam${RESET}[${YELLOW}lvl${LEVEL}${RESET}|${GREEN}$(get_score)/60${RESET}]${BOLD}> ${RESET}"
     read input
 
     case "$input" in
@@ -1539,16 +1857,21 @@ while true; do
         score|scoreboard)
             show_scoreboard
             ;;
+        hint|subject)
+            show_subject
+            read -p "  Press Enter..."
+            ;;
         skip)
-            echo "Skipping level $LEVEL..."
-            echo $((LEVEL + 1)) > .level
+            echo -e "  ${YELLOW}Skipping level $LEVEL...${RESET}"
+            echo $(( LEVEL + 1 )) > .level
             sleep 1
             ;;
+        goto\ *)
+            goto_level "${input#goto }"
+            ;;
         reset)
-            read -p "  Reset to 0? This resets level but keeps score (y/n): " confirm
-            if [[ "$confirm" == "y" ]]; then
-                echo 0 > .level
-            fi
+            read -p "  Reset level to 0? (score is kept) (y/n): " confirm
+            [[ "$confirm" == "y" ]] && echo 0 > .level
             ;;
         resetscore)
             read -p "  Reset ALL progress including score? (y/n): " confirm
@@ -1556,20 +1879,21 @@ while true; do
                 echo 0 > .level
                 echo 0 > .score
                 > .passed
-                echo "Full reset done."
+                echo -e "  ${RED}Full reset done.${RESET}"
                 sleep 1
             fi
             ;;
-        hint|subject)
-            cat "subjects/lvl$LEVEL.txt"
-            read -p "  Press Enter..."
+        help|h|"?")
+            show_help
             ;;
-        exit|quit)
-            echo "  Progress saved at level $LEVEL. Score: $(get_score)/60. Keep going!"
+        exit|quit|q)
+            echo -e "  ${GRAY}Progress saved at level $LEVEL. Score: $(get_score)/60. Keep going!${RESET}"
             exit 0
             ;;
+        "")
+            ;; # just redraw
         *)
-            echo "  Unknown command. Try: grademe | score | skip | reset | hint | exit"
+            echo -e "  ${RED}Unknown command.${RESET} Type ${BOLD}help${RESET} for the list."
             sleep 1
             ;;
     esac

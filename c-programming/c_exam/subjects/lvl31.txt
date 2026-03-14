@@ -1,0 +1,16 @@
+=== LEVEL 31 ─ IF...ELSE [2/3] : FizzBuzz ===
+FILE: rendu/ft_fizzbuzz/ft_fizzbuzz.c
+
+FizzBuzz from 1 to 20.
+
+Expected output (first 8 lines shown, all 20 required):
+  1
+  2
+  Fizz
+  4
+  Buzz
+  Fizz
+  7
+  8
+
+Tip: Check divisible by 15 (FizzBuzz) BEFORE 3 or 5 alone!

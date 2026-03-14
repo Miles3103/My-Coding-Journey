@@ -1,0 +1,5 @@
+=== Level 2 | Sat Feb 28 03:07:01 AM CET 2026 ===
+1. Preprocessing
+2. Compilation
+3. Assembly
+4. Linking

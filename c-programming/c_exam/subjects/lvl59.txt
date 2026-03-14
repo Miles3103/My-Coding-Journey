@@ -1,0 +1,21 @@
+=== LEVEL 59 ─ POINTERS [3/3] ★ FINAL BOSS ★ ===
+FILE: rendu/ft_funcptr/ft_funcptr.c
+
+Part 1 — Function pointer dispatch table:
+  int ft_add(int a, int b)  { return a + b; }
+  int ft_sub(int a, int b)  { return a - b; }
+  int ft_mul(int a, int b)  { return a * b; }
+
+  Store them in an array of function pointers and call each.
+
+Part 2 — ft_map:
+  void ft_map(int *arr, int n, int (*f)(int))
+  Apply a doubling function to {1,2,3,4,5}.
+
+Expected output:
+  ft_add(10, 3) = 13
+  ft_sub(10, 3) = 7
+  ft_mul(10, 3) = 30
+  2 4 6 8 10
+
+  You have completed the C Mastery Exam. You are ready.

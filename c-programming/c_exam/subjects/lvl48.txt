@@ -1,0 +1,15 @@
+=== LEVEL 48 ─ STRINGS [1/3] : String Functions from Scratch ===
+FILE: rendu/ft_strfuncs/ft_strfuncs.c
+
+WITHOUT <string.h>, implement:
+  int   ft_strlen(char *s)
+  char *ft_strcpy(char *dst, char *src)
+  int   ft_strcmp(char *s1, char *s2)
+  char *ft_strchr(char *s, char c)
+
+Expected output:
+  strlen: 5
+  strcpy: world
+  strcmp equal: 0
+  strcmp diff: nonzero
+  strchr: llo

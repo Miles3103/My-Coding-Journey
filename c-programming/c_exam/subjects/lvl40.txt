@@ -1,0 +1,16 @@
+=== LEVEL 40 ─ FOR LOOP [2/3] : Nested Loops & Patterns ===
+FILE: rendu/ft_patterns/ft_patterns.c
+
+Print a right-triangle (growing) then inverted triangle (shrinking):
+
+Expected output (exactly):
+  *
+  **
+  ***
+  ****
+  *****
+  *****
+  ****
+  ***
+  **
+  *

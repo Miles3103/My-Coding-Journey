@@ -1,0 +1,11 @@
+=== LEVEL 52 ─ USER INPUT [2/3] : Parsing Input ===
+FILE: rendu/ft_parseinput/ft_parseinput.c
+
+Read a line from stdin, count uppercase, lowercase, digits, spaces.
+Test input: "Hello World 42"
+
+Expected output:
+  Uppercase: 2
+  Lowercase: 8
+  Digits: 2
+  Spaces: 2

@@ -1,0 +1,15 @@
+=== LEVEL 44 ─ BREAK/CONTINUE [3/3] : Nested Loop Control ===
+FILE: rendu/ft_nested/ft_nested.c
+
+Print pairs (i,j) where i and j are 1-5 and i*j is a perfect square.
+Include <math.h>, compile with -lm.
+
+Hint: sqrt(n) is an integer if (int)sqrt(n)*(int)sqrt(n) == n
+
+Expected output:
+  (1,1)=1
+  (1,4)=4
+  (2,2)=4
+  (3,3)=9
+  (4,4)=16
+  (5,5)=25

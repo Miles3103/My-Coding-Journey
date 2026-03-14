@@ -1,0 +1,15 @@
+=== LEVEL 54 ─ MEMORY ADDRESS [1/3] : Address Explorer ===
+FILE: rendu/ft_memaddr/ft_memaddr.c
+
+Print addresses of:
+  - A global variable   (label: global)
+  - A stack variable    (label: stack)
+  - A heap variable     (label: heap, use malloc)
+Free the heap allocation.
+
+Expected output format (addresses will vary):
+  global: 0x[hex address]
+  stack:  0x[hex address]
+  heap:   0x[hex address]
+
+Tip: printf("global: %p\n", (void*)&g);

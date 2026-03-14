@@ -1,0 +1,15 @@
+=== LEVEL 43 ─ BREAK/CONTINUE [2/3] : Filter with Continue ===
+FILE: rendu/ft_filter/ft_filter.c
+
+Process {-3, 7, -1, 0, 5, -8, 2, 9, -4, 6}:
+  Skip negatives and zero with continue.
+  Print index (0-based) and value for positives.
+  Print sum of positives at end.
+
+Expected output:
+  [1]: 7
+  [4]: 5
+  [6]: 2
+  [7]: 9
+  [9]: 6
+  Sum of positives: 29

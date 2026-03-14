@@ -1,0 +1,18 @@
+=== LEVEL 6 ─ OUTPUT [1/3] : write() Mastery ===
+FILE: rendu/ft_write/ft_write.c
+
+Using ONLY write(), print:
+  *** HEADER ***
+  (blank line)
+  Content here
+  (blank line)
+  *** FOOTER ***
+
+Expected output:
+  *** HEADER ***
+
+  Content here
+
+  *** FOOTER ***
+
+Tip: A blank line = just "\n" written to stdout.

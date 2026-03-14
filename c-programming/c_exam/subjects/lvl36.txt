@@ -1,0 +1,20 @@
+=== LEVEL 36 ─ WHILE LOOP [1/3] : Collatz Conjecture ===
+FILE: rendu/ft_collatz/ft_collatz.c
+
+Collatz from n = 6:
+  If even: n = n / 2
+  If odd:  n = n * 3 + 1
+Print each value until you reach 1.
+Then print: Steps: X (count transitions, not the starting number)
+
+Expected output:
+  6
+  3
+  10
+  5
+  16
+  8
+  4
+  2
+  1
+  Steps: 8

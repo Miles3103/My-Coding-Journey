@@ -1,0 +1,13 @@
+=== LEVEL 53 ─ USER INPUT [3/3] : Multi-line Reader ===
+FILE: rendu/ft_multiline/ft_multiline.c
+
+Read exactly 3 lines from stdin using a loop with read().
+For each line print: "Line N (len=X): content"
+(length excludes the newline)
+
+Test with: printf "hello\nworld\n42\n"
+
+Expected output:
+  Line 1 (len=5): hello
+  Line 2 (len=5): world
+  Line 3 (len=2): 42

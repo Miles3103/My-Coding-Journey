@@ -1,0 +1,19 @@
+=== LEVEL 28 ─ BOOLEANS [2/3] : Short-Circuit Evaluation ===
+FILE: rendu/ft_shortcircuit/ft_shortcircuit.c
+
+Write two functions with side effects:
+  int check_a() { printf("check_a called\n"); return 0; }
+  int check_b() { printf("check_b called\n"); return 1; }
+
+Test:
+  Print "Test 1:" then evaluate: check_a() && check_b()
+  Print "Test 2:" then evaluate: check_b() || check_a()
+
+Expected output:
+  Test 1:
+  check_a called
+  Test 2:
+  check_b called
+
+Note: check_b() is NOT called in Test 1 (short-circuit),
+      check_a() is NOT called in Test 2 (short-circuit).

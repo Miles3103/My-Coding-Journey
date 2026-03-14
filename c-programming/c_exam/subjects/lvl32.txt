@@ -1,0 +1,14 @@
+=== LEVEL 32 ─ IF...ELSE [3/3] : Leap Year ===
+FILE: rendu/ft_leap/ft_leap.c
+
+Write: int ft_is_leap(int year)
+Rules:
+  - Divisible by 4   -> leap
+  - EXCEPT divisible by 100 -> NOT leap
+  - EXCEPT divisible by 400 -> IS leap
+
+Expected output:
+  2000: leap
+  1900: not leap
+  2024: leap
+  2023: not leap

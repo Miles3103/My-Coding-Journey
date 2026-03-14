@@ -1,0 +1,14 @@
+=== LEVEL 49 ─ STRINGS [2/3] : String Manipulation ===
+FILE: rendu/ft_strmanip/ft_strmanip.c
+
+Implement:
+  void ft_toupper_str(char *s)    -- in-place uppercase
+  void ft_tolower_str(char *s)    -- in-place lowercase
+  void ft_reverse_str(char *s)    -- in-place reverse
+  int  ft_count_words(char *s)    -- count space-separated words
+
+Expected output:
+  upper: HELLO WORLD
+  lower: hello world
+  reverse: edcba
+  words: 4
