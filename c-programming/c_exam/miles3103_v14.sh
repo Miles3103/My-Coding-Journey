@@ -1,10 +1,11 @@
 #!/bin/bash
 # **************************************************************************** #
 #                                                                              #
-#  Project : Miles3103 C Low-Level Mastery Shell v10.0                        #
+#  Project : Miles3103 C Low-Level Mastery Shell v14.0                        #
 #  Coverage: C Intro → Pointers (Deep Mastery Edition)                        #
 #  Total   : 60 Levels  (3 per topic × 20 topics)                             #
-#  Changes : v10 — Bug fixes, color UI, strict grading, better hints          #
+#  Changes : v14 — Full diff on FAIL: line-by-line table + char-level hint    #
+#                  Expected output defined for all 60 levels                  #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,10 +27,13 @@ RESET='\033[0m'
 # ══════════════════════════════════════════════════════════════════
 #  INIT
 # ══════════════════════════════════════════════════════════════════
-mkdir -p subjects rendu traces
-[ ! -f .level  ] && echo 0 > .level
-[ ! -f .score  ] && echo 0 > .score
-[ ! -f .passed ] && touch .passed
+mkdir -p subjects rendu traces saves
+[ ! -f .level    ] && echo 0 > .level
+[ ! -f .score    ] && echo 0 > .score
+[ ! -f .passed   ] && touch .passed
+[ ! -f .attempts ] && touch .attempts
+[ ! -f .streak   ] && echo 0 > .streak
+[ ! -f .best     ] && echo 0 > .best
 
 MAX_LEVEL=59
 
@@ -134,6 +138,49 @@ get_level()     { cat .level; }
 add_score()     { echo $(( $(get_score) + $1 )) > .score; }
 already_passed(){ grep -qx "$1" .passed 2>/dev/null; }
 mark_passed()   { echo "$1" >> .passed; }
+get_streak()    { cat .streak; }
+get_best()      { cat .best; }
+
+inc_streak() {
+    local s=$(( $(get_streak) + 1 ))
+    echo $s > .streak
+    local b=$(get_best)
+    [ $s -gt $b ] && echo $s > .best
+}
+reset_streak()  { echo 0 > .streak; }
+
+get_attempts() {
+    local lvl=$1
+    grep -c "^$lvl:" .attempts 2>/dev/null || echo 0
+}
+get_passes_for() {
+    local lvl=$1
+    grep -c "^$lvl:PASS:" .attempts 2>/dev/null || echo 0
+}
+get_fails_for() {
+    local lvl=$1
+    grep -c "^$lvl:FAIL:" .attempts 2>/dev/null || echo 0
+}
+add_attempt() {
+    local lvl=$1 result=$2
+    echo "$lvl:$result:$(date +%H:%M)" >> .attempts
+}
+
+get_hardest_level() {
+    # level with most fails that has also been passed
+    local hardest_lvl="-"
+    local hardest_count=0
+    if [ -s .passed ]; then
+        while IFS= read -r lvl; do
+            local f=$(get_fails_for "$lvl")
+            if [ "$f" -gt "$hardest_count" ]; then
+                hardest_count=$f
+                hardest_lvl=$lvl
+            fi
+        done < .passed
+    fi
+    echo "$hardest_lvl ($hardest_count fails)"
+}
 
 score_bar() {
     local score=$1 width=${2:-20}
@@ -164,6 +211,15 @@ show_scoreboard() {
     local pct=$(( score * 100 / 60 ))
     local bar=$(score_bar $score 30)
     local rank=$(get_rank $score)
+    local streak=$(get_streak)
+    local best=$(get_best)
+    local total_attempts=$(wc -l < .attempts 2>/dev/null | tr -d ' ')
+    [ -z "$total_attempts" ] && total_attempts=0
+    local total_pass=$(grep -c ":PASS:" .attempts 2>/dev/null || echo 0)
+    local total_fail=$(grep -c ":FAIL:" .attempts 2>/dev/null || echo 0)
+    local win_rate=0
+    [ "$total_attempts" -gt 0 ] && win_rate=$(( total_pass * 100 / total_attempts ))
+    local hardest=$(get_hardest_level)
 
     echo ""
     echo -e "${BOLD}${CYAN}╔══════════════════════════════════════════════════════════╗${RESET}"
@@ -175,6 +231,12 @@ show_scoreboard() {
     printf "${CYAN}║${RESET}  Bar          : [${GREEN}%-30s${RESET}]               ${CYAN}║${RESET}\n" "$bar"
     printf "${CYAN}║${RESET}  Rank         : ${BOLD}${MAGENTA}%-30s${RESET}          ${CYAN}║${RESET}\n" "$rank"
     echo -e "${CYAN}╠══════════════════════════════════════════════════════════╣${RESET}"
+    printf "${CYAN}║${RESET}  Win streak   : ${BOLD}${YELLOW}%-3s${RESET}  Best streak : ${BOLD}${YELLOW}%-3s${RESET}                   ${CYAN}║${RESET}\n" "$streak" "$best"
+    printf "${CYAN}║${RESET}  Attempts     : ${GRAY}%-4s${RESET} total                                 ${CYAN}║${RESET}\n" "$total_attempts"
+    printf "${CYAN}║${RESET}  Passes       : ${GREEN}%-4s${RESET} (${GREEN}%3s${RESET}%% win rate)                         ${CYAN}║${RESET}\n" "$total_pass" "$win_rate"
+    printf "${CYAN}║${RESET}  Failures     : ${RED}%-4s${RESET}                                        ${CYAN}║${RESET}\n" "$total_fail"
+    printf "${CYAN}║${RESET}  Hardest lvl  : ${YELLOW}%-30s${RESET}          ${CYAN}║${RESET}\n" "$hardest"
+    echo -e "${CYAN}╠══════════════════════════════════════════════════════════╣${RESET}"
     if [ -s .passed ]; then
         local passed_list
         passed_list=$(sort -n .passed | tr '\n' ' ')
@@ -184,7 +246,7 @@ show_scoreboard() {
     fi
     echo -e "${BOLD}${CYAN}╚══════════════════════════════════════════════════════════╝${RESET}"
     echo ""
-    read -p "  Press Enter to continue..."
+    read -r -p "  Press Enter to continue..." _x < /dev/tty
 }
 
 # ══════════════════════════════════════════════════════════════════
@@ -196,8 +258,12 @@ show_progress() {
     local fname=$(get_filename $level)
     local topic=$(get_topic $level)
     local subtask=$(( (level % 3) + 1 ))
-    local sbar=$(score_bar $score)
     local rank=$(get_rank $score)
+    local streak=$(get_streak)
+    local attempts=$(get_attempts $level)
+    local passes=$(get_passes_for $level)
+    local fails=$(get_fails_for $level)
+    local total_fail=$(grep -c ":FAIL:" .attempts 2>/dev/null || echo 0)
 
     # 60-char progress bar
     local pbar=""
@@ -209,10 +275,10 @@ show_progress() {
     done
 
     echo -e "  ${BOLD}Topic   :${RESET} ${CYAN}$topic${RESET}  (task ${subtask}/3)"
-    echo -e "  ${BOLD}Level   :${RESET} ${YELLOW}$level${RESET} / $MAX_LEVEL"
+    echo -e "  ${BOLD}Level   :${RESET} ${YELLOW}$level${RESET} / $MAX_LEVEL   ${BOLD}This level:${RESET} ${GREEN}${passes}✓${RESET} ${RED}${fails}✗${RESET}  ${GRAY}(${attempts} total)${RESET}"
     echo -e "  ${BOLD}File    :${RESET} ${WHITE}$fname${RESET}"
     echo -e "  ${BOLD}Progress:${RESET} [${pbar}]"
-    echo -e "  ${BOLD}Score   :${RESET} ${GREEN}$score${RESET}/60 pts  [${GREEN}$(score_bar $score)${RESET}]"
+    echo -e "  ${BOLD}Score   :${RESET} ${GREEN}$score${RESET}/60  [${GREEN}$(score_bar $score)${RESET}]  ${BOLD}All-time fails:${RESET} ${RED}${total_fail}${RESET}  ${BOLD}Streak:${RESET} ${YELLOW}${streak}${RESET}"
     echo -e "  ${BOLD}Rank    :${RESET} ${MAGENTA}$rank${RESET}"
 }
 
@@ -1322,6 +1388,181 @@ EOF
 }  # end generate_subjects
 
 # ══════════════════════════════════════════════════════════════════
+#  EXPECTED OUTPUT MAP  (all 60 levels)
+# ══════════════════════════════════════════════════════════════════
+get_expected() {
+    local lvl=$1
+    case $lvl in
+        0)  printf "Hello, C World!" ;;
+        1)  printf "Program starting\nProgram done" ;;
+        2)  printf "1. Preprocessing\n2. Compilation\n3. Assembly\n4. Linking" ;;
+        3)  printf "Syntax is power" ;;
+        4)  printf "Hello\nGoodbye" ;;
+        5)  printf "Result: 15" ;;
+        6)  printf "*** HEADER ***\n\nContent here\n\n*** FOOTER ***" ;;
+        7)  printf "0\n42\n-7\n100" ;;
+        8)  printf "a b c d e f g h i j k l m n o p q r s t u v w x y z\n0 1 2 3 4 5 6 7 8 9" ;;
+        9)  printf "Comments guide future you" ;;
+        10) printf "Length: 5\nIsAlpha: 0\nIsAlpha: 1" ;;
+        11) printf "Sum: 10" ;;
+        12) printf "letter: X\ncount: 2025\npi_approx: 3.14\nprecise: 2.718282" ;;
+        13) printf "local g = 999\nglobal g = 100" ;;
+        14) printf "Before: a=5, b=9\nAfter:  a=9, b=5" ;;
+        15) printf "char:      1 bytes\nint:       4 bytes\nfloat:     4 bytes\ndouble:    8 bytes" ;;
+        16) printf "INT_MAX:  2147483647\nINT_MIN:  -2147483648\nCHAR_MAX: 127\nCHAR_MIN: -128\nOverflow result: -2147483648" ;;
+        17) printf "signed char:   -1\nunsigned char: 255\nunsigned underflow: 4294967295" ;;
+        18) printf "char from int: A\nint from char: 122\nint division stored as double: 2.000000\ncast before division: 2.500000" ;;
+        19) printf "1 of 3   = 33%%\n2 of 3   = 66%%\n1 of 4   = 25%%\n3 of 4   = 75%%\n1 of 7   = 14%%" ;;
+        20) printf "A -> a\nM -> m\nZ -> z\n'5' -> 5\n'9' -> 9" ;;
+        21) printf "BUFFER_SIZE: 1024\nPI: 3.14159265\nMAX_USERS: 100\nSEPARATOR: -" ;;
+        22) printf "1: Monday\n2: Tuesday\n3: Wednesday\n4: Thursday\n5: Friday\n6: Saturday\n7: Sunday" ;;
+        23) printf "MAX(3, 7)   = 7\nMIN(3, 7)   = 3\nABS(-5)     = 5\nSQUARE(4)   = 16" ;;
+        24) printf "a & b  = 8\na | b  = 14\na ^ b  = 6\n~a     = -11\na << 1 = 20\na >> 1 = 5" ;;
+        25) printf "x += 4  : 20\nx -= 5  : 15\nx *= 3  : 45\nx /= 9  : 5\nx %%= 3  : 2\nx <<= 2 : 8" ;;
+        26) printf "-5: negative\n0: zero\n3: positive\nabs(-42): 42" ;;
+        27) printf "A=0 B=0: AND=0 OR=0  NOT_A=1\nA=0 B=1: AND=0 OR=1  NOT_A=1\nA=1 B=0: AND=0 OR=1  NOT_A=0\nA=1 B=1: AND=1 OR=1  NOT_A=0" ;;
+        28) printf "Test 1:\ncheck_a called\nTest 2:\ncheck_b called" ;;
+        29) printf "hello: invalid\nHello1!!: valid\nSHORT1A: invalid\nlongbutnodigit: invalid" ;;
+        30) printf "95: A\n83: B\n71: C\n65: D\n40: F" ;;
+        31) printf "1\n2\nFizz\n4\nBuzz\nFizz\n7\n8\nFizz\nBuzz\n11\nFizz\n13\n14\nFizzBuzz\n16\n17\nFizz\n19\nBuzz" ;;
+        32) printf "2000: leap\n1900: not leap\n2024: leap\n2023: not leap" ;;
+        33) printf "10 + 3 = 13\n10 - 3 = 7\n10 * 3 = 30\n10 / 3 = 3\n10 / 0 = 0" ;;
+        34) printf "a: vowel\nb: consonant\n5: digit\n!: other" ;;
+        35) printf "RED\nGREEN\nYELLOW\nRED\nGREEN\nYELLOW" ;;
+        36) printf "6\n3\n10\n5\n16\n8\n4\n2\n1\nSteps: 8" ;;
+        37) printf "Invalid: -1\nInvalid: 0\nInvalid: 200\nValid: 50\nInvalid: -5\nValid: 42" ;;
+        38) printf "digit_sum(12345)  = 15\ndigit_sum(9999)   = 36\nft_reverse(12345) = 54321\nft_reverse(100)   = 1" ;;
+        39) printf "0 1 1 2 3 5 8 13 21 34" ;;
+        40) printf "*\n**\n***\n****\n*****\n*****\n****\n***\n**\n*" ;;
+        41) printf "2 3 5 7 11 13 17 19 23 29 31 37 41 43 47\nCount: 15" ;;
+        42) printf "Find 8:  Found at index 3\nFind 42: Found at index 4\nFind 99: Not found" ;;
+        43) printf "[1]: 7\n[4]: 5\n[6]: 2\n[7]: 9\n[9]: 6\nSum of positives: 29" ;;
+        44) printf "(1,1)=1\n(1,4)=4\n(2,2)=4\n(3,3)=9\n(4,4)=16\n(5,5)=25" ;;
+        45) printf "Min: 1\nMax: 10\nSum: 55\nAvg: 5.50" ;;
+        46) printf "Before: 64 34 25 12 22 11 90\nAfter:  11 12 22 25 34 64 90" ;;
+        47) printf "1 2 3\n4 5 6\n7 8 9\nSum: 45\nTrace: 15" ;;
+        48) printf "strlen: 5\nstrcpy: world\nstrcmp equal: 0\nstrcmp diff: nonzero\nstrchr: llo" ;;
+        49) printf "upper: HELLO WORLD\nlower: hello world\nreverse: edcba\nwords: 4" ;;
+        50) printf 'atoi("42"):    42\natoi("-100"):  -100\natoi("0"):     0\nitoa(12345):   12345\nitoa(-7):      -7' ;;
+        51) printf "You entered: Hello42" ;;
+        52) printf "Uppercase: 2\nLowercase: 8\nDigits: 2\nSpaces: 2" ;;
+        53) printf "Line 1 (len=5): hello\nLine 2 (len=5): world\nLine 3 (len=2): 42" ;;
+        54) printf "global: 0x[addr]\nstack:  0x[addr]\nheap:   0x[addr]" ;;
+        55) printf "After double_val: 5\nAfter double_ref: 10" ;;
+        56) printf "Before swap: a=10, b=20\nAfter swap:  a=20, b=10\nBefore swap: s1=hello, s2=world\nAfter swap:  s1=world, s2=hello" ;;
+        57) printf "*p     = 10\n*(p+1) = 20\n*(p+2) = 30\n*(p+3) = 40\n*(p+4) = 50\nint units apart:  1\nbytes apart:      4" ;;
+        58) printf "x    = 42\n*p   = 42\n**pp = 42\nAfter **pp = 99: x = 99" ;;
+        59) printf "ft_add(10, 3) = 13\nft_sub(10, 3) = 7\nft_mul(10, 3) = 30\n2 4 6 8 10\n\nYou have completed the C Mastery Exam. You are ready." ;;
+        *)  printf "" ;;
+    esac
+}
+
+# ══════════════════════════════════════════════════════════════════
+#  DIFF DISPLAY
+# ══════════════════════════════════════════════════════════════════
+show_diff() {
+    local expected="$1"
+    local got="$2"
+    local lvl="$3"
+
+    # levels with dynamic output (addresses vary) — skip line diff
+    if [ "$lvl" -eq 54 ]; then
+        echo -e "  ${YELLOW}Note:${RESET} Addresses vary per run — checking label format only."
+        echo -e "  ${BOLD}Expected format:${RESET}"
+        echo -e "    ${GREEN}global: 0x...${RESET}"
+        echo -e "    ${GREEN}stack:  0x...${RESET}"
+        echo -e "    ${GREEN}heap:   0x...${RESET}"
+        echo ""
+        return
+    fi
+
+    echo -e "  ${BOLD}${CYAN}┌─────────────────────────────────────────────────────────┐${RESET}"
+    printf  "  ${CYAN}│${RESET}  ${BOLD}%-24s${RESET}  ${BOLD}%-24s${RESET}  ${CYAN}│${RESET}\n" "EXPECTED" "YOUR OUTPUT"
+    echo -e "  ${CYAN}├──────────────────────────────┬──────────────────────────┤${RESET}"
+
+    local exp_line got_line match idx
+    idx=0
+    # iterate over expected lines
+    while IFS= read -r exp_line; do
+        idx=$(( idx + 1 ))
+        got_line=$(echo "$got" | sed -n "${idx}p")
+        if [ "$exp_line" = "$got_line" ]; then
+            match="${GREEN}✓${RESET}"
+            printf "  ${CYAN}│${RESET}  ${GREEN}%-28s${RESET}${CYAN}│${RESET}  ${GREEN}%-24s${RESET}  ${CYAN}│${RESET} %b\n" \
+                "${exp_line:0:28}" "${got_line:0:24}" "$match"
+        else
+            match="${RED}✗${RESET}"
+            # truncate long lines for display
+            local e_disp="${exp_line:0:28}"
+            local g_disp="${got_line:0:24}"
+            printf "  ${CYAN}│${RESET}  ${GREEN}%-28s${RESET}${CYAN}│${RESET}  ${RED}%-24s${RESET}  ${CYAN}│${RESET} %b\n" \
+                "$e_disp" "${g_disp:-(empty)}" "$match"
+        fi
+    done <<< "$expected"
+
+    # check if got has EXTRA lines beyond expected
+    local exp_lines got_lines
+    exp_lines=$(echo "$expected" | wc -l | tr -d ' ')
+    got_lines=$(echo "$got" | wc -l | tr -d ' ')
+    if [ "$got_lines" -gt "$exp_lines" ]; then
+        local extra=$(( got_lines - exp_lines ))
+        for i in $(seq 1 $extra); do
+            local extra_line=$(echo "$got" | sed -n "$(( exp_lines + i ))p")
+            printf "  ${CYAN}│${RESET}  ${GRAY}%-28s${RESET}${CYAN}│${RESET}  ${RED}%-24s${RESET}  ${CYAN}│${RESET} %b\n" \
+                "(unexpected)" "${extra_line:0:24}" "${RED}✗${RESET}"
+        done
+    fi
+
+    echo -e "  ${CYAN}└──────────────────────────────┴──────────────────────────┘${RESET}"
+
+    # line count mismatch summary
+    if [ "$exp_lines" -ne "$got_lines" ]; then
+        echo -e "  ${RED}Line count: expected ${exp_lines}, got ${got_lines}${RESET}"
+    fi
+
+    # char-level hint on first mismatched line
+    local first_exp first_got
+    local lidx=0
+    while IFS= read -r exp_line; do
+        lidx=$(( lidx + 1 ))
+        first_got=$(echo "$got" | sed -n "${lidx}p")
+        if [ "$exp_line" != "$first_got" ]; then
+            first_exp="$exp_line"
+            break
+        fi
+    done <<< "$expected"
+
+    if [ -n "$first_exp" ]; then
+        echo ""
+        echo -e "  ${BOLD}First difference on line ${lidx}:${RESET}"
+        # find char position
+        local pos=0
+        local elen=${#first_exp}
+        local glen=${#first_got}
+        local maxlen=$(( elen > glen ? elen : glen ))
+        for (( c=0; c<maxlen; c++ )); do
+            if [ "${first_exp:$c:1}" != "${first_got:$c:1}" ]; then
+                pos=$c
+                break
+            fi
+            pos=$(( c + 1 ))
+        done
+        local exp_char="${first_exp:$pos:1}"
+        local got_char="${first_got:$pos:1}"
+        [ -z "$exp_char" ] && exp_char="(end)"
+        [ -z "$got_char" ] && got_char="(end)"
+        echo -e "  Expected char at pos $pos: ${GREEN}'${exp_char}'${RESET}"
+        echo -e "  Got char at pos $pos     : ${RED}'${got_char}'${RESET}"
+        # show arrow under the difference
+        local arrow="$(printf '%*s' $pos '')^"
+        echo -e "  ${GREEN}${first_exp}${RESET}"
+        echo -e "  ${RED}${first_got}${RESET}"
+        echo -e "  ${YELLOW}${arrow}${RESET}"
+    fi
+    echo ""
+}
+
+# ══════════════════════════════════════════════════════════════════
 #  GRADER
 # ══════════════════════════════════════════════════════════════════
 grade_me() {
@@ -1701,7 +1942,7 @@ grade_me() {
     esac
 
     echo ""
-    echo -e "${GRAY}┌── Output ──────────────────────────────────────────────────┐${RESET}"
+    echo -e "${GRAY}┌── Your output ─────────────────────────────────────────────┐${RESET}"
     echo "$OUTPUT" | while IFS= read -r line; do
         printf "${GRAY}│${RESET} %s\n" "$line"
     done
@@ -1712,6 +1953,8 @@ grade_me() {
     { echo "=== Level $LEVEL | $(date) ==="; echo "$OUTPUT"; } >> "$TRACE"
 
     if [ $PASS -eq 1 ]; then
+        add_attempt "$LEVEL" "PASS"
+        inc_streak
         local SCORE_MSG
         if ! already_passed "$LEVEL"; then
             add_score 1
@@ -1721,8 +1964,20 @@ grade_me() {
             SCORE_MSG="  ${GRAY}(already cleared — no extra point)${RESET}"
         fi
 
-        echo -e "${GREEN}  ✓ PASS${RESET}  Level ${BOLD}$LEVEL${RESET} cleared!  [ ${WHITE}$FNAME${RESET} ]"
+        local streak=$(get_streak)
+        local streak_msg=""
+        [ $streak -ge 3 ] && streak_msg="  ${YELLOW}🔥 ${streak} win streak!${RESET}"
+        [ $streak -ge 5 ] && streak_msg="  ${YELLOW}⚡ ${streak} win streak! On fire!${RESET}"
+
+        echo -e "${GREEN}  ╔══════════════════════════════════════════════════════╗${RESET}"
+        echo -e "${GREEN}  ║                    ✓  PASS                          ║${RESET}"
+        echo -e "${GREEN}  ╚══════════════════════════════════════════════════════╝${RESET}"
+        echo ""
+        echo -e "${GREEN}  Level ${BOLD}$LEVEL${RESET}${GREEN} cleared!  [ ${WHITE}$FNAME${GREEN} ]${RESET}"
         echo -e "$SCORE_MSG"
+        [ -n "$streak_msg" ] && echo -e "$streak_msg"
+        auto_save
+        echo -e "  ${GRAY}(auto-saved)${RESET}"
 
         local NEXT=$(( LEVEL + 1 ))
         echo $NEXT > .level
@@ -1746,13 +2001,47 @@ grade_me() {
             exit 0
         fi
         echo ""
-        read -p "  Press Enter for Level $NEXT..."
+        read -r -p "  Press Enter for Level $NEXT..." _x < /dev/tty
     else
-        echo -e "${RED}  ✗ FAIL${RESET}  Output did not match expected."
-        echo -e "  Study the subject carefully. Trace: ${GRAY}$TRACE${RESET}"
-        echo -e "  Score: ${BOLD}$(get_score)/60${RESET}"
+        add_attempt "$LEVEL" "FAIL"
+        reset_streak
+        local attempts=$(get_attempts $LEVEL)
+        local fails_here=$(get_fails_for $LEVEL)
+        local total_fail=$(grep -c ":FAIL:" .attempts 2>/dev/null || echo 0)
+
+        echo -e "${RED}  ╔══════════════════════════════════════════════════════╗${RESET}"
+        echo -e "${RED}  ║                    ✗  FAIL                          ║${RESET}"
+        echo -e "${RED}  ╚══════════════════════════════════════════════════════╝${RESET}"
         echo ""
-        read -p "  Press Enter to continue..."
+        echo -e "  Attempt ${BOLD}#${attempts}${RESET} on level ${BOLD}$LEVEL${RESET}. ${RED}Fails on this level: ${fails_here}${RESET}  |  ${RED}Total fails all-time: ${total_fail}${RESET}"
+        echo ""
+
+        # Show full diff for all levels
+        local EXPECTED_OUT
+        EXPECTED_OUT=$(get_expected "$LEVEL")
+        if [ -n "$EXPECTED_OUT" ]; then
+            show_diff "$EXPECTED_OUT" "$OUTPUT" "$LEVEL"
+        fi
+
+        # Show attempt-based tips
+        if [ "$attempts" -eq 1 ]; then
+            echo -e "  ${YELLOW}Tip:${RESET} Compare your output letter-by-letter with expected."
+        elif [ "$attempts" -eq 2 ]; then
+            echo -e "  ${YELLOW}Tip:${RESET} Check for extra spaces, missing newlines, or wrong spelling."
+        elif [ "$attempts" -ge 3 ]; then
+            echo -e "  ${YELLOW}Tip:${RESET} Type ${CYAN}hint${RESET} to re-read the full subject. $attempts attempts so far."
+        fi
+
+        echo ""
+        echo -e "  ${BOLD}Next steps:${RESET}"
+        echo -e "  · ${CYAN}hint${RESET}         — re-read the subject"
+        echo -e "  · ${WHITE}open${RESET}         — open your file in \$EDITOR"
+        echo -e "  · ${GRAY}cat $TRACE${RESET}"
+        echo ""
+        echo -e "  Score: ${BOLD}$(get_score)/60${RESET}   Streak reset to 0."
+        echo ""
+        sleep 0.3
+        read -r -p "  Press Enter to try again..." _x < /dev/tty
     fi
     rm -f eval_bin
 }
@@ -1798,21 +2087,200 @@ goto_level() {
 }
 
 # ══════════════════════════════════════════════════════════════════
+#  BACKUP / SAVE SYSTEM
+# ══════════════════════════════════════════════════════════════════
+
+# Save current progress to a named slot
+do_save() {
+    local slot="${1:-quicksave}"
+    # sanitize: only alphanum + underscore
+    slot=$(echo "$slot" | tr -cd '[:alnum:]_-')
+    [ -z "$slot" ] && slot="quicksave"
+    local dir="saves/${slot}"
+    mkdir -p "$dir"
+    cp .level    "$dir/level"
+    cp .score    "$dir/score"
+    cp .passed   "$dir/passed"
+    cp .attempts "$dir/attempts"
+    cp .streak   "$dir/streak"
+    cp .best     "$dir/best"
+    echo "$(date '+%Y-%m-%d %H:%M:%S')" > "$dir/timestamp"
+    echo "Level=$(cat .level) Score=$(cat .score)" > "$dir/meta"
+    echo -e "  ${GREEN}✓ Saved${RESET} → slot '${BOLD}${slot}${RESET}'  (level=$(cat .level), score=$(cat .score)/60)"
+}
+
+# Auto-save called silently after every PASS
+auto_save() {
+    local dir="saves/autosave"
+    mkdir -p "$dir"
+    cp .level    "$dir/level"
+    cp .score    "$dir/score"
+    cp .passed   "$dir/passed"
+    cp .attempts "$dir/attempts"
+    cp .streak   "$dir/streak"
+    cp .best     "$dir/best"
+    echo "$(date '+%Y-%m-%d %H:%M:%S')" > "$dir/timestamp"
+    echo "Level=$(cat .level) Score=$(cat .score)" > "$dir/meta"
+}
+
+# Load a save slot
+do_load() {
+    local slot="${1:-quicksave}"
+    slot=$(echo "$slot" | tr -cd '[:alnum:]_-')
+    [ -z "$slot" ] && slot="quicksave"
+    local dir="saves/${slot}"
+    if [ ! -d "$dir" ]; then
+        echo -e "  ${RED}No save found with name '${slot}'.${RESET}  Use ${CYAN}saves${RESET} to list slots."
+        return 1
+    fi
+    local ts=$(cat "$dir/timestamp" 2>/dev/null || echo "unknown")
+    local meta=$(cat "$dir/meta" 2>/dev/null || echo "")
+    read -r -p "  Load '${slot}' ($meta, saved $ts)? This overwrites current progress. (y/n): " confirm < /dev/tty
+    if [[ "$confirm" == "y" ]]; then
+        cp "$dir/level"    .level
+        cp "$dir/score"    .score
+        cp "$dir/passed"   .passed
+        cp "$dir/attempts" .attempts
+        cp "$dir/streak"   .streak
+        cp "$dir/best"     .best
+        echo -e "  ${GREEN}✓ Loaded${RESET} slot '${BOLD}${slot}${RESET}'  →  level=$(cat .level), score=$(cat .score)/60"
+        sleep 1
+    else
+        echo -e "  ${GRAY}Load cancelled.${RESET}"
+    fi
+}
+
+# List all save slots
+list_saves() {
+    echo ""
+    echo -e "${BOLD}${CYAN}╔══════════════════════════════════════════════════════════╗${RESET}"
+    echo -e "${BOLD}${CYAN}║                  ◆  SAVE SLOTS  ◆                       ║${RESET}"
+    echo -e "${BOLD}${CYAN}╠══════════════════════════════════════════════════════════╣${RESET}"
+    local found=0
+    for dir in saves/*/; do
+        [ -d "$dir" ] || continue
+        found=1
+        local slot=$(basename "$dir")
+        local ts=$(cat "$dir/timestamp" 2>/dev/null || echo "no date")
+        local meta=$(cat "$dir/meta"      2>/dev/null || echo "")
+        local marker=""
+        [ "$slot" = "autosave" ] && marker="${GRAY}[auto]${RESET} "
+        printf "${CYAN}║${RESET}  ${BOLD}%-15s${RESET}  %s${marker}${GRAY}%s${RESET}  ${CYAN}║${RESET}\n" \
+            "$slot" "$meta  " "$ts"
+    done
+    if [ $found -eq 0 ]; then
+        echo -e "${CYAN}║${RESET}  ${GRAY}No saves yet. Use: save [name]${RESET}                        ${CYAN}║${RESET}"
+    fi
+    echo -e "${BOLD}${CYAN}╚══════════════════════════════════════════════════════════╝${RESET}"
+    echo ""
+    echo -e "  ${GRAY}Commands: ${WHITE}save [name]${RESET}  ${WHITE}load [name]${RESET}  ${RED}deletesave [name]${RESET}"
+    echo ""
+    read -r -p "  Press Enter to continue..." _x < /dev/tty
+}
+
+# Delete a save slot
+delete_save() {
+    local slot="${1:-}"
+    [ -z "$slot" ] && { echo -e "  ${RED}Usage: deletesave <name>${RESET}"; return 1; }
+    slot=$(echo "$slot" | tr -cd '[:alnum:]_-')
+    local dir="saves/${slot}"
+    if [ ! -d "$dir" ]; then
+        echo -e "  ${RED}No save slot named '${slot}'.${RESET}"
+        return 1
+    fi
+    read -r -p "  Delete save '${slot}'? (y/n): " confirm < /dev/tty
+    if [[ "$confirm" == "y" ]]; then
+        rm -rf "$dir"
+        echo -e "  ${RED}Deleted${RESET} save slot '${slot}'."
+        sleep 1
+    else
+        echo -e "  ${GRAY}Cancelled.${RESET}"
+    fi
+}
+
+# ══════════════════════════════════════════════════════════════════
+#  STATS TABLE  (per-level breakdown)
+# ══════════════════════════════════════════════════════════════════
+show_stats() {
+    local current=$(get_level)
+    echo ""
+    echo -e "${BOLD}${CYAN}╔══════════════════════════════════════════════════════════╗${RESET}"
+    echo -e "${BOLD}${CYAN}║               ◆  PER-LEVEL STATS  ◆                     ║${RESET}"
+    echo -e "${BOLD}${CYAN}╠══════════════════════════════════════════════════════════╣${RESET}"
+    printf "${CYAN}║${RESET}  ${BOLD}%-4s  %-22s  %5s  %5s  %6s${RESET}  ${CYAN}║${RESET}\n" "Lvl" "File" "Pass" "Fail" "Status"
+    echo -e "${CYAN}╠══════════════════════════════════════════════════════════╣${RESET}"
+
+    local total_p=0 total_f=0
+    for i in $(seq 0 $((current > MAX_LEVEL ? MAX_LEVEL : current))); do
+        local fname=$(get_filename $i)
+        local p=$(get_passes_for $i)
+        local f=$(get_fails_for $i)
+        total_p=$(( total_p + p ))
+        total_f=$(( total_f + f ))
+        local status=""
+        local color=""
+        if already_passed "$i"; then
+            # first-try vs needed retries
+            if [ "$f" -eq 0 ]; then
+                status="✓ clean"
+                color="$GREEN"
+            else
+                status="✓ +${f}retry"
+                color="$YELLOW"
+            fi
+        elif [ "$i" -eq "$current" ]; then
+            status="► active"
+            color="$CYAN"
+        elif [ "$p" -eq 0 ] && [ "$f" -eq 0 ]; then
+            status="─ untried"
+            color="$GRAY"
+        else
+            status="✗ stuck"
+            color="$RED"
+        fi
+        # trim filename to 22 chars
+        local short="${fname:0:22}"
+        printf "${CYAN}║${RESET}  ${color}%-4s  %-22s  %5s  %5s  %-8s${RESET}  ${CYAN}║${RESET}\n" \
+            "$i" "$short" "$p" "$f" "$status"
+    done
+
+    echo -e "${CYAN}╠══════════════════════════════════════════════════════════╣${RESET}"
+    printf "${CYAN}║${RESET}  ${BOLD}%-27s  ${GREEN}%5s${RESET}  ${RED}%5s${RESET}${RESET}          ${CYAN}║${RESET}\n" \
+        "TOTAL (levels 0–$current)" "$total_p" "$total_f"
+    echo -e "${BOLD}${CYAN}╚══════════════════════════════════════════════════════════╝${RESET}"
+    echo ""
+    read -r -p "  Press Enter to continue..." _x < /dev/tty
+}
+
+# ══════════════════════════════════════════════════════════════════
 #  HELP
 # ══════════════════════════════════════════════════════════════════
 show_help() {
     echo ""
-    echo -e "${BOLD}${WHITE}  COMMANDS${RESET}"
-    echo -e "  ${GREEN}grademe${RESET}      — compile & test your solution"
-    echo -e "  ${CYAN}hint${RESET}         — re-read the current subject"
-    echo -e "  ${CYAN}score${RESET}        — show full scoreboard"
-    echo -e "  ${YELLOW}skip${RESET}         — skip level (no credit)"
-    echo -e "  ${YELLOW}goto N${RESET}       — jump to level N"
-    echo -e "  ${RED}reset${RESET}        — restart level counter (score kept)"
-    echo -e "  ${RED}resetscore${RESET}   — full reset (level + score)"
-    echo -e "  ${GRAY}exit${RESET}         — quit (progress saved)"
+    echo -e "${BOLD}${CYAN}╔══════════════════════════════════════════════════════════╗${RESET}"
+    echo -e "${BOLD}${CYAN}║                    ◆  COMMANDS  ◆                       ║${RESET}"
+    echo -e "${BOLD}${CYAN}╠══════════════════════════════════════════════════════════╣${RESET}"
+    echo -e "${CYAN}║${RESET}  ${GREEN}grademe${RESET}      — compile & grade your solution           ${CYAN}║${RESET}"
+    echo -e "${CYAN}║${RESET}  ${CYAN}hint${RESET}         — re-read the current subject              ${CYAN}║${RESET}"
+    echo -e "${CYAN}║${RESET}  ${WHITE}open${RESET}         — open your .c file in \$EDITOR             ${CYAN}║${RESET}"
+    echo -e "${CYAN}║${RESET}  ${WHITE}cat${RESET}          — print your current .c file              ${CYAN}║${RESET}"
+    echo -e "${CYAN}║${RESET}  ${CYAN}score${RESET}        — show full scoreboard + stats             ${CYAN}║${RESET}"
+    echo -e "${CYAN}║${RESET}  ${CYAN}stats${RESET}        — per-level pass/fail breakdown table      ${CYAN}║${RESET}"
+    echo -e "${CYAN}║${RESET}  ${CYAN}history${RESET}      — show attempt log for this level          ${CYAN}║${RESET}"
+    echo -e "${CYAN}╠══════════════════════════════════════════════════════════╣${RESET}"
+    echo -e "${CYAN}║${RESET}  ${MAGENTA}save [name]${RESET}  — save progress to a named slot           ${CYAN}║${RESET}"
+    echo -e "${CYAN}║${RESET}  ${MAGENTA}load [name]${RESET}  — restore a saved slot                    ${CYAN}║${RESET}"
+    echo -e "${CYAN}║${RESET}  ${MAGENTA}saves${RESET}        — list all save slots                     ${CYAN}║${RESET}"
+    echo -e "${CYAN}║${RESET}  ${MAGENTA}deletesave N${RESET} — delete a save slot                      ${CYAN}║${RESET}"
+    echo -e "${CYAN}╠══════════════════════════════════════════════════════════╣${RESET}"
+    echo -e "${CYAN}║${RESET}  ${YELLOW}skip${RESET}         — skip level (no credit)                  ${CYAN}║${RESET}"
+    echo -e "${CYAN}║${RESET}  ${YELLOW}goto N${RESET}       — jump to level N                         ${CYAN}║${RESET}"
+    echo -e "${CYAN}║${RESET}  ${RED}reset${RESET}        — restart level counter (score kept)     ${CYAN}║${RESET}"
+    echo -e "${CYAN}║${RESET}  ${RED}resetscore${RESET}   — full reset (level + score + streaks)   ${CYAN}║${RESET}"
+    echo -e "${CYAN}║${RESET}  ${GRAY}exit${RESET}         — quit (progress saved)                   ${CYAN}║${RESET}"
+    echo -e "${BOLD}${CYAN}╚══════════════════════════════════════════════════════════╝${RESET}"
     echo ""
-    read -p "  Press Enter..."
+    read -r -p "  Press Enter..." _x < /dev/tty
 }
 
 # ══════════════════════════════════════════════════════════════════
@@ -1826,7 +2294,7 @@ while true; do
 
     clear
     echo -e "${BOLD}${CYAN}╔══════════════════════════════════════════════════════════╗${RESET}"
-    echo -e "${BOLD}${CYAN}║      MILES3103 — C MASTERY EXAM v10.0  (60 Levels)      ║${RESET}"
+    echo -e "${BOLD}${CYAN}║      MILES3103 — C MASTERY EXAM v14.0  (60 Levels)      ║${RESET}"
     echo -e "${BOLD}${CYAN}╚══════════════════════════════════════════════════════════╝${RESET}"
     echo ""
     show_progress
@@ -1844,7 +2312,7 @@ while true; do
     echo -e "  ${BOLD}Your file :${RESET} ${WHITE}rendu/$(get_dirname $LEVEL)/$FNAME${RESET}"
     echo -e "  ${BOLD}Trace log :${RESET} ${GRAY}traces/trace_$(get_dirname $LEVEL).txt${RESET}"
     echo -e "${GRAY}  ────────────────────────────────────────────────────────${RESET}"
-    echo -e "  ${GREEN}grademe${RESET} · ${CYAN}hint${RESET} · ${CYAN}score${RESET} · ${YELLOW}skip${RESET} · ${YELLOW}goto N${RESET} · ${RED}reset${RESET} · ${GRAY}exit${RESET} · ${WHITE}help${RESET}"
+    echo -e "  ${GREEN}grademe${RESET} · ${CYAN}hint${RESET} · ${WHITE}open${RESET} · ${WHITE}cat${RESET} · ${CYAN}score${RESET} · ${CYAN}stats${RESET} · ${MAGENTA}save${RESET} · ${MAGENTA}load${RESET} · ${MAGENTA}saves${RESET} · ${WHITE}help${RESET}"
     echo -e "${GRAY}  ────────────────────────────────────────────────────────${RESET}"
     echo -ne "  ${BOLD}${CYAN}exam${RESET}[${YELLOW}lvl${LEVEL}${RESET}|${GREEN}$(get_score)/60${RESET}]${BOLD}> ${RESET}"
     read input
@@ -1857,9 +2325,69 @@ while true; do
         score|scoreboard)
             show_scoreboard
             ;;
+        stats)
+            show_stats
+            ;;
+        saves|savelist)
+            list_saves
+            ;;
+        save)
+            do_save "quicksave"
+            sleep 1
+            ;;
+        save\ *)
+            do_save "${input#save }"
+            sleep 1
+            ;;
+        load)
+            do_load "quicksave"
+            ;;
+        load\ *)
+            do_load "${input#load }"
+            ;;
+        deletesave\ *)
+            delete_save "${input#deletesave }"
+            ;;
         hint|subject)
             show_subject
-            read -p "  Press Enter..."
+            read -r -p "  Press Enter..." _x < /dev/tty
+            ;;
+        open)
+            local FPATH="rendu/$(get_dirname $LEVEL)/$FNAME"
+            mkdir -p "rendu/$(get_dirname $LEVEL)"
+            [ ! -f "$FPATH" ] && touch "$FPATH"
+            ${EDITOR:-nano} "$FPATH"
+            ;;
+        cat)
+            local FPATH="rendu/$(get_dirname $LEVEL)/$FNAME"
+            if [ -f "$FPATH" ]; then
+                echo ""
+                echo -e "${GRAY}── $FPATH ──${RESET}"
+                cat -n "$FPATH"
+                echo ""
+            else
+                echo -e "  ${RED}File not found:${RESET} $FPATH"
+            fi
+            read -r -p "  Press Enter..." _x < /dev/tty
+            ;;
+        history)
+            echo ""
+            echo -e "${BOLD}  Attempt history — Level $LEVEL${RESET}"
+            echo -e "${GRAY}  ──────────────────────────────${RESET}"
+            local found=0
+            while IFS=: read -r lvl result time; do
+                if [ "$lvl" = "$LEVEL" ]; then
+                    found=1
+                    if [ "$result" = "PASS" ]; then
+                        echo -e "  ${GREEN}✓ PASS${RESET}  at $time"
+                    else
+                        echo -e "  ${RED}✗ FAIL${RESET}  at $time"
+                    fi
+                fi
+            done < .attempts
+            [ $found -eq 0 ] && echo -e "  ${GRAY}No attempts yet on this level.${RESET}"
+            echo ""
+            read -r -p "  Press Enter..." _x < /dev/tty
             ;;
         skip)
             echo -e "  ${YELLOW}Skipping level $LEVEL...${RESET}"
@@ -1870,15 +2398,18 @@ while true; do
             goto_level "${input#goto }"
             ;;
         reset)
-            read -p "  Reset level to 0? (score is kept) (y/n): " confirm
+            read -r -p "  Reset level to 0? (score is kept) (y/n): " confirm < /dev/tty
             [[ "$confirm" == "y" ]] && echo 0 > .level
             ;;
         resetscore)
-            read -p "  Reset ALL progress including score? (y/n): " confirm
+            read -r -p "  Reset ALL progress including score? (y/n): " confirm < /dev/tty
             if [[ "$confirm" == "y" ]]; then
                 echo 0 > .level
                 echo 0 > .score
+                echo 0 > .streak
+                echo 0 > .best
                 > .passed
+                > .attempts
                 echo -e "  ${RED}Full reset done.${RESET}"
                 sleep 1
             fi
@@ -1887,7 +2418,7 @@ while true; do
             show_help
             ;;
         exit|quit|q)
-            echo -e "  ${GRAY}Progress saved at level $LEVEL. Score: $(get_score)/60. Keep going!${RESET}"
+            echo -e "  ${GRAY}Progress saved at level $LEVEL. Score: $(get_score)/60. Streak: $(get_streak). Keep going!${RESET}"
             exit 0
             ;;
         "")
