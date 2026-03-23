@@ -26,7 +26,7 @@
 #define NAME_LEN     32
 
 /* ============================================================ */
-/*  STRUCT — group related data into one type                    */
+/*  STRUCT — group related data into one type                   */
 /* ============================================================ */
 
 typedef struct s_student
@@ -38,7 +38,7 @@ typedef struct s_student
 }	t_student;
 
 /* ============================================================ */
-/*  HELPER FUNCTIONS                                             */
+/*  HELPER FUNCTIONS                                            */
 /* ============================================================ */
 
 /*
