@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Laboratory Assignments on MIT OpenCourseWare</title>
+    <link>/resources/laboratory-assignments/</link>
+    <description>Recent content in Laboratory Assignments on MIT OpenCourseWare</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <atom:link href="/resources/laboratory-assignments/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Final Project</title>
+      <link>/resources/mit6_087iap10_project/data.json</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>/resources/mit6_087iap10_project/data.json</guid>
+      <description>&lt;p&gt;Final project to build a C application leveraging one or more open-source libraries.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Lab 1: Game of Life</title>
+      <link>/resources/mit6_087iap10_lab01/data.json</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>/resources/mit6_087iap10_lab01/data.json</guid>
+      <description>&lt;p&gt;Lab assignment to implement John Conway&amp;rsquo;s Game of Life as a C program.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Lab 1: Game of life (ZIP)</title>
+      <link>/resources/lab-1-game-of-life-zip/data.json</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>/resources/lab-1-game-of-life-zip/data.json</guid>
+      <description>&lt;p&gt;Supporting files for a lab assignment to implement John Conway&amp;rsquo;s Game of Life as a C program. (This ZIP file contains: 3 .txt files, 3 .c files, and 1 .h file.)&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Lab 1: Game of life Solutions (ZIP)</title>
+      <link>/resources/lab-1-game-of-life-solutions-zip/data.json</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>/resources/lab-1-game-of-life-solutions-zip/data.json</guid>
+      <description>&lt;p&gt;Solution files for a lab assignment to implement John Conway&amp;rsquo;s Game of Life as a C program. (This ZIP file contains: 1 .txt file, 1 .h file and 4 .c files.)&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Lab 2: Data compression</title>
+      <link>/resources/mit6_087iap10_lab02/data.json</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>/resources/mit6_087iap10_lab02/data.json</guid>
+      <description>&lt;p&gt;Lab assignment to implement a Huffman decoder using C to compress a data file.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Lab 2: Data compression (ZIP)</title>
+      <link>/resources/lab-2-data-compression-zip/data.json</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>/resources/lab-2-data-compression-zip/data.json</guid>
+      <description>&lt;p&gt;Supporting files for a lab assignment to implement a Huffman decoder using C to compress a data file. (This ZIP file contains: 4 .txt files and 2 .c files.)&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Labs</title>
+      <link>/pages/labs/data.json</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>/pages/labs/data.json</guid>
+      <description>&lt;p&gt;This section contains the labs and final project.&lt;/p&gt;&#xA;&#xA;    &lt;h3 id=&#34;lab-assignments&#34;&gt;Lab Assignments&lt;/h3&gt;&#xA;&#xA;&lt;p&gt;&lt;table&gt;&#xA;&#xA;&lt;thead&gt;&#xA;&#xA;&lt;tr&gt;&#xA;&#xA;&lt;th&gt;&#xA;&#xA;LAB #&#xA;&lt;/th&gt;&#xA;&#xA;&lt;th&gt;&#xA;&#xA;LABS&#xA;&lt;/th&gt;&#xA;&#xA;&lt;th&gt;&#xA;&#xA;SOLUTIONS&#xA;&lt;/th&gt;&#xA;&lt;/p&gt;&#xA;&lt;/tr&gt;&#xA;&#xA;&lt;p&gt;&lt;/thead&gt;&#xA;&#xA;&lt;tr&gt;&#xA;&#xA;&lt;td&gt;&#xA;&#xA;Lab 1: Game of life&#xA;&lt;/td&gt;&#xA;&#xA;&lt;td&gt;&#xA;&lt;/p&gt;&#xA;&lt;p&gt;(&lt;a href=&#34;../../resources/mit6_087iap10_lab01/index.html&#34;&gt;PDF&lt;/a&gt;)&lt;/p&gt;&#xA;&lt;p&gt;(&lt;a href=&#34;../../resources/lab-1-game-of-life-zip/index.html&#34;&gt;ZIP&lt;/a&gt;) (This ZIP file contains: 3 .txt files, 3 .c files and 1 .h file.)&lt;/p&gt;&#xA;&lt;p&gt;&lt;/td&gt;&#xA;&#xA;&lt;td&gt;&#xA;&#xA;(&lt;a href=&#34;../../resources/lab-1-game-of-life-solutions-zip/index.html&#34;&gt;ZIP&lt;/a&gt;) (This ZIP file contains: 1 .txt file, 1 .h file and 4 .c files.)&#xA;&lt;/td&gt;&#xA;&lt;/p&gt;&#xA;&lt;p&gt;&lt;/tr&gt;&#xA;&#xA;&lt;tr&gt;&#xA;&#xA;&lt;td&gt;&#xA;&#xA;Lab 2: Data compression&#xA;&lt;/td&gt;&#xA;&#xA;&lt;td&gt;&#xA;&lt;/p&gt;&#xA;&lt;p&gt;(&lt;a href=&#34;../../resources/mit6_087iap10_lab02/index.html&#34;&gt;PDF&lt;/a&gt;)&lt;/p&gt;&#xA;&lt;p&gt;(&lt;a href=&#34;../../resources/lab-2-data-compression-zip/index.html&#34;&gt;ZIP&lt;/a&gt;) (This ZIP file contains: 4 .txt files and 2 .c files.)&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
