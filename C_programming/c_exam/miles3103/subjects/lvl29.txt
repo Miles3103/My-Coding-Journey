@@ -1,0 +1,16 @@
+FILE: rendu/ft_password/ft_password.c
+
+Write: int ft_is_valid_password(char *password)
+Returns 1 if ALL conditions are true:
+  · Length >= 8
+  · Has at least one uppercase letter
+  · Has at least one digit
+Returns 0 otherwise.
+
+Tip: Loop once through the string, track flags for each condition.
+
+Expected output:
+  hello: invalid
+  Hello1!!: valid
+  SHORT1A: invalid
+  longbutnodigit: invalid

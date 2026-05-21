@@ -1,0 +1,11 @@
+FILE: rendu/ft_bubblesort/ft_bubblesort.c
+
+Implement: void ft_bubble_sort(int *arr, int n)
+Sort {64, 34, 25, 12, 22, 11, 90} in ascending order.
+
+Tip: N-1 passes. In each pass, compare adjacent elements
+     and swap if out of order. Largest element "bubbles up".
+
+Expected output:
+  Before: 64 34 25 12 22 11 90
+  After:  11 12 22 25 34 64 90

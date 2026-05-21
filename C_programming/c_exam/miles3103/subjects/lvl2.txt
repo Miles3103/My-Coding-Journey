@@ -1,0 +1,15 @@
+FILE: rendu/ft_pipeline/ft_pipeline.c
+
+Print the 4 stages of GCC compilation using write():
+  1. Preprocessing
+  2. Compilation
+  3. Assembly
+  4. Linking
+
+Tip: These map to: cpp → cc1 → as → ld
+
+Expected output:
+  1. Preprocessing
+  2. Compilation
+  3. Assembly
+  4. Linking

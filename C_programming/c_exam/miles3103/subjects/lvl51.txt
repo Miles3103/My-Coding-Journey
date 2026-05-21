@@ -1,0 +1,15 @@
+FILE: rendu/ft_readbuf/ft_readbuf.c
+
+Using ONLY read() and write():
+  · Read up to 32 chars from stdin
+  · Null-terminate the buffer
+  · Strip trailing newline if present
+  · Print: "You entered: " followed by the input
+
+Test: echo "Hello42" | ./ft_readbuf
+
+Tip: read(0, buf, 32) returns the number of bytes read.
+     Check if buf[bytes-1] == '\n' and replace with '\0'.
+
+Expected output:
+  You entered: Hello42

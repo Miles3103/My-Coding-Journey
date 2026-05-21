@@ -1,0 +1,16 @@
+FILE: rendu/ft_implicit/ft_implicit.c
+
+Demonstrate implicit type conversion:
+  1. int i = 65; char c = i;       → char from int: A
+  2. char ch = 'z'; int n = ch;    → int from char: 122
+  3. int a=5, b=2; double d = a/b; → int division stored as double: 2.000000
+  4. double e = (double)a / b;     → cast before division: 2.500000
+
+Tip: In case 3, the division happens as int/int BEFORE storing.
+     In case 4, one operand is cast first, forcing float division.
+
+Expected output:
+  char from int: A
+  int from char: 122
+  int division stored as double: 2.000000
+  cast before division: 2.500000

@@ -1,0 +1,16 @@
+FILE: rendu/ft_macros/ft_macros.c
+
+Write these four macros (not functions):
+  #define MAX(a, b)   largest of a and b
+  #define MIN(a, b)   smallest of a and b
+  #define ABS(x)      absolute value of x
+  #define SQUARE(x)   x squared
+
+Tip: Always wrap arguments in parentheses:
+     #define SQUARE(x) ((x) * (x))
+
+Expected output:
+  MAX(3, 7)   = 7
+  MIN(3, 7)   = 3
+  ABS(-5)     = 5
+  SQUARE(4)   = 16

@@ -1,0 +1,17 @@
+FILE: rendu/ft_ptrarith/ft_ptrarith.c
+
+Navigate int arr[] = {10, 20, 30, 40, 50} using ONLY pointer arithmetic.
+No arr[i] subscript notation allowed.
+
+Also print:
+  · "int units apart" between consecutive elements (always 1)
+  · "bytes apart" (sizeof(int), typically 4)
+
+Expected output:
+  *p     = 10
+  *(p+1) = 20
+  *(p+2) = 30
+  *(p+3) = 40
+  *(p+4) = 50
+  int units apart:  1
+  bytes apart:      4

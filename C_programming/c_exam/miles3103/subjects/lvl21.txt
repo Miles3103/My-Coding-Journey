@@ -1,0 +1,16 @@
+FILE: rendu/ft_define/ft_define.c
+
+Declare and print all four constants:
+  #define BUFFER_SIZE 1024
+  #define PI 3.14159265
+  const int  MAX_USERS = 100;
+  const char SEPARATOR = '-';
+
+Tip: PI needs %.8f to show all 8 decimal digits.
+     printf("PI: %.8f\n", PI);  → PI: 3.14159265
+
+Expected output:
+  BUFFER_SIZE: 1024
+  PI: 3.14159265
+  MAX_USERS: 100
+  SEPARATOR: -

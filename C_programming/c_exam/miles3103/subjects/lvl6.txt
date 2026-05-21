@@ -1,0 +1,18 @@
+FILE: rendu/ft_write/ft_write.c
+
+Using ONLY write(), print this exact layout:
+  *** HEADER ***
+  (blank line)
+  Content here
+  (blank line)
+  *** FOOTER ***
+
+Tip: A blank line = writing just "\n" to stdout.
+     Total 5 write() calls (or combine them).
+
+Expected output:
+  *** HEADER ***
+
+  Content here
+
+  *** FOOTER ***

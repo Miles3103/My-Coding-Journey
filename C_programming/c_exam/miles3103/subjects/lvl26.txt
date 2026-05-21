@@ -1,0 +1,17 @@
+FILE: rendu/ft_ternary/ft_ternary.c
+
+Write using ONLY ternary operators (no if/else):
+  const char *ft_classify(int n) → "negative", "zero", or "positive"
+  int ft_abs(int n)              → absolute value
+
+Test in main:
+  ft_classify(-5) → print: -5: negative
+  ft_classify(0)  → print: 0: zero
+  ft_classify(3)  → print: 3: positive
+  ft_abs(-42)     → print: abs(-42): 42
+
+Expected output:
+  -5: negative
+  0: zero
+  3: positive
+  abs(-42): 42

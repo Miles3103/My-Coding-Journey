@@ -1,0 +1,17 @@
+FILE: rendu/ft_statemachine/ft_statemachine.c
+
+typedef enum { RED, YELLOW, GREEN } t_light;
+
+Write: t_light next_light(t_light current)
+Cycle: RED → GREEN → YELLOW → RED
+
+Simulate 6 transitions starting from RED.
+Print the CURRENT light BEFORE each transition.
+
+Expected output (exactly 6 lines):
+  RED
+  GREEN
+  YELLOW
+  RED
+  GREEN
+  YELLOW

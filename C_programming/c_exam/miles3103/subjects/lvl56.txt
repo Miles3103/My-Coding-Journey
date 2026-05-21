@@ -1,0 +1,14 @@
+FILE: rendu/ft_swapptr/ft_swapptr.c
+
+Write two swap functions:
+  void ft_swap(int *a, int *b)          — swap two integers
+  void ft_swap_str(char **a, char **b)  — swap two string pointers
+
+Tip: ft_swap: use a temp variable.
+     ft_swap_str: swap the pointers themselves (char *tmp = *a; etc.)
+
+Expected output:
+  Before swap: a=10, b=20
+  After swap:  a=20, b=10
+  Before swap: s1=hello, s2=world
+  After swap:  s1=world, s2=hello

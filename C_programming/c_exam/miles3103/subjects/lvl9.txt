@@ -1,0 +1,14 @@
+FILE: rendu/ft_comments/ft_comments.c
+
+Write a C program demonstrating ALL comment types:
+  1. File header block comment (/* ... */)
+  2. Function-level comment above a function
+  3. Inline comment on a variable declaration
+  4. A TODO comment inside main
+  5. Program prints: "Comments guide future you"
+
+Tip: Good comments explain WHY, not WHAT.
+     The code already shows what — comments add context.
+
+Expected output:
+  Comments guide future you

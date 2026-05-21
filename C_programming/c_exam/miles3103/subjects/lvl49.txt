@@ -1,0 +1,13 @@
+FILE: rendu/ft_strmanip/ft_strmanip.c
+
+Implement (all in-place, modifying the original string):
+  void ft_toupper_str(char *s)    — convert all chars to uppercase
+  void ft_tolower_str(char *s)    — convert all chars to lowercase
+  void ft_reverse_str(char *s)    — reverse the string in-place
+  int  ft_count_words(char *s)    — count space-separated words
+
+Expected output:
+  upper: HELLO WORLD
+  lower: hello world
+  reverse: edcba
+  words: 4
