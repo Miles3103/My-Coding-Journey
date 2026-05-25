@@ -7,28 +7,40 @@
 /* ************************************************************************** */
 
 /*
-** OPERATORS IN C — THE COMPLETE PICTURE
+** WHAT ARE OPERATORS AND WHY DO THE GOTCHAS MATTER?
 **
-** 1. ARITHMETIC:  + - * / %
-** 2. RELATIONAL:  == != > < >= <=    (return 0 or 1)
-** 3. LOGICAL:     && || !            (short-circuit evaluation!)
-** 4. BITWISE:     & | ^ ~ << >>     (operate on individual bits)
-** 5. ASSIGNMENT:  = += -= *= /= %= <<= >>= &= |= ^=
-** 6. TERNARY:     condition ? val_true : val_false
+**   Operators are symbols that tell the compiler to perform an operation
+**   on one or more operands. C has six families:
+**     1. ARITHMETIC  + - * / %
+**     2. RELATIONAL  == != > < >= <=   (always return 0 or 1)
+**     3. LOGICAL     && || !           (short-circuit evaluation)
+**     4. BITWISE     & | ^ ~ << >>    (work on individual bits)
+**     5. ASSIGNMENT  = += -= *= /= %= <<= >>= &= |= ^=
+**     6. TERNARY     condition ? val_if_true : val_if_false
 **
 ** CRITICAL GOTCHAS:
-**   - Integer division TRUNCATES: 7 / 2 = 3, not 3.5
-**   - % only works on integers
-**   - && and || SHORT-CIRCUIT — right side may never run
-**   - Bitwise & is NOT the same as logical &&
+**   Integer division TRUNCATES → 7 / 2 = 3, not 3.5
+**   % only works on integers — use fmod() for floats
+**   && and || SHORT-CIRCUIT — the right side may never be evaluated
+**   Bitwise & is NOT the same as logical && — completely different purpose
+**
+** BITWISE IN PRACTICE:
+**   Bitwise operators are used heavily in systems programming for
+**   bit flags, masks, permissions, hardware registers, and fast math:
+**     x << 1  multiplies by 2   (shift bits left)
+**     x >> 1  divides by 2      (shift bits right)
+**
+** NOTE:
+**   When mixing integer and float arithmetic, cast BEFORE the operation:
+**   (double)7 / 2 = 3.5, but 7 / 2 = 3 (the damage is already done).
 */
 
 #include <stdio.h>
 
 int	main(void)
 {
-	int a = 10;
-	int b = 3;
+	int	a = 10;
+	int	b = 3;
 
 	/* --- ARITHMETIC --- */
 	printf("=== Arithmetic ===\n");
@@ -38,23 +50,23 @@ int	main(void)
 	printf("%d / %d = %d  (truncates!)\n", a, b, a / b);
 	printf("%d %% %d = %d (remainder)\n\n", a, b, a % b);
 
-	/* --- DIVISION GOTCHA: cast BEFORE dividing --- */
+	/* --- DIVISION GOTCHA: cast BEFORE dividing, not after --- */
 	printf("=== Division Precision ===\n");
-	printf("7 / 2       = %d     (int division)\n", 7 / 2);
-	printf("(double)7/2 = %.4f (float division)\n\n", (double)7 / 2);
+	printf("7 / 2       = %d     (int division — truncates)\n", 7 / 2);
+	printf("(double)7/2 = %.4f (float division — correct)\n\n", (double)7 / 2);
 
-	/* --- BITWISE — used heavily in systems programming --- */
+	/* --- BITWISE — used heavily in systems and 42 projects --- */
 	printf("=== Bitwise Operators ===\n");
 	int	ba = 10;
 	int	bb = 12;
-	printf("10 & 12  = %d   (AND)\n",  ba & bb);
-	printf("10 | 12  = %d   (OR)\n",   ba | bb);
-	printf("10 ^ 12  = %d   (XOR)\n",  ba ^ bb);
-	printf("~10      = %d  (NOT)\n",   ~ba);
-	printf("10 << 1  = %d   (x2)\n",   ba << 1);
-	printf("10 >> 1  = %d   (/2)\n\n", ba >> 1);
+	printf("10 & 12  = %d   (AND  — bits set in BOTH)\n",  ba & bb);
+	printf("10 | 12  = %d   (OR   — bits set in EITHER)\n", ba | bb);
+	printf("10 ^ 12  = %d   (XOR  — bits set in ONE, not both)\n", ba ^ bb);
+	printf("~10      = %d  (NOT  — flip every bit)\n",   ~ba);
+	printf("10 << 1  = %d   (LEFT SHIFT  = x2)\n",   ba << 1);
+	printf("10 >> 1  = %d   (RIGHT SHIFT = /2)\n\n", ba >> 1);
 
-	/* --- BIT FLAGS — real-world use of bitwise --- */
+	/* --- BIT FLAGS — real-world pattern for permissions/modes --- */
 	printf("=== Bit Flags (real-world pattern) ===\n");
 	int	flags = 0;
 	flags |= (1 << 0);  /* set READ  bit */
@@ -65,21 +77,21 @@ int	main(void)
 	flags &= ~(1 << 1); /* clear WRITE bit */
 	printf("After clearing WRITE:   %d\n\n", flags);
 
-	/* --- LOGICAL SHORT-CIRCUIT --- */
+	/* --- LOGICAL SHORT-CIRCUIT — right side only runs if needed --- */
 	printf("=== Logical Short-Circuit ===\n");
 	int	x = 0;
-	/* x != 0 is false, so 10/x is NEVER evaluated -> no crash */
+	/* x != 0 is false, so (10 / x) is NEVER evaluated — no crash */
 	if (x != 0 && (10 / x > 1))
 		printf("division happened\n");
 	else
 		printf("&& short-circuited: division by zero avoided\n");
 
-	/* --- TERNARY CHAINED --- */
+	/* --- TERNARY — compact if/else for single expressions --- */
 	printf("\n=== Ternary ===\n");
-	int score = 75;
-	char *grade = (score >= 90) ? "A" :
-	              (score >= 80) ? "B" :
-	              (score >= 70) ? "C" : "F";
+	int		score = 75;
+	char	*grade = (score >= 90) ? "A" :
+	               (score >= 80) ? "B" :
+	               (score >= 70) ? "C" : "F";
 	printf("Score %d -> Grade: %s\n", score, grade);
 
 	return (0);

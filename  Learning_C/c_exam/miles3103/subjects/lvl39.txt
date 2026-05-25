@@ -1,9 +1,0 @@
-FILE: rendu/ft_fibonacci/ft_fibonacci.c
-
-Print the first 10 Fibonacci numbers, space-separated,
-with a newline at the end.
-
-Tip: Start with a=0, b=1. Each iteration: tmp=b; b=a+b; a=tmp;
-
-Expected output (exact):
-  0 1 1 2 3 5 8 13 21 34

@@ -7,25 +7,41 @@
 /* ************************************************************************** */
 
 /*
-** LOOPS IN C — THREE TYPES, ONE PURPOSE
+** WHAT ARE LOOPS AND WHEN DO YOU USE EACH TYPE?
 **
-** while (condition) {}   → check BEFORE, may never run
-** do {} while (cond);    → check AFTER, always runs at least once
-** for (init; cond; step) → most compact, use when count is known
+**   A loop repeats a block of code until a condition becomes false.
+**   C has three loop constructs, each with a distinct use case:
 **
-** BREAK:    exits the loop immediately
-** CONTINUE: skips to next iteration
+**   while (condition) {}
+**     → checks BEFORE running — may never execute if condition is false
+**     → use when you don't know how many iterations you'll need
+**
+**   for (init; condition; step) {}
+**     → most compact form — use when the iteration count is known
+**     → init runs once, condition checked each time, step runs after each body
+**
+**   do { } while (condition);
+**     → checks AFTER running — always executes AT LEAST once
+**     → use for menu/input loops where you need one run before checking
+**
+** FLOW CONTROL:
+**   break    → exits the loop immediately
+**   continue → skips the rest of the current iteration, jumps to next
 **
 ** RULE: Prefer 'for' when you know the count.
 **       Prefer 'while' when you don't.
-**       Use 'do-while' for menu/input loops (run at least once).
+**       Use 'do-while' when the body must run at least once.
+**
+** NOTE:
+**   Nested loops multiply complexity. A loop inside a loop is O(n²).
+**   Always consider whether a nested loop can be flattened or replaced.
 */
 
 #include <stdio.h>
 
 /* ============================================================ */
 /*  COLLATZ CONJECTURE — while loop showcase                    */
-/*  n even → n/2 | n odd → 3n+1 | repeat until n=1            */
+/*  n even → n/2  |  n odd → 3n+1  |  repeat until n=1        */
 /* ============================================================ */
 
 void	collatz(int n)
@@ -79,7 +95,7 @@ int	is_prime(int n)
 		return (0);
 	for (int i = 2; i * i <= n; i++)
 		if (n % i == 0)
-			return (0);
+			return (0);  /* divisor found — not prime */
 	return (1);
 }
 
@@ -92,7 +108,7 @@ void	print_primes(int limit)
 	for (int i = 2; i <= limit; i++)
 	{
 		if (!is_prime(i))
-			continue ;  /* skip non-primes */
+			continue ;  /* skip non-primes, go to next i */
 		printf("%d ", i);
 		count++;
 	}
@@ -115,7 +131,7 @@ void	print_triangle(int height)
 }
 
 /* ============================================================ */
-/*  DO-WHILE — processes array as if validating input           */
+/*  DO-WHILE — processes array as if validating user input      */
 /* ============================================================ */
 
 void	validate_demo(void)
@@ -133,7 +149,7 @@ void	validate_demo(void)
 		else
 			printf("  [%d] Valid:   %d\n", i, val);
 		i++;
-	} while (i < n);
+	} while (i < n);  /* condition checked AFTER the body runs */
 }
 
 /* ============================================================ */

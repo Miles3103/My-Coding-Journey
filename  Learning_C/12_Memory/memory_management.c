@@ -7,35 +7,40 @@
 /* ************************************************************************** */
 
 /*
-** MEMORY IN C — THE FULL PICTURE
+** HOW IS A C PROGRAM'S MEMORY LAID OUT?
 **
-** Your program's memory is divided into regions:
+**   Your program's virtual memory is divided into distinct regions:
 **
 **   ┌─────────────────────┐  high addresses
-**   │       STACK         │  ← local variables, function calls
-**   │   (grows down ↓)    │    fast, automatic, limited (~8MB)
+**   │       STACK         │  ← local variables, function frames
+**   │   (grows down ↓)    │    fast, automatic, limited (~8 MB)
 **   ├─────────────────────┤
-**   │       HEAP          │  ← malloc/free, dynamic allocation
-**   │   (grows up ↑)      │    slow(er), manual, large
+**   │       HEAP          │  ← malloc / free, dynamic allocation
+**   │   (grows up ↑)      │    slower, manual, essentially unlimited
 **   ├─────────────────────┤
-**   │   BSS (globals=0)   │  ← uninitialized globals
-**   │   DATA (globals≠0)  │  ← initialized globals
-**   │   TEXT (code)       │  ← your compiled instructions
+**   │   BSS  (globals=0)  │  ← zero-initialized global/static variables
+**   │   DATA (globals≠0)  │  ← explicitly initialized globals/statics
+**   │   TEXT (code)       │  ← compiled machine instructions (read-only)
 **   └─────────────────────┘  low addresses
 **
-** RULES OF DYNAMIC MEMORY:
+** RULES OF DYNAMIC MEMORY (break these and your program breaks):
 **   1. Every malloc() must have exactly one free()
-**   2. Never free() the same pointer twice (double-free = crash)
-**   3. Never use a pointer after free() (use-after-free = undefined)
-**   4. Always check if malloc() returned NULL
-**   5. Set pointer to NULL after freeing
+**   2. Never free() the same pointer twice     → double-free crash
+**   3. Never use a pointer after free()        → use-after-free (UB)
+**   4. Always check if malloc() returned NULL  → it can fail
+**   5. Set the pointer to NULL after freeing   → prevents accidents
 **
-** CHECK FOR LEAKS: valgrind --leak-check=full ./your_program
+** NOTE:
+**   Memory leaks — heap memory that is never freed — do not crash your
+**   program immediately but accumulate over time. Use valgrind to detect:
+**     valgrind --leak-check=full ./your_program
 */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+int	g_global = 42;  /* DATA segment — initialized global, lives forever */
 
 /* ============================================================ */
 /*  BASIC MALLOC / FREE                                         */
@@ -45,30 +50,27 @@ void	demo_basic_malloc(void)
 {
 	printf("=== Basic Malloc ===\n");
 
-	/* Allocate space for 5 integers */
-	int	*arr = malloc(5 * sizeof(int));
-	if (!arr)  /* ALWAYS check! malloc returns NULL on failure */
+	int	*arr = malloc(5 * sizeof(int)); /* allocate 5 ints on the heap */
+	if (!arr)                           /* ALWAYS check — malloc can return NULL */
 	{
 		printf("malloc failed!\n");
 		return ;
 	}
 
-	/* Use the memory */
 	for (int i = 0; i < 5; i++)
 		arr[i] = (i + 1) * 10;
 
 	for (int i = 0; i < 5; i++)
 		printf("arr[%d] = %d\n", i, arr[i]);
 
-	/* Free and nullify */
-	free(arr);
-	arr = NULL;  /* prevents use-after-free bugs */
+	free(arr);   /* release heap memory */
+	arr = NULL;  /* nullify to prevent use-after-free bugs */
 	printf("Memory freed.\n\n");
 }
 
 /* ============================================================ */
 /*  ft_strdup — duplicate a string on the heap                  */
-/*  This is a real function you'll write in 42 projects.        */
+/*  A real function required in many 42 projects.               */
 /* ============================================================ */
 
 char	*ft_strdup(const char *src)
@@ -80,7 +82,7 @@ char	*ft_strdup(const char *src)
 	len = 0;
 	while (src[len])
 		len++;
-	dup = malloc((len + 1) * sizeof(char));  /* +1 for '\0' */
+	dup = malloc((len + 1) * sizeof(char)); /* +1 for the null terminator */
 	if (!dup)
 		return (NULL);
 	i = 0;
@@ -97,8 +99,8 @@ void	demo_strdup(void)
 {
 	printf("=== ft_strdup (heap-allocated string copy) ===\n");
 
-	char	*original = "Hello, Miles3103!";
-	char	*copy = ft_strdup(original);
+	char	*original = "Hello, Miles3103!"; /* read-only string literal */
+	char	*copy = ft_strdup(original);      /* writable heap copy       */
 
 	if (!copy)
 	{
@@ -107,10 +109,10 @@ void	demo_strdup(void)
 	}
 
 	printf("Original: %s  (address: %p)\n", original, (void *)original);
-	printf("Copy:     %s  (address: %p)\n", copy, (void *)copy);
+	printf("Copy:     %s  (address: %p)\n", copy,     (void *)copy);
 	printf("Same address? %s\n", original == copy ? "yes (BAD)" : "no (GOOD)");
 
-	/* Modify copy — original is unaffected */
+	/* Modifying copy does not touch the original */
 	copy[0] = 'X';
 	printf("After modifying copy[0]='X':\n");
 	printf("  original: %s\n", original);
@@ -125,23 +127,21 @@ void	demo_strdup(void)
 /*  STACK vs HEAP — where does each variable live?             */
 /* ============================================================ */
 
-int	g_global = 42;  /* DATA segment — lives forever */
-
 void	demo_memory_locations(void)
 {
-	int		stack_var   = 10;       /* STACK */
-	int		*heap_var   = malloc(sizeof(int)); /* HEAP */
+	int		stack_var = 10;               /* STACK — automatic lifetime  */
+	int		*heap_var = malloc(sizeof(int)); /* HEAP  — manual lifetime  */
 
 	if (!heap_var)
 		return ;
 	*heap_var = 99;
 
 	printf("=== Memory Locations ===\n");
-	printf("global (&g_global):   %p  ← data segment\n", (void *)&g_global);
-	printf("stack  (&stack_var):  %p  ← stack\n", (void *)&stack_var);
-	printf("heap   (heap_var):    %p  ← heap\n", (void *)heap_var);
+	printf("global (&g_global):  %p  ← data segment\n", (void *)&g_global);
+	printf("stack  (&stack_var): %p  ← stack\n",        (void *)&stack_var);
+	printf("heap   (heap_var):   %p  ← heap\n",         (void *)heap_var);
 	printf("\n");
-	printf("Stack address HIGHER than heap? %s\n\n",
+	printf("Stack address higher than heap? %s\n\n",
 		(void *)&stack_var > (void *)heap_var ? "yes (typical)" : "no");
 
 	free(heap_var);
@@ -149,16 +149,16 @@ void	demo_memory_locations(void)
 }
 
 /* ============================================================ */
-/*  COMMON MEMORY MISTAKES — know these to avoid them           */
+/*  COMMON MEMORY MISTAKES — know them so you never make them   */
 /* ============================================================ */
 
 void	demo_common_mistakes(void)
 {
 	printf("=== Common Memory Mistakes (showing safe versions) ===\n");
 
-	/* MISTAKE 1: Forgetting to check malloc return */
+	/* MISTAKE 1: not checking malloc return value */
 	int *p = malloc(sizeof(int));
-	if (!p)  /* ALWAYS do this */
+	if (!p)  /* this check is not optional */
 	{
 		printf("malloc returned NULL — handle it!\n");
 		return ;
@@ -168,15 +168,16 @@ void	demo_common_mistakes(void)
 	free(p);
 	p = NULL;
 
-	/* MISTAKE 2: Buffer overflow — reading past array bounds */
+	/* MISTAKE 2: out-of-bounds access — C never checks for you */
 	int arr[3] = {1, 2, 3};
 	printf("Safe access: arr[0]=%d arr[1]=%d arr[2]=%d\n",
 		arr[0], arr[1], arr[2]);
-	/* arr[3] would be out of bounds — NEVER do this */
+	/* arr[3] is out of bounds — it reads someone else's memory */
 
-	/* MISTAKE 3: Returning pointer to local variable */
-	/* NEVER do: int *bad_func() { int x = 5; return &x; } */
-	/* x is on the stack and destroyed when function returns */
+	/* MISTAKE 3: returning a pointer to a local variable
+	**   NEVER do: int *bad(void) { int x = 5; return &x; }
+	**   x is on the stack and destroyed when the function returns.
+	**   The returned pointer points to garbage. */
 
 	printf("All safe!\n\n");
 }

@@ -7,36 +7,52 @@
 /* ************************************************************************** */
 
 /*
-** FUNCTIONS — WHY THEY MATTER
+** WHAT IS A FUNCTION IN C?
 **
-** A function is a named block of code that:
-**   - Takes 0 or more INPUT parameters
-**   - Does some work
-**   - Returns 0 or 1 OUTPUT value
+**   A function is a named, reusable block of code that:
+**     - Takes 0 or more INPUT parameters
+**     - Performs some work
+**     - Returns exactly 0 or 1 OUTPUT value (use void for none)
 **
-** In C, functions are the ONLY way to reuse code.
-** Every program is just functions calling functions.
+**   In C, functions are the ONLY mechanism for code reuse.
+**   Every program is a hierarchy of functions calling other functions.
 **
-** THE STACK: When a function is called, its local variables
-** are pushed onto the call stack. When it returns, they're popped.
-** This is why locals don't survive after the function ends.
+** THE CALL STACK:
+**   When a function is called, a stack frame is pushed onto the call stack.
+**   That frame holds the local variables for that call.
+**   When the function returns, the frame is popped — locals are destroyed.
+**   This is why you can NEVER return a pointer to a local variable.
 **
 ** PASS BY VALUE vs PASS BY POINTER:
-**   C is ALWAYS pass-by-value. You pass a COPY of the argument.
-**   To modify a variable in the caller, pass its ADDRESS (pointer).
+**   C is ALWAYS pass-by-value. Every argument is COPIED.
+**   To let a function modify the caller's variable, pass its ADDRESS.
+**
+**   void f(int n)   { n = 99; }  → caller's variable unchanged
+**   void f(int *n)  { *n = 99; } → caller's variable IS changed
+**
+** RECURSION:
+**   A function that calls itself. Every recursive function needs:
+**     1. BASE CASE   → condition that stops the recursion
+**     2. RECURSIVE CASE → call with a smaller/simpler input
+**   Without a base case, recursion overflows the stack and crashes.
+**
+** NOTE:
+**   Declare function prototypes above main when the definition comes after.
+**   The compiler reads top-to-bottom — it needs to know the signature
+**   before the first call site.
 */
 
 #include <stdio.h>
 #include <unistd.h>
 
 /* ============================================================ */
-/*  UTILITY FUNCTIONS (what you'll build for 42 projects)       */
+/*  UTILITY FUNCTIONS (the kind you build for 42 projects)      */
 /* ============================================================ */
 
 /*
 ** @desc   Returns the length of a null-terminated string.
-** @param  s : the string to measure
-** @return   : number of characters before '\0'
+** @param  s   : the string to measure
+** @return     : number of characters before '\0'
 */
 int	ft_strlen(const char *s)
 {
@@ -49,8 +65,8 @@ int	ft_strlen(const char *s)
 }
 
 /*
-** @desc   Prints a string using write() — no printf.
-** @param  s : null-terminated string to print
+** @desc   Prints a string using write() — no printf dependency.
+** @param  s   : null-terminated string to print to stdout
 */
 void	ft_putstr(const char *s)
 {
@@ -59,9 +75,9 @@ void	ft_putstr(const char *s)
 
 /*
 ** @desc   Returns 1 if c is a letter (a-z or A-Z), 0 otherwise.
-**         Implements without ctype.h.
-** @param  c : character to test
-** @return   : 1 if alpha, 0 if not
+**         Implemented without ctype.h using ASCII ranges.
+** @param  c   : character to test
+** @return     : 1 if alphabetic, 0 if not
 */
 int	ft_isalpha(char c)
 {
@@ -70,8 +86,8 @@ int	ft_isalpha(char c)
 
 /*
 ** @desc   Returns the absolute value of n.
-** @param  n : integer input
-** @return   : n if positive, -n if negative
+** @param  n   : integer input
+** @return     : n if positive, -n if negative
 */
 int	ft_abs(int n)
 {
@@ -83,7 +99,7 @@ int	ft_abs(int n)
 /* ============================================================ */
 
 /*
-** This CANNOT change x in main — it receives a COPY.
+** Receives a COPY of x — any change stays local, caller unchanged.
 */
 void	try_double_val(int n)
 {
@@ -92,7 +108,7 @@ void	try_double_val(int n)
 }
 
 /*
-** This CAN change x in main — it receives the ADDRESS.
+** Receives the ADDRESS of x — dereferencing modifies the original.
 */
 void	do_double_ref(int *n)
 {
@@ -106,20 +122,21 @@ void	do_double_ref(int *n)
 
 /*
 ** @desc   Computes factorial of n recursively.
-**         factorial(5) = 5 * 4 * 3 * 2 * 1 = 120
-** @param  n : non-negative integer
-** @return   : n!
+**         factorial(5) = 5 × 4 × 3 × 2 × 1 = 120
+** @param  n   : non-negative integer
+** @return     : n!  (returns 1 for n <= 1)
 */
 int	ft_factorial(int n)
 {
-	if (n <= 1)        /* BASE CASE — stops the recursion */
+	if (n <= 1)                       /* BASE CASE — recursion stops here */
 		return (1);
-	return (n * ft_factorial(n - 1)); /* RECURSIVE CASE */
+	return (n * ft_factorial(n - 1)); /* RECURSIVE CASE — shrinks toward base */
 }
 
 /*
-** @desc   Computes the nth Fibonacci number.
-**         0, 1, 1, 2, 3, 5, 8, 13, 21...
+** @desc   Returns the nth Fibonacci number (0-indexed).
+**         Sequence: 0, 1, 1, 2, 3, 5, 8, 13, 21 ...
+** @param  n   : position in the sequence
 */
 int	ft_fibonacci(int n)
 {
@@ -156,11 +173,12 @@ int	main(void)
 	printf("After  do_double_ref: x = %d (CHANGED!)\n\n", x);
 
 	/* --- RECURSION --- */
-	printf("=== Recursion ===\n");
+	printf("=== Recursion — Factorial ===\n");
 	for (int i = 0; i <= 7; i++)
 		printf("factorial(%d) = %d\n", i, ft_factorial(i));
 	printf("\n");
 
+	printf("=== Recursion — Fibonacci ===\n");
 	printf("First 10 Fibonacci numbers:\n");
 	for (int i = 0; i < 10; i++)
 		printf("%d ", ft_fibonacci(i));
