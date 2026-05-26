@@ -1,95 +1,176 @@
 <div align="center">
 
-```
-███╗   ███╗██╗██╗     ███████╗███████╗██████╗  ██╗ ██████╗ ██████╗
-████╗ ████║██║██║     ██╔════╝██╔════╝╚════██╗███║██╔═████╗╚════██╗
-██╔████╔██║██║██║     █████╗  ███████╗ █████╔╝╚██║██║██╔██║ █████╔╝
-██║╚██╔╝██║██║██║     ██╔══╝  ╚════██║ ╚═══██╗ ██║████╔╝██║ ╚═══██╗
-██║ ╚═╝ ██║██║███████╗███████╗███████║██████╔╝ ██║╚██████╔╝██████╔╝
-╚═╝     ╚═╝╚═╝╚══════╝╚══════╝╚══════╝╚═════╝  ╚═╝ ╚═════╝ ╚═════╝
-```
+# My Coding Journey
 
-### Ismail Mahgoub · Warsaw, Poland
+**C · C++ · Python — built from the ground up**
 
-*Self-taught developer. Building from the ground up — no shortcuts.*
+[![Language](https://img.shields.io/badge/primary-C-00599C?style=flat&logo=c&logoColor=white)]()
+[![Status](https://img.shields.io/badge/status-active-brightgreen?style=flat)]()
+[![Exam](https://img.shields.io/badge/exam-60%20levels-blueviolet?style=flat)]()
+[![42 Style](https://img.shields.io/badge/style-42%20Norm-black?style=flat)]()
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-ismail--mahgoub--dev-0077B5?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ismail-mahgoub-dev)
-[![Profile views](https://komarev.com/ghpvc/?username=Miles3103&color=0e75b6&style=flat)](https://github.com/Miles3103)
+> Every file in this repo is written with deep comments —  
+> not just *what* the code does, but *why* and *how* it works at a low level.
 
 </div>
 
 ---
 
-## What I'm building
+## 📁 Repository Structure
 
-I document every step of learning to program at a low level — not just syntax, but *why* things work. Every file has deep comments explaining the reasoning, not just the code.
-
-```c
-/* The only way to truly learn C is to write it — no magic, no shortcuts */
-int  main(void)
-{
-    write(1, "Hello, C World!\n", 16);
-    return (0);
-}
+```
+My-Coding-Journey/
+│
+├── Learning_C/
+│   ├── 00_Hello/           ← write() syscall, printf, puts
+│   ├── 01_Variables/       ← types, scope, lifetime, static, XOR swap
+│   ├── 02_DataTypes/       ← sizes, limits, overflow, signed vs unsigned
+│   ├── 03_Operators/       ← arithmetic, bitwise, logical, ternary, bit flags
+│   ├── 04_Conditionals/    ← if/else, switch, ternary, guard clauses
+│   ├── 05_Functions_Intro/ ← syntax, prototypes, return values, void
+│   ├── 06_Scope/           ← local, global, static, shadowing
+│   ├── 07_Loops/           ← while, for, do-while, Collatz, Fibonacci
+│   ├── 08_Arrays/          ← 1D/2D, statistics, bubble sort
+│   ├── 09_Strings/         ← all of string.h reimplemented from scratch
+│   ├── 10_Pointers/        ← basics, arithmetic, double ptrs, func ptrs
+│   ├── 11_Functions/       ← recursion, pass-by-ref, ft_* functions
+│   ├── 12_Memory/          ← stack vs heap, malloc/free, valgrind
+│   ├── 13_Projects/        ← showcase projects combining everything
+│   ├── c_exam/             ← 60-level self-grading exam system
+│   ├── Games_c/            ← snake, random walk — real programs in C
+│   └── C_books/            ← K&R, Modern C, Beej's Guide
+│
+├── Learning_C++/           ← OOP, classes, templates (coming soon)
+├── Learning_Python/        ← scripts, automation, algorithms
+└── Discovery_Pscin/        ← 42 piscine discovery exercises
 ```
 
 ---
 
-## Repositories
+## 🗓️ 2-Month C Mastery Roadmap
 
-| Repo | What it is | Status |
-|------|-----------|--------|
-| [**My-Coding-Journey**](https://github.com/Miles3103/My-Coding-Journey) | Learning C, C++, and Python with deep commented files. Every topic has its own folder and a full explanation of *why* the code works — not just *what* it does. | 🟢 Active |
+### Week 1–2 — Foundations
+> Understand how C really works — no magic.
+
+| Days | Focus | Folder |
+|------|-------|--------|
+| 1–2 | `write()` vs `printf` vs `puts`, compilation pipeline | `00_Hello/` |
+| 3–4 | Variables, types, addresses, `sizeof` | `01_Variables/` `02_DataTypes/` |
+| 5–6 | Operators — bitwise, ternary, bit flags | `03_Operators/` |
+| 7 | Review + exam levels 0–8 | `c_exam/` |
+
+**Goal:** Write any expression, know what every type stores, understand `&` and `*`.
 
 ---
 
-## Learning C — roadmap (2 months)
+### Week 3–4 — Control Flow + Functions
+> Write real programs with logic and reusable functions.
 
+| Days | Focus | Folder |
+|------|-------|--------|
+| 8–9 | if/else, switch, guard clauses | `04_Conditionals/` |
+| 10–11 | Function syntax, prototypes, return values | `05_Functions_Intro/` |
+| 12–13 | Scope: local, global, static, shadowing | `06_Scope/` |
+| 14 | All loop types, break/continue, Collatz | `07_Loops/` |
+| 15 | Exam levels 9–26 | `c_exam/` |
+
+**Goal:** Write any algorithm — FizzBuzz, Fibonacci, Collatz, factorial — without looking anything up.
+
+---
+
+### Week 5–6 — Arrays + Strings
+> Master memory layout. Implement `string.h` from scratch.
+
+| Days | Focus | Folder |
+|------|-------|--------|
+| 16–19 | 1D/2D arrays, bubble sort, pointer equivalence | `08_Arrays/` |
+| 20–23 | Strings, null terminator, `ft_strlen` → `ft_atoi` | `09_Strings/` |
+| 24 | Exam levels 27–50 | `c_exam/` |
+
+**Goal:** Reimplement any function from `<string.h>`. Know why `char *` and `char []` differ.
+
+---
+
+### Week 7–8 — Pointers + Memory
+> Become dangerous with pointers. Understand the stack and heap.
+
+| Days | Focus | Folder |
+|------|-------|--------|
+| 25–30 | Pointer basics, arithmetic, double ptrs, func ptrs | `10_Pointers/` |
+| 31–32 | `malloc`/`free`, `ft_strdup`, valgrind | `12_Memory/` |
+| 33–34 | Recursion, pass-by-ref, `ft_*` functions | `11_Functions/` |
+| 35–36 | Structs + real projects + exam final boss | `13_Projects/` `c_exam/` |
+
+**Goal:** Use `malloc`, detect leaks with valgrind, write function pointer dispatch tables, build real programs with structs.
+
+---
+
+## 🧠 Skills Checklist
+
+- [ ] Explain what a pointer is and draw the memory layout on paper
+- [ ] Write `ft_strlen`, `ft_strcpy`, `ft_strcmp` without looking anything up
+- [ ] Swap two values without a temporary variable (XOR swap)
+- [ ] Implement bubble sort from memory
+- [ ] Write a recursive factorial and Fibonacci
+- [ ] Explain the difference between stack and heap
+- [ ] Use `malloc` and `free` correctly without memory leaks
+- [ ] Write a function pointer and use it as a callback
+- [ ] Explain why `char arr[]` and `char *arr` differ as function params
+- [ ] Read and understand a compiler error message
+- [ ] Run `valgrind` and fix every leak
+
+---
+
+## 🏆 Exam System
+
+The `c_exam/` folder contains a **60-level self-grading exam** built from scratch in Bash.
+It compiles your code, checks your output line-by-line, shows a diff on failure, tracks your score and streak, and saves progress between sessions.
+
+```bash
+cd Learning_C/c_exam
+chmod +x miles3103_v15.sh
+./miles3103_v15.sh
 ```
-WEEK 1–2  Foundations        ████████████████████ done
-WEEK 3–4  Control Flow       ████████████████████ done
-WEEK 5–6  Arrays & Strings   ████████░░░░░░░░░░░░ in progress
-WEEK 7–8  Pointers & Memory  ░░░░░░░░░░░░░░░░░░░░ next
+
+| Levels | Topic |
+|--------|-------|
+| 0–8 | C Intro, Syntax, Output, Comments |
+| 9–17 | Variables, Data Types, Type Conversion |
+| 18–26 | Constants, Operators, Booleans |
+| 27–35 | If/Else, Switch, While Loop |
+| 36–44 | For Loop, Break/Continue, Arrays |
+| 45–53 | Strings, User Input, Memory Addresses |
+| 54–59 | **Pointers — Final Boss** |
+
+---
+
+## 🔧 How to Compile
+
+```bash
+# Basic
+gcc -Wall -Wextra -Werror filename.c -o output
+
+# With math library
+gcc -Wall -Wextra -Werror filename.c -o output -lm
+
+# Memory check
+valgrind --leak-check=full ./output
+
+# Test all files in a folder
+for f in *.c; do gcc -Wall -Wextra -Werror "$f" -o test && echo "$f: OK" && rm test; done
 ```
 
-**Topics covered so far:**
-`write()` · `printf` · Variables · Data Types · Operators · Conditionals · Functions · Scope · Loops · Arrays · Strings · Pointers · Memory Management
-
-**Currently building:**
-- 60-level self-grading C exam system (`c_exam/`)
-- Snake game in C (`Games_c/`)
-
 ---
 
-## Stack
+## 📚 Resources
 
-![C](https://img.shields.io/badge/C-00599C?style=flat&logo=c&logoColor=white)
-![C++](https://img.shields.io/badge/C++-00599C?style=flat&logo=cplusplus&logoColor=white)
-![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
-![Bash](https://img.shields.io/badge/Bash-121011?style=flat&logo=gnu-bash&logoColor=white)
-![Linux](https://img.shields.io/badge/Linux-FCC624?style=flat&logo=linux&logoColor=black)
-![Vim](https://img.shields.io/badge/Vim-019733?style=flat&logo=vim&logoColor=white)
-
----
-
-## Goals
-
-- [ ] Complete the full C roadmap and pass all 60 exam levels
-- [ ] Build a Snake game in C using only `write()` and terminal control
-- [ ] Start 42 School piscine
-- [ ] Build a network scanner in C (cybersecurity project)
-- [ ] Contribute to an open source C project
-
----
-
-## Stats
-
-<div align="center">
-
-[![GitHub stats](https://github-readme-stats.vercel.app/api?username=Miles3103&show_icons=true&theme=tokyonight&hide_border=true)](https://github.com/Miles3103)
-[![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=Miles3103&layout=compact&theme=tokyonight&hide_border=true)](https://github.com/Miles3103)
-
-</div>
+| Book | Location |
+|------|----------|
+| *The C Programming Language* — K&R (2nd Ed.) | `C_books/` |
+| *Modern C* — Jens Gustedt | `C_books/` |
+| *Beej's Guide to C* — beej.us/guide/bgc | `C_books/` |
+| man pages — `man 2 write`, `man 3 malloc` | terminal |
+| cs50.harvard.edu | online, free |
 
 ---
 
