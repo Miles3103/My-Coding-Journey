@@ -1,62 +1,101 @@
-# 🚀 My Coding Journey
+<div align="center">
 
-> Documenting my path from beginner to cybersecurity professional & software developer.
-
----
-
-## 👨‍💻 Who am I?
-
-I'm **Ismail Mahgoub** — a self-taught programmer with a passion for building things,
-solving hard problems, and understanding how computers really work.
-I've been learning programming for over a year, and this repository is my public
-record of everything I study, build, and discover.
-
----
-
-## 🧠 What I'm learning
-
-| Language | Status | Focus |
-|----------|--------|-------|
-| C | 🟡 In progress | Fundamentals, memory, pointers |
-| C++ | 🟡 In progress | OOP, classes, data structures |
-| Python | 🟡 In progress | Scripting, automation, problem solving |
-
----
-
-## 🔨 What I've built so far
-
-- ✅ Basic syntax exercises across C, C++, and Python
-- ✅ Simple calculator programs
-- ✅ Small games (guessing game and more)
-
----
-
-## 🎯 My goals
-
-- [ ] Master C and understand memory management deeply
-- [ ] Build real projects with C++ and OOP principles
-- [ ] Use Python for scripting and cybersecurity tools
-- [ ] Learn ethical hacking and penetration testing
-- [ ] Contribute to open source projects
-- [ ] Land a role as a cybersecurity professional or software developer
-
----
-
-## 📂 Repository structure
 ```
-My-Coding-Journey/
-├── C/          → C exercises and programs
-├── C++/        → C++ OOP practice and projects
-└── Python/     → Python scripts and mini projects
+███╗   ███╗██╗██╗     ███████╗███████╗██████╗  ██╗ ██████╗ ██████╗
+████╗ ████║██║██║     ██╔════╝██╔════╝╚════██╗███║██╔═████╗╚════██╗
+██╔████╔██║██║██║     █████╗  ███████╗ █████╔╝╚██║██║██╔██║ █████╔╝
+██║╚██╔╝██║██║██║     ██╔══╝  ╚════██║ ╚═══██╗ ██║████╔╝██║ ╚═══██╗
+██║ ╚═╝ ██║██║███████╗███████╗███████║██████╔╝ ██║╚██████╔╝██████╔╝
+╚═╝     ╚═╝╚═╝╚══════╝╚══════╝╚══════╝╚═════╝  ╚═╝ ╚═════╝ ╚═════╝
+```
+
+### Ismail Mahgoub · Warsaw, Poland
+
+*Self-taught developer. Building from the ground up — no shortcuts.*
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-ismail--mahgoub--dev-0077B5?style=flat&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/ismail-mahgoub-dev)
+[![Profile views](https://komarev.com/ghpvc/?username=Miles3103&color=0e75b6&style=flat)](https://github.com/Miles3103)
+
+</div>
+
+---
+
+## What I'm building
+
+I document every step of learning to program at a low level — not just syntax, but *why* things work. Every file has deep comments explaining the reasoning, not just the code.
+
+```c
+/* The only way to truly learn C is to write it — no magic, no shortcuts */
+int  main(void)
+{
+    write(1, "Hello, C World!\n", 16);
+    return (0);
+}
 ```
 
 ---
 
-## 💬 A note
+## Repositories
 
-I believe the best way to learn is to build, break things, and keep going.
-Every commit here is a step forward.
+| Repo | What it is | Status |
+|------|-----------|--------|
+| [**My-Coding-Journey**](https://github.com/Miles3103/My-Coding-Journey) | Learning C, C++, and Python with deep commented files. Every topic has its own folder and a full explanation of *why* the code works — not just *what* it does. | 🟢 Active |
 
 ---
 
-⭐ If you're on a similar journey, feel free to follow along or reach out!
+## Learning C — roadmap (2 months)
+
+```
+WEEK 1–2  Foundations        ████████████████████ done
+WEEK 3–4  Control Flow       ████████████████████ done
+WEEK 5–6  Arrays & Strings   ████████░░░░░░░░░░░░ in progress
+WEEK 7–8  Pointers & Memory  ░░░░░░░░░░░░░░░░░░░░ next
+```
+
+**Topics covered so far:**
+`write()` · `printf` · Variables · Data Types · Operators · Conditionals · Functions · Scope · Loops · Arrays · Strings · Pointers · Memory Management
+
+**Currently building:**
+- 60-level self-grading C exam system (`c_exam/`)
+- Snake game in C (`Games_c/`)
+
+---
+
+## Stack
+
+![C](https://img.shields.io/badge/C-00599C?style=flat&logo=c&logoColor=white)
+![C++](https://img.shields.io/badge/C++-00599C?style=flat&logo=cplusplus&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
+![Bash](https://img.shields.io/badge/Bash-121011?style=flat&logo=gnu-bash&logoColor=white)
+![Linux](https://img.shields.io/badge/Linux-FCC624?style=flat&logo=linux&logoColor=black)
+![Vim](https://img.shields.io/badge/Vim-019733?style=flat&logo=vim&logoColor=white)
+
+---
+
+## Goals
+
+- [ ] Complete the full C roadmap and pass all 60 exam levels
+- [ ] Build a Snake game in C using only `write()` and terminal control
+- [ ] Start 42 School piscine
+- [ ] Build a network scanner in C (cybersecurity project)
+- [ ] Contribute to an open source C project
+
+---
+
+## Stats
+
+<div align="center">
+
+[![GitHub stats](https://github-readme-stats.vercel.app/api?username=Miles3103&show_icons=true&theme=tokyonight&hide_border=true)](https://github.com/Miles3103)
+[![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=Miles3103&layout=compact&theme=tokyonight&hide_border=true)](https://github.com/Miles3103)
+
+</div>
+
+---
+
+<div align="center">
+
+*"The only way to learn a new programming language is by writing programs in it."*
+**— Brian Kernighan, co-author of C**
+
+</div>
