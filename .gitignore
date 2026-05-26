@@ -1,0 +1,21 @@
+# Vim swap files
+*.swp
+*.swo
+*.swn
+.*.swp
+
+# Compiled binaries
+*.o
+a.out
+eval_bin
+
+# macOS
+.DS_Store
+
+# Exam runtime files (don't commit these)
+.level
+.score
+.passed
+.attempts
+.streak
+.best
