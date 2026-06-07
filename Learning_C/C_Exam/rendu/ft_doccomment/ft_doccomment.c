@@ -1,4 +1,4 @@
-#include <unistd.h>
+#include <unistd.h>
 
 /**
  * @desc   Calculates the length of a null-terminated string.
@@ -67,12 +67,12 @@ int main(void)
     ft_putstr("\n");
 
     // Test 2: ft_isalpha('3')
-    ft_putstr("IsAlpha ('3'): ");
+    ft_putstr("IsAlpha: ");
     ft_putnbr(ft_isalpha('3'));
     ft_putstr("\n");
 
     // Test 3: ft_isalpha('z')
-    ft_putstr("IsAlpha ('z'): ");
+    ft_putstr("IsAlpha: ");
     ft_putnbr(ft_isalpha('z'));
     ft_putstr("\n");
 

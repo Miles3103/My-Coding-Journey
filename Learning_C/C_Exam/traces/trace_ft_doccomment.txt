@@ -1,18 +1,4 @@
-rendu/ft_doccomment/ft_doccomment.c:1:1: error: stray ‘\177’ in program
-    1 | <U+007F>#include <unistd.h>
-      | ^~~~~~~~
-rendu/ft_doccomment/ft_doccomment.c:1:2: error: stray ‘#’ in program
-    1 | #include <unistd.h>
-      |  ^
-rendu/ft_doccomment/ft_doccomment.c:1:11: error: expected ‘=’, ‘,’, ‘;’, ‘asm’ or ‘__attribute__’ before ‘<’ token
-    1 | #include <unistd.h>
-      |           ^
-rendu/ft_doccomment/ft_doccomment.c: In function ‘ft_putchar’:
-rendu/ft_doccomment/ft_doccomment.c:39:5: error: implicit declaration of function ‘write’ [-Werror=implicit-function-declaration]
-   39 |     write(1, &c, 1);
-      |     ^~~~~
-rendu/ft_doccomment/ft_doccomment.c: In function ‘ft_putstr’:
-rendu/ft_doccomment/ft_doccomment.c:59:17: error: implicit declaration of function ‘ft_strlen’ [-Werror=implicit-function-declaration]
-   59 |     write(1, s, ft_strlen(s));
-      |                 ^~~~~~~~~
-cc1: all warnings being treated as errors
+=== Level 10 | Sun Jun  7 05:06:51 AM CEST 2026 ===
+Length: 5
+IsAlpha: 0
+IsAlpha: 1
