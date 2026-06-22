@@ -1,21 +1,16 @@
-# ft_strdup
-
-Turn-in directory: `ex20/`
-Files to turn in: `ft_strdup.c`
-Allowed functions: `malloc`
-
-A function that reproduces the behavior of the standard `strdup` (see `man strdup`): it allocates a new buffer and copies a string into it.
-
+# 42 Piscine: C Module - ft_strdup
+A small guide to a function that reproduces the behavior of the standard `strdup`: it allocates a new buffer and copies a string into it.
 ## 📋 The Assignment
-
-* Reproduce the behavior of `strdup`.
-* Prototype:
-  ```c
-  char *ft_strdup(char *src);
-  ```
-
-## 💡 The Code
-
+Write a function named `ft_strdup` inside a file named `ft_strdup.c`. Reproduce the behavior of the function `strdup` (see `man strdup`).
+### 📋 Function Prototype
+```c
+char *ft_strdup(char *src);
+```
+### 🛠️ Allowed Functions
+* `malloc`
+---
+## 💡 The Solution
+This is the content of `ft_strdup.c`:
 ```c
 #include <stdlib.h>
 
@@ -49,65 +44,48 @@ char	*ft_strdup(char *src)
 	return (dst);
 }
 ```
-
 ### 🔍 Detailed Code Breakdown
-
-* **`ft_strlen`**: A hand-written helper (the real `strlen` isn't in the allowed-functions list) that counts the characters in `src` up to, but not including, the terminating `'\0'`. Marked `static` since it's a private implementation detail, not part of the required interface.
+* **`ft_strlen`**: A hand-written helper (the real `strlen` isn't in the allowed-functions list) that counts the characters in `src` up to, but not including, the terminating `'\0'`.
 * **`len = ft_strlen(src)`**: Figures out how many characters need to be copied.
-* **`dst = malloc(sizeof(char) * (len + 1))`**: Allocates exactly enough space for the string plus its own null terminator. `malloc` is the one function the subject allows.
-* **`if (dst == NULL) return (NULL);`**: Mirrors the real `strdup`'s behavior — if allocation fails, it returns `NULL` rather than crashing or copying into invalid memory.
+* **`dst = malloc(sizeof(char) * (len + 1))`**: Allocates exactly enough space for the string plus its own null terminator.
+* **`if (dst == NULL) return (NULL);`**: Mirrors the real `strdup`'s behavior — if allocation fails, it returns `NULL` rather than crashing.
 * **Copy loop**: Walks `src` character by character, writing each one into the matching position in `dst`.
 * **`dst[len] = '\0'`**: Manually null-terminates the new string, since the copy loop only handles the visible characters.
-* **`return (dst)`**: Hands back the freshly allocated, independent copy.
-
-### ✅ Correctness
-
-Compiled with `gcc -Wall -Wextra -Werror -fsanitize=address` — no warnings, no memory errors or leaks reported. Tested:
-
-| Input                  | Result                                      |
-|-------------------------|----------------------------------------------|
-| `"Hello, world!"`       | Duplicated correctly                          |
-| `""`                    | Returns a valid pointer to an empty string (`strlen` of result is `0`) |
-| `"mutable"` (then mutated after duplicating) | Duplicate is unaffected — confirms it's a true deep copy, not just a pointer to the same memory |
-
-Since the duplicate is freshly allocated memory, the caller is responsible for `free()`-ing it when done — exactly like the real `strdup`.
-
-### 🛠️ Norm Notes
-
-This file is `norminette`-clean: tabs throughout, one declaration per line with assignment on a separate line, return values in parentheses, no `for` loops, and only 2 functions in the file (well under the 5-function cap).
-
-> ⚠️ Before submitting, update the header's `By:`, `Created:`, and `Updated:` lines with your real 42 login and email — they're currently placeholders.
-
+> ⚠️ **Important Note for Submission:** Do **NOT** include an `int main(void)` function inside your turned-in file, and keep it `norminette`-clean: a proper 42 header comment at the top, tabs (not spaces) for indentation and alignment.
 ---
-
 ## 🛠️ Compilation and Testing
+1. **Create an isolated `main.c` file** outside of what you turn in:
+   ```c
+   #include <stdio.h>
+   #include <stdlib.h>
 
-```c
-#include <stdio.h>
-#include <stdlib.h>
+   char	*ft_strdup(char *src);
 
-char *ft_strdup(char *src);
+   int	main(void)
+   {
+       char *dup = ft_strdup("Hello, world!");
 
-int main(void)
-{
-    char *dup = ft_strdup("Hello, world!");
-
-    printf("%s\n", dup);
-    free(dup);
-    return (0);
-}
-```
-
-```bash
-gcc -Wall -Wextra -Werror -fsanitize=address ft_strdup.c main.c -o test_strdup
-./test_strdup
-```
-
-Check the norm:
-```bash
-norminette ft_strdup.c
-```
-
+       printf("%s\n", dup);
+       free(dup);
+       return (0);
+   }
+   ```
+2. **Compile using the strict 42 toolchain flags**:
+   ```bash
+   gcc -Wall -Wextra -Werror -fsanitize=address ft_strdup.c main.c -o test_strdup
+   ```
+3. **Run your program**:
+   ```bash
+   ./test_strdup
+   ```
+   Expected output:
+   ```
+   Hello, world!
+   ```
+4. **Check the norm**:
+   ```bash
+   norminette ft_strdup.c
+   ```
+---
 ## 📦 Submission
-
-Make sure `ex20/` contains only `ft_strdup.c` before committing and pushing.
+Clean your project folder by removing `main.c` and `test_strdup`. Ensure your exercise directory contains **only** `ft_strdup.c` before committing and pushing your code changes to Git.

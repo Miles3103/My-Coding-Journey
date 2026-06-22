@@ -1,78 +1,63 @@
-# ft_strcmp
-
-A function that compares two null-terminated strings character by character, mirroring the standard `strcmp` from `<string.h>`.
-
-## 📋 The Function
-
+# 42 Piscine: C Module - ft_strcmp
+A small guide to a function that compares two null-terminated strings character by character, mirroring the standard `strcmp` from `<string.h>`.
+## 📋 The Assignment
+Write a function named `ft_strcmp` inside a file named `ft_strcmp.c`. The function compares `s1` and `s2`, returning `0` if they're identical, or the (non-zero) difference between the first pair of characters that don't match.
+### 📋 Function Prototype
 ```c
-int ft_strcmp(char *s1, char *s2);
+int	ft_strcmp(char *s1, char *s2);
 ```
-
-Compares `s1` and `s2`. Returns `0` if they're identical, or the (non-zero) difference between the first pair of characters that don't match.
-
-## 💡 The Code
-
+### 🛠️ Allowed Functions
+* None
+---
+## 💡 The Solution
+This is the content of `ft_strcmp.c`:
 ```c
-#include <unistd.h>
-
-int ft_strcmp(char *s1, char *s2)
+int	ft_strcmp(char *s1, char *s2)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while (s1[i] != '\0' && s2[i] != '\0' && s1[i] == s2[i])
-    {
-        i++;
-    }
-    return (s1[i] - s2[i]);
+	i = 0;
+	while (s1[i] != '\0' && s2[i] != '\0' && s1[i] == s2[i])
+		i++;
+	return (s1[i] - s2[i]);
 }
 ```
-
-## 🐛 Bugs Fixed From the Original Draft
-
-The version pasted in had a few issues that kept it from compiling/working as a complete function:
-
-* **Comparing pointers instead of characters.** `s1 != '\0'` checks whether the pointer itself is non-null, not whether the *current character* is non-null. The fix is to index into the string: `s1[i] != '\0'`.
-* **Comparing addresses instead of contents.** `s1 == s2` is true only if both pointers point to the same memory location — it does not check whether the characters they point to are equal. The fix is `s1[i] == s2[i]`.
-* **Unused variable `j`.** It was declared and reset but never read or incremented. Since both strings are walked at the same position, only one index (`i`) is needed; `j` was removed.
-* **Missing return / incomplete function.** The original snippet ended mid-loop with no `return` and no closing brace, so it wasn't a complete, compilable function.
-
-## ✅ Correctness
-
-Compiled with `gcc -Wall -Wextra -Werror` (no warnings) and tested against the real `strcmp` for sign agreement:
-
-| `s1`    | `s2`    | `ft_strcmp` | `strcmp` |
-|---------|---------|-------------|----------|
-| "hello" | "hello" | 0           | 0        |
-| "hello" | "world" | -15         | -15      |
-| "abc"   | "abd"   | -1          | -1       |
-| "abc"   | "ab"    | 99          | 99       |
-| "ab"    | "abc"   | -99         | -99      |
-| ""      | ""      | 0           | 0        |
-| "a"     | ""      | 97          | 97       |
-
-## 🔍 How It Works
-
+### 🔍 Detailed Code Breakdown
 * **`i = 0`**: A single index is enough since both strings are compared position by position.
 * **`while (s1[i] != '\0' && s2[i] != '\0' && s1[i] == s2[i])`**: Keeps advancing as long as neither string has ended *and* the characters at the current position match.
-* **`return (s1[i] - s2[i])`**: When the loop stops, `i` points to either the first mismatching pair of characters, or the end of one (or both) strings. Subtracting the character codes gives a positive, negative, or zero result — exactly like the standard `strcmp`.
-* **`#include <unistd.h>`**: Not used by this function (no `write` calls), but harmless to leave in.
+* **`return (s1[i] - s2[i])`**: When the loop stops, `i` points to either the first mismatching pair of characters, or the end of one (or both) strings. Subtracting the character codes gives a positive, negative, or zero result, exactly like the standard `strcmp`.
+* **Equal strings**: If `s1` and `s2` are identical, the loop runs until both hit `'\0'` simultaneously, and `'\0' - '\0'` correctly returns `0`.
+> ⚠️ **Important Note for Submission:** Do **NOT** include an `int main(void)` function inside your turned-in file, and keep it `norminette`-clean: a proper 42 header comment at the top, tabs (not spaces) for indentation and alignment, no braces around a single-statement loop.
+---
+## 🛠️ Compilation and Testing
+1. **Create an isolated `main.c` file** outside of what you turn in:
+   ```c
+   #include <stdio.h>
 
-## 🛠️ Testing It Yourself
+   int	ft_strcmp(char *s1, char *s2);
 
-```c
-#include <stdio.h>
-
-int ft_strcmp(char *s1, char *s2);
-
-int main(void)
-{
-    printf("%d\n", ft_strcmp("abc", "abd"));
-    return (0);
-}
-```
-
-```bash
-gcc -Wall -Wextra -Werror ft_strcmp.c main.c -o test_strcmp
-./test_strcmp
-```
+   int	main(void)
+   {
+       printf("%d\n", ft_strcmp("abc", "abd"));
+       return (0);
+   }
+   ```
+2. **Compile using the strict 42 toolchain flags**:
+   ```bash
+   gcc -Wall -Wextra -Werror ft_strcmp.c main.c -o test_strcmp
+   ```
+3. **Run your program**:
+   ```bash
+   ./test_strcmp
+   ```
+   Expected output:
+   ```
+   -1
+   ```
+4. **Check the norm**:
+   ```bash
+   norminette ft_strcmp.c
+   ```
+---
+## 📦 Submission
+Clean your project folder by removing `main.c` and `test_strcmp`. Ensure your exercise directory contains **only** `ft_strcmp.c` before committing and pushing your code changes to Git.
