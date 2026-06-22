@@ -8,6 +8,7 @@
 [![Status](https://img.shields.io/badge/status-active-brightgreen?style=flat)]()
 [![Exam](https://img.shields.io/badge/exam-60%20levels-blueviolet?style=flat)]()
 [![42 Style](https://img.shields.io/badge/style-42%20Norm-black?style=flat)]()
+[![Piscine](https://img.shields.io/badge/piscine-reloaded-orange?style=flat)]()
 
 > Every file in this repo is written with deep comments —  
 > not just *what* the code does, but *why* and *how* it works at a low level.
@@ -40,10 +41,33 @@ My-Coding-Journey/
 │   ├── Games_c/            ← snake, random walk — real programs in C
 │   └── C_books/            ← K&R, Modern C, Beej's Guide
 │
+├── Piscine_Reloaded/       ← 42 Piscine Reloaded — 28 exercises (ex00–ex27)
+│   ├── ex00/ – ex09/       ← C basics: output, variables, types, operators
+│   ├── ex10/ – ex19/       ← control flow, loops, functions, strings
+│   └── ex20/ – ex27/       ← arrays, pointers, memory, advanced exercises
+│
 ├── Learning_C++/           ← OOP, classes, templates (coming soon)
 ├── Learning_Python/        ← scripts, automation, algorithms
 └── Discovery_Pscin/        ← 42 piscine discovery exercises
 ```
+
+---
+
+## 🌊 Piscine Reloaded
+
+The `Piscine_Reloaded/` folder contains the **42 Piscine Reloaded** — a full re-run of the classic 42 C piscine exercises, done from scratch to solidify fundamentals.
+
+28 exercises covering the full C curriculum arc:
+
+| Range | Topics |
+|-------|--------|
+| ex00 – ex04 | Output, variables, types, arithmetic |
+| ex05 – ex09 | Conditionals, loops, basic functions |
+| ex10 – ex14 | String manipulation, arrays |
+| ex15 – ex19 | Pointers, memory, function pointers |
+| ex20 – ex27 | Advanced exercises — recursion, structs, linked logic |
+
+> All exercises written in strict **42 Norm** style: no `for` where disallowed, no forbidden functions, proper header comments, `cc -Wall -Wextra -Werror`.
 
 ---
 
@@ -118,6 +142,7 @@ My-Coding-Journey/
 - [ ] Explain why `char arr[]` and `char *arr` differ as function params
 - [ ] Read and understand a compiler error message
 - [ ] Run `valgrind` and fix every leak
+- [ ] Complete all 28 Piscine Reloaded exercises from scratch
 
 ---
 
