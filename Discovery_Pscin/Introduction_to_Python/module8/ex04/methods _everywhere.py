@@ -20,7 +20,7 @@ def enlarge(text):
     # Append 'Z' characters and return the result
     return text + ('Z' * z_count)
 
-# --- Execution Start --- #
+# --- Execution Start ---
 
 # Check the number of arguments: sys.argv is a list, and a length of 1 means there are no extra arguments other than the file name itself
 # Error corrected: sys.arg -> sys.argv

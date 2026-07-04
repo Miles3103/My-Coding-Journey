@@ -22,6 +22,7 @@ def array_of_names(persons_dict):
         
     return full_names_list
 
+# --- Example Usage (as shown in your prompt) ---
 
 persons = {
     "jean": "valjeAn",

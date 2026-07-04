@@ -27,6 +27,7 @@ def famous_births(people_dict):
         # The required format: "[Name] is a great scientist born in [Year]."
         print(f"{name} is a great scientist born in {birth_year}.")
 
+# --- Example Usage (as shown in your prompt) ---
 
 women_scientists = {
     "ada": {"name": "Ada Lovelace", "date_of_birth": "1815"},

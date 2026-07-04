@@ -28,6 +28,7 @@ def find_the_redheads(family_dict):
     
     return redhead_names
 
+# --- Example Usage (as shown in your prompt) ---
 
 dupont_family = {
     "florian": "red",

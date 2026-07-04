@@ -9,6 +9,7 @@
 [![Exam](https://img.shields.io/badge/exam-60%20levels-blueviolet?style=flat)]()
 [![42 Style](https://img.shields.io/badge/style-42%20Norm-black?style=flat)]()
 [![Piscine](https://img.shields.io/badge/piscine-reloaded-orange?style=flat)]()
+[![Libft](https://img.shields.io/badge/libft-43%20functions-informational?style=flat)]()
 
 > Every file in this repo is written with deep comments —  
 > not just *what* the code does, but *why* and *how* it works at a low level.
@@ -42,9 +43,13 @@ My-Coding-Journey/
 │   └── C_books/            ← K&R, Modern C, Beej's Guide
 │
 ├── Piscine_Reloaded/       ← 42 Piscine Reloaded — 28 exercises (ex00–ex27)
-│   ├── ex00/ – ex09/       ← C basics: output, variables, types, operators
-│   ├── ex10/ – ex19/       ← control flow, loops, functions, strings
-│   └── ex20/ – ex27/       ← arrays, pointers, memory, advanced exercises
+│   ├── ex00/ – ex05/       ← Shell 01: permissions, links, timestamps, one-liners
+│   └── ex06/ – ex27/       ← C Module: loops, pointers, recursion, arrays,
+│                              function pointers, macros, headers, Makefile
+│
+├── Libft/                  ← 42's first real C library project — 43 hand-built
+│                              functions (libc reimplementations, string/array
+│                              utilities, and a singly linked list toolkit)
 │
 ├── Learning_C++/           ← OOP, classes, templates (coming soon)
 ├── Learning_Python/        ← scripts, automation, algorithms
@@ -55,19 +60,48 @@ My-Coding-Journey/
 
 ## 🌊 Piscine Reloaded
 
-The `Piscine_Reloaded/` folder contains the **42 Piscine Reloaded** — a full re-run of the classic 42 C piscine exercises, done from scratch to solidify fundamentals.
+The `Piscine_Reloaded/` folder contains the **42 Piscine Reloaded** — a full re-run of the classic 42 shell and C fundamentals, done from scratch to solidify the basics before Libft.
 
-28 exercises covering the full C curriculum arc:
+28 exercises across two tracks:
 
-| Range | Topics |
-|-------|--------|
-| ex00 – ex04 | Output, variables, types, arithmetic |
-| ex05 – ex09 | Conditionals, loops, basic functions |
-| ex10 – ex14 | String manipulation, arrays |
-| ex15 – ex19 | Pointers, memory, function pointers |
-| ex20 – ex27 | Advanced exercises — recursion, structs, linked logic |
+| Range | Track | Topics |
+|-------|-------|--------|
+| ex00 – ex05 | Shell 01 | File types/permissions/links from `ls -l`, single-command scripts (`clean`, `find_sh.sh`, `MAC.sh`), shell-escaping tricky filenames |
+| ex06 – ex08 | C 00 | Output basics — alphabet, digits, sign checking |
+| ex09 – ex11 | C 01 | Pointers — dereferencing, swap, div/mod via pointers |
+| ex12 – ex14 | C Module | Recursion vs iteration, factorial, integer square root |
+| ex15 – ex20 | C Module | `ft_putstr`, `ft_strlen`, `ft_strcmp`, argument printing/sorting, `ft_strdup` |
+| ex21 – ex23 | C Module | Dynamic ranges, macros (`ABS`), custom structs (`t_point`) |
+| ex24 | C Module | First hand-written `Makefile` (builds `libft.a` from `srcs/`/`includes/`) |
+| ex25 – ex27 | C Module | Function pointers as callbacks (`ft_foreach`, `ft_count_if`), file display |
 
 > All exercises written in strict **42 Norm** style: no `for` where disallowed, no forbidden functions, proper header comments, `cc -Wall -Wextra -Werror`.
+
+---
+
+## 📚 Libft
+
+The `Libft/` folder is the first "real" 42 project: a personal C library of 43
+functions, split into three parts, built to be reused across every later
+project in the curriculum.
+
+| Part | Count | Contents |
+|------|-------|----------|
+| Part 1 — Libc reimplementations | 23 | `ft_isalpha` → `ft_strdup`: char classification, memory ops, string ops, `ft_atoi` |
+| Part 2 — Additional utilities | 11 | `ft_substr`, `ft_split`, `ft_itoa`, `ft_strmapi`, `ft_putnbr_fd`, and more |
+| Part 3 — Linked list | 9 | `t_list`-based singly linked list: create, add, size, map, iterate, clear |
+
+```bash
+cd Libft
+make            # builds libft.a
+make clean      # removes .o files
+make fclean     # removes .o files + libft.a
+make re         # full rebuild
+```
+
+Every function is covered by a personal (non-submitted) numbered test harness
+comparing behavior against the real libc where applicable, plus manual edge
+cases for the Part 2/3 functions that have no libc equivalent.
 
 ---
 
@@ -142,7 +176,8 @@ The `Piscine_Reloaded/` folder contains the **42 Piscine Reloaded** — a full r
 - [ ] Explain why `char arr[]` and `char *arr` differ as function params
 - [ ] Read and understand a compiler error message
 - [ ] Run `valgrind` and fix every leak
-- [ ] Complete all 28 Piscine Reloaded exercises from scratch
+- [x] Complete all 28 Piscine Reloaded exercises from scratch
+- [x] Build and pass a full 43-function Libft test suite
 
 ---
 
@@ -177,6 +212,9 @@ gcc -Wall -Wextra -Werror filename.c -o output
 
 # With math library
 gcc -Wall -Wextra -Werror filename.c -o output -lm
+
+# Against Libft
+gcc -Wall -Wextra -Werror filename.c Libft/libft.a -I Libft -o output
 
 # Memory check
 valgrind --leak-check=full ./output
