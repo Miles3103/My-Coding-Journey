@@ -10,6 +10,7 @@
 [![42 Style](https://img.shields.io/badge/style-42%20Norm-black?style=flat)]()
 [![Piscine](https://img.shields.io/badge/piscine-reloaded-orange?style=flat)]()
 [![Libft](https://img.shields.io/badge/libft-43%20functions-informational?style=flat)]()
+[![Piscine 2026](https://img.shields.io/badge/C%20Piscine-2026-yellow?style=flat)]()
 
 > Every file in this repo is written with deep comments —  
 > not just *what* the code does, but *why* and *how* it works at a low level.
@@ -22,6 +23,10 @@
 
 ```
 My-Coding-Journey/
+│
+├── Piscine_2026/           ← 42 C Piscine — Shell00/01 + C00–C14
+│   ├── Shell00/ Shell01/   ← shell basics → scripting
+│   └── C00/ – C14/         ← output, pointers, strings, recursion, argv, ...
 │
 ├── Learning_C/
 │   ├── 00_Hello/           ← write() syscall, printf, puts
@@ -55,6 +60,30 @@ My-Coding-Journey/
 ├── Learning_Python/        ← scripts, automation, algorithms
 └── Discovery_Pscin/        ← 42 piscine discovery exercises
 ```
+
+---
+
+## 🧪 Piscine 2026 (C Piscine)
+
+The `Piscine_2026/` folder tracks the **42 C Piscine** itself — the intro
+Shell and C modules that come before Piscine Reloaded and Libft.
+
+| Module | Status | Notes |
+|--------|--------|-------|
+| `Shell00` | 🟡 In progress | ex00, ex01, ex02, ex04 |
+| `Shell01` | ⬜ Not started | — |
+| `C00` | ✅ Complete | Output basics — `ft_putchar`, alphabet, digits, combinations |
+| `C01` | ✅ Complete | Pointers — `ft_ft`, `ft_swap`, div/mod, `ft_putstr`, array reverse/sort |
+| `C02` | 🟡 In progress | String basics — `ft_strcpy`, `ft_strncpy`, `ft_str_is_alpha` |
+| `C03` | ✅ Complete | `ft_strcmp`, `ft_strncmp`, `ft_strcat`, `ft_strstr`, `ft_strlcat` |
+| `C04` | ✅ Complete | `ft_atoi`, `ft_putnbr`, base conversion |
+| `C05` | ✅ Complete | Recursion & math — factorial, power, Fibonacci, `ft_sqrt` |
+| `C06` | ✅ Complete | `argv` handling — print, reverse, sort |
+| `C07` – `C14` | ⬜ Not started | Subjects only, no exercises yet |
+
+> See `Piscine_2026/README.md` for the full per-module breakdown and a
+> cleanup checklist (stray binaries, editor swap files, a couple of
+> filename typos) to resolve before submission.
 
 ---
 
@@ -176,6 +205,7 @@ cases for the Part 2/3 functions that have no libc equivalent.
 - [ ] Explain why `char arr[]` and `char *arr` differ as function params
 - [ ] Read and understand a compiler error message
 - [ ] Run `valgrind` and fix every leak
+- [ ] Finish the C Piscine (`C07`–`C14`, `Shell01`)
 - [x] Complete all 28 Piscine Reloaded exercises from scratch
 - [x] Build and pass a full 43-function Libft test suite
 
