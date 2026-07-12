@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: iismail- <iismail-@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/07/04 23:10:59 by iismail-          #+#    #+#             */
-/*   Updated: 2026/07/04 23:11:20 by iismail-         ###   ########.fr       */
+/*   Created: 2026/07/12 22:55:54 by iismail-          #+#    #+#             */
+/*   Updated: 2026/07/12 23:25:24 by iismail-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,14 @@
 
 void	*ft_memset(void *b, int c, size_t len)
 {
-	size_t			i;
 	unsigned char	*ptr;
+	size_t			i;
 
 	ptr = (unsigned char *)b;
 	i = 0;
 	while (i < len)
 	{
-		ptr[i] = (unsigned char)c;
+		ptr[i] = (unsigned char )c;
 		i++;
 	}
 	return (b);

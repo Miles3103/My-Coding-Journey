@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: iismail- <iismail-@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/07/04 19:30:18 by iismail-          #+#    #+#             */
-/*   Updated: 2026/07/04 20:01:30 by iismail-         ###   ########.fr       */
+/*   Created: 2026/07/12 21:10:26 by iismail-          #+#    #+#             */
+/*   Updated: 2026/07/12 22:48:01 by iismail-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,7 @@
 
 int	ft_isalnum(int c)
 {
-	return (ft_isalpha(c) || ft_isdigit(c));
+	if (ft_isalpha(c) || ft_isdigit(c))
+		return (1);
+	return (0);
 }

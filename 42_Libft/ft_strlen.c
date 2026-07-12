@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: iismail- <iismail-@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/07/04 19:44:43 by iismail-          #+#    #+#             */
-/*   Updated: 2026/07/04 20:00:00 by iismail-         ###   ########.fr       */
+/*   Created: 2026/07/12 22:44:04 by iismail-          #+#    #+#             */
+/*   Updated: 2026/07/12 22:48:14 by iismail-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@ size_t	ft_strlen(const char *s)
 	size_t	len;
 
 	len = 0;
-	while (s[len])
+	while (s[len] != '\0')
+	{
 		len++;
+	}
 	return (len);
 }
