@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: iismail- <iismail-@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/07/12 23:42:33 by iismail-          #+#    #+#             */
-/*   Updated: 2026/07/13 00:04:17 by iismail-         ###   ########.fr       */
+/*   Created: 2026/07/15 17:11:37 by iismail-          #+#    #+#             */
+/*   Updated: 2026/07/15 17:38:23 by iismail-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,14 @@
 
 void	ft_bzero(void *s, size_t n)
 {
-	ft_memset(s, 0, n);
+	unsigned char	*ptr;
+	size_t			i;
+
+	ptr = (unsigned char *)s;
+	i = 0;
+	while (i < n)
+	{
+		ptr[i] = 0;
+		i++;
+	}
 }
