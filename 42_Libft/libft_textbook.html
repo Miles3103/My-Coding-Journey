@@ -1,0 +1,2292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Libft — The Complete Textbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --slate-900:#0f172a;
+    --slate-800:#1e293b;
+    --slate-600:#475569;
+    --slate-400:#94a3b8;
+    --slate-200:#e2e8f0;
+    --slate-100:#f1f5f9;
+    --slate-50:#f8fafc;
+    --teal-700:#0f766e;
+    --teal-600:#0d9488;
+    --teal-500:#14b8a6;
+    --teal-100:#ccfbf1;
+    --teal-50:#f0fdfa;
+    --paper:#ffffff;
+    --code-bg:#0f172a;
+    --code-text:#e2e8f0;
+    --code-accent:#5eead4;
+    --font-display:'Source Serif 4', Georgia, serif;
+    --font-body:'Inter', -apple-system, sans-serif;
+    --font-mono:'JetBrains Mono', ui-monospace, monospace;
+  }
+
+  *{box-sizing:border-box;}
+
+  body{
+    margin:0;
+    background:var(--slate-100);
+    font-family:var(--font-body);
+    color:var(--slate-800);
+    line-height:1.65;
+    font-size:15.5px;
+  }
+
+  .page{
+    max-width:880px;
+    margin:0 auto;
+    background:var(--paper);
+    padding:0 0 40px 0;
+  }
+
+  /* ===================== COVER ===================== */
+  .cover{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:80px 90px;
+    background:
+      linear-gradient(180deg, var(--slate-900) 0%, var(--slate-800) 100%);
+    color:var(--slate-50);
+    page-break-after:always;
+    position:relative;
+    overflow:hidden;
+  }
+  .cover::before{
+    content:"";
+    position:absolute;
+    top:0; right:0; bottom:0;
+    width:38%;
+    background:
+      repeating-linear-gradient(
+        transparent, transparent 27px,
+        rgba(94,234,212,0.07) 28px
+      );
+  }
+  .cover .eyebrow{
+    font-family:var(--font-mono);
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    color:var(--teal-500);
+    font-size:12.5px;
+    margin-bottom:22px;
+  }
+  .cover h1{
+    font-family:var(--font-display);
+    font-size:64px;
+    font-weight:700;
+    margin:0 0 10px 0;
+    line-height:1.05;
+    color:#fff;
+  }
+  .cover h2{
+    font-family:var(--font-display);
+    font-weight:400;
+    font-style:italic;
+    font-size:22px;
+    color:var(--teal-100);
+    margin:0 0 46px 0;
+  }
+  .cover .meta{
+    font-family:var(--font-mono);
+    font-size:13px;
+    color:var(--slate-400);
+    border-top:1px solid rgba(148,163,184,0.25);
+    padding-top:22px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px 24px;
+    max-width:520px;
+  }
+  .cover .meta span{color:var(--teal-500);}
+
+  /* ===================== TOC ===================== */
+  .toc{
+    padding:70px 90px;
+    page-break-after:always;
+  }
+  .toc h2{
+    font-family:var(--font-display);
+    font-size:30px;
+    color:var(--slate-900);
+    border-bottom:3px solid var(--teal-600);
+    padding-bottom:14px;
+    margin-bottom:28px;
+  }
+  .toc-part{
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    color:var(--teal-700);
+    margin:26px 0 8px 0;
+  }
+  .toc-list{list-style:none;margin:0;padding:0;}
+  .toc-list li{
+    display:flex;
+    justify-content:space-between;
+    padding:6px 0;
+    border-bottom:1px dotted var(--slate-200);
+    font-size:14.5px;
+  }
+  .toc-list li b{color:var(--slate-900);font-weight:600;}
+  .toc-list li span{color:var(--slate-400);font-family:var(--font-mono);font-size:12.5px;}
+
+  /* ===================== SECTIONS ===================== */
+  section.part{
+    padding:70px 90px 20px 90px;
+  }
+  .part-header{
+    margin-bottom:40px;
+    page-break-after:avoid;
+  }
+  .part-tag{
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--teal-600);
+    display:block;
+    margin-bottom:10px;
+  }
+  .part-header h1{
+    font-family:var(--font-display);
+    font-size:38px;
+    color:var(--slate-900);
+    margin:0 0 12px 0;
+  }
+  .part-header p.lede{
+    font-size:16.5px;
+    color:var(--slate-600);
+    max-width:640px;
+    margin:0;
+  }
+
+  h3.subhead{
+    font-family:var(--font-display);
+    font-size:22px;
+    color:var(--slate-900);
+    margin:44px 0 14px 0;
+    padding-bottom:8px;
+    border-bottom:2px solid var(--slate-200);
+    page-break-after:avoid;
+  }
+  h4.microhead{
+    font-family:var(--font-mono);
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    color:var(--teal-700);
+    margin:22px 0 8px 0;
+  }
+
+  p{margin:0 0 14px 0;}
+  ul, ol{margin:0 0 14px 0; padding-left:22px;}
+  li{margin-bottom:6px;}
+
+  code.inline{
+    font-family:var(--font-mono);
+    background:var(--teal-50);
+    color:var(--teal-700);
+    padding:1.5px 6px;
+    border-radius:4px;
+    font-size:0.88em;
+    border:1px solid var(--teal-100);
+  }
+
+  pre.code{
+    font-family:var(--font-mono);
+    background:var(--code-bg);
+    color:var(--code-text);
+    padding:18px 20px;
+    border-radius:8px;
+    font-size:12.8px;
+    line-height:1.55;
+    overflow-x:auto;
+    margin:14px 0 18px 0;
+    page-break-inside:avoid;
+    border-left:3px solid var(--teal-500);
+  }
+  pre.code .kw{color:#f0abfc;}
+  pre.code .tp{color:var(--code-accent);}
+  pre.code .cm{color:#64748b;font-style:italic;}
+  pre.code .fn{color:#93c5fd;}
+
+  .diagram{
+    font-family:var(--font-mono);
+    background:var(--slate-900);
+    color:var(--teal-100);
+    padding:18px 22px;
+    border-radius:8px;
+    font-size:12.3px;
+    line-height:1.65;
+    white-space:pre;
+    overflow-x:auto;
+    margin:14px 0 20px 0;
+    page-break-inside:avoid;
+    border:1px dashed var(--teal-600);
+  }
+  .diagram .cap{
+    display:block;
+    font-family:var(--font-body);
+    font-size:11.5px;
+    color:var(--slate-400);
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    margin-top:10px;
+    font-style:normal;
+  }
+
+  .callout{
+    background:var(--teal-50);
+    border-left:4px solid var(--teal-600);
+    padding:14px 18px;
+    border-radius:0 6px 6px 0;
+    margin:16px 0;
+    font-size:14.5px;
+  }
+  .callout b{color:var(--teal-700);}
+
+  table.spec{
+    width:100%;
+    border-collapse:collapse;
+    margin:14px 0 20px 0;
+    font-size:13.5px;
+  }
+  table.spec th{
+    background:var(--slate-800);
+    color:#fff;
+    text-align:left;
+    padding:9px 12px;
+    font-family:var(--font-mono);
+    font-weight:500;
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+  }
+  table.spec td{
+    padding:9px 12px;
+    border-bottom:1px solid var(--slate-200);
+    vertical-align:top;
+  }
+  table.spec tr:nth-child(even) td{background:var(--slate-50);}
+  table.spec td code{font-family:var(--font-mono);font-size:12.5px;color:var(--teal-700);}
+
+  /* ===================== FUNCTION CARD ===================== */
+  .func-card{
+    border:1px solid var(--slate-200);
+    border-radius:10px;
+    margin:0 0 34px 0;
+    overflow:hidden;
+    page-break-inside:avoid;
+  }
+  .func-head{
+    background:var(--slate-900);
+    color:#fff;
+    padding:16px 22px;
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:14px;
+  }
+  .func-head .name{
+    font-family:var(--font-mono);
+    font-size:18px;
+    font-weight:600;
+    color:#fff;
+  }
+  .func-head .concept{
+    font-family:var(--font-mono);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--teal-500);
+    background:rgba(20,184,166,0.12);
+    border:1px solid rgba(20,184,166,0.4);
+    padding:4px 10px;
+    border-radius:20px;
+    white-space:nowrap;
+  }
+  .func-body{padding:22px 24px 8px 24px;}
+  .func-body h4.microhead:first-child{margin-top:0;}
+
+  .lesson-block{
+    display:flex;
+    gap:14px;
+    margin-bottom:4px;
+  }
+  .lesson-num{
+    font-family:var(--font-mono);
+    color:var(--teal-600);
+    font-weight:600;
+    font-size:13px;
+    flex-shrink:0;
+    width:20px;
+  }
+
+  footer.pagefoot{
+    text-align:center;
+    font-family:var(--font-mono);
+    font-size:11px;
+    color:var(--slate-400);
+    padding:30px 0 10px 0;
+  }
+
+  @media print{
+    body{background:#fff;font-size:12.5px;}
+    .page{max-width:100%;}
+    .cover, .toc, section.part{padding-left:52px;padding-right:52px;}
+    pre.code, .diagram{font-size:10.8px;}
+    a{color:inherit;text-decoration:none;}
+    @page{size:A4; margin:16mm 14mm;}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ============================================================ -->
+  <!-- COVER                                                          -->
+  <!-- ============================================================ -->
+  <div class="cover">
+    <span class="eyebrow">42 School &nbsp;·&nbsp; Foundational C Curriculum</span>
+    <h1>Libft</h1>
+    <h2>The Complete Textbook — Header, Build System &amp; 43 Functions Explained</h2>
+    <div class="meta">
+      <div>Author <span>iismail-</span></div>
+      <div>Campus <span>42 Warsaw</span></div>
+      <div>Functions Covered <span>43 / 43</span></div>
+      <div>Norm Status <span>100% Compliant</span></div>
+      <div>Build Status <span>libft.a — Verified</span></div>
+      <div>Memory Audit <span>Valgrind Clean</span></div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- TABLE OF CONTENTS                                              -->
+  <!-- ============================================================ -->
+  <div class="toc">
+    <h2>Table of Contents</h2>
+
+    <div class="toc-part">Part 1 — The Blueprint</div>
+    <ul class="toc-list">
+      <li><b>Header Guards</b> — why <code class="inline">#ifndef</code>/<code class="inline">#define</code> exist <span>1.1</span></li>
+      <li><b>The t_list Structure</b> — anatomy of a node <span>1.2</span></li>
+      <li><b>Prototypes → Implementations</b> — how the compiler links them <span>1.3</span></li>
+    </ul>
+
+    <div class="toc-part">Part 2 — The Automator</div>
+    <ul class="toc-list">
+      <li><b>Makefile Internals</b> — targets, dependencies, recipes <span>2.1</span></li>
+      <li><b>Core Variables</b> — CC, CFLAGS, AR, SRCS, OBJS <span>2.2</span></li>
+      <li><b>The Pipeline</b> — .c → .o → .a <span>2.3</span></li>
+      <li><b>Relinking</b> — the rule that catches careless students <span>2.4</span></li>
+    </ul>
+
+    <div class="toc-part">Part 3 — The Library Deep-Dive</div>
+    <ul class="toc-list">
+      <li><b>3.1 Character Classification &amp; Case</b> — 7 functions <span>ft_isalpha … ft_tolower</span></li>
+      <li><b>3.2 Memory Primitives</b> — 6 functions <span>ft_memset … ft_memmove</span></li>
+      <li><b>3.3 String Inspection &amp; Comparison</b> — 8 functions <span>ft_strchr … ft_atoi</span></li>
+      <li><b>3.4 Heap Allocation</b> — 2 functions <span>ft_calloc, ft_strdup</span></li>
+      <li><b>3.5 String Construction</b> — 5 functions <span>ft_substr … ft_itoa</span></li>
+      <li><b>3.6 Function Pointers &amp; I/O</b> — 6 functions <span>ft_strmapi … ft_putnbr_fd</span></li>
+      <li><b>3.7 The Linked List Engine</b> — 9 functions <span>ft_lstnew … ft_lstmap</span></li>
+    </ul>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- PART 1 — THE BLUEPRINT                                         -->
+  <!-- ============================================================ -->
+  <section class="part">
+    <div class="part-header">
+      <span class="part-tag">Part 1 · The Blueprint</span>
+      <h1>libft.h</h1>
+      <p class="lede">Every library begins as a contract. Before a single algorithm runs, the header
+      file declares <em>what exists</em> — without saying how. This chapter explains why that
+      separation matters, and how three small lines of preprocessor syntax quietly protect an
+      entire multi-file project from itself.</p>
+    </div>
+
+    <h3 class="subhead">1.1 — Header Guards: Why #ifndef Exists</h3>
+    <p>Look at the top and bottom of your header:</p>
+    <pre class="code"><span class="kw">#ifndef</span> LIBFT_H
+<span class="kw"># define</span> LIBFT_H
+
+<span class="cm">... entire header body ...</span>
+
+<span class="kw">#endif</span></pre>
+    <p>This is called an <b>include guard</b>, and it solves a very specific problem that only
+    appears once your project has more than one <code class="inline">.c</code> file: <b>double inclusion</b>.</p>
+    <p>Imagine <code class="inline">ft_strtrim.c</code> includes <code class="inline">libft.h</code>, and that header
+    also gets pulled in indirectly by another file it depends on. Without a guard, the preprocessor
+    would paste the entire contents of <code class="inline">libft.h</code> into the translation unit
+    <em>twice</em>. The compiler would then see the <code class="inline">t_list</code> struct declared
+    twice and throw a <code class="inline">redefinition</code> error — a project that compiled fine
+    yesterday suddenly refuses to build the moment a second file starts including the header
+    indirectly.</p>
+    <p>The guard works through simple conditional compilation logic:</p>
+    <ol>
+      <li><b>First inclusion:</b> the macro <code class="inline">LIBFT_H</code> is not yet defined, so
+      <code class="inline">#ifndef LIBFT_H</code> (<i>"if not defined"</i>) evaluates true. The preprocessor
+      immediately runs <code class="inline">#define LIBFT_H</code>, marking the guard as "used," then
+      includes everything up to <code class="inline">#endif</code>.</li>
+      <li><b>Every subsequent inclusion in the same translation unit:</b> <code class="inline">LIBFT_H</code>
+      is now defined, so <code class="inline">#ifndef</code> is false. The preprocessor skips straight to
+      <code class="inline">#endif</code>, contributing nothing. The struct, the typedef, and all 43
+      prototypes are declared exactly once — no matter how many files transitively include the header.</li>
+    </ol>
+    <div class="callout"><b>Why the name LIBFT_H specifically?</b> By convention, the guard macro
+    matches the filename in uppercase with the dot replaced by an underscore. This isn't enforced
+    by the compiler — it's a human convention that prevents <em>two different headers in the same
+    project</em> from accidentally sharing a guard name and silently shadowing each other.</div>
+
+    <h4 class="microhead">Includes inside the guard</h4>
+    <pre class="code"><span class="kw">#include</span> &lt;stdlib.h&gt;
+<span class="kw">#include</span> &lt;unistd.h&gt;</pre>
+    <p><code class="inline">&lt;stdlib.h&gt;</code> is required because <code class="inline">malloc</code>,
+    <code class="inline">free</code>, and <code class="inline">NULL</code> are used throughout the
+    allocation-heavy functions (<code class="inline">ft_calloc</code>, <code class="inline">ft_split</code>,
+    <code class="inline">ft_substr</code>, and the entire linked-list module). <code class="inline">&lt;unistd.h&gt;</code>
+    is required because it's the only standard header that declares <code class="inline">write()</code>
+    — the single system call underneath every one of the <code class="inline">ft_put*_fd</code> functions.
+    Both headers are themselves guarded internally by the C library, so nesting them inside
+    <code class="inline">libft.h</code>'s own guard is completely safe even if a consuming program
+    also includes them directly.</p>
+
+    <h3 class="subhead">1.2 — Anatomy of a Node: the t_list Structure</h3>
+    <pre class="code"><span class="kw">typedef struct</span> s_list
+{
+    <span class="tp">void</span>            *content;
+    <span class="kw">struct</span> s_list   *next;
+}   t_list;</pre>
+
+    <div class="diagram">┌───────────────────────┐        ┌───────────────────────┐
+│   t_list  (node A)    │        │   t_list  (node B)    │
+├───────────────────────┤        ├───────────────────────┤
+│ content ──────────────┼──► [42]│ content ──────────────┼──► ["hello"]
+│ next    ──────────────┼───────►│ next    ──────────────┼───► NULL
+└───────────────────────┘        └───────────────────────┘
+<span class="cap">Two nodes chained by 'next'. 'content' is opaque — it points anywhere.</span></div>
+
+    <p>Two fields, two very different jobs:</p>
+    <table class="spec">
+      <tr><th>Field</th><th>Type</th><th>Role</th></tr>
+      <tr>
+        <td><code>content</code></td>
+        <td><code>void *</code></td>
+        <td>A generic pointer. Because <code class="inline">void *</code> carries no type information,
+        a single <code class="inline">t_list</code> node can hold an <code class="inline">int *</code>,
+        a <code class="inline">char *</code>, a custom <code class="inline">struct</code> — anything.
+        The struct itself never needs to know what it's storing; that responsibility is deferred
+        entirely to the caller, and to the function pointers (<code class="inline">del</code>, <code class="inline">f</code>)
+        passed into functions like <code class="inline">ft_lstclear</code> and <code class="inline">ft_lstmap</code>.</td>
+      </tr>
+      <tr>
+        <td><code>next</code></td>
+        <td><code>struct s_list *</code></td>
+        <td>A self-referential pointer — the struct contains a pointer to <em>its own type</em>. This
+        is the mechanism that turns isolated nodes into a chain. <code class="inline">NULL</code> in
+        this field is the list's own sentinel: it means "there is nothing after me," and every
+        traversal function in this library (<code class="inline">ft_lstsize</code>, <code class="inline">ft_lstlast</code>,
+        <code class="inline">ft_lstiter</code>…) relies on that convention to know when to stop.</td>
+      </tr>
+    </table>
+    <div class="callout"><b>Why <code class="inline">struct s_list *next</code> and not <code class="inline">t_list *next</code>?</b>
+    At the point where <code class="inline">next</code> is declared, the <code class="inline">typedef</code>
+    hasn't finished yet — the compiler is still <em>inside</em> the definition of <code class="inline">struct s_list</code>,
+    so the name <code class="inline">t_list</code> doesn't exist as a usable type until the closing
+    <code class="inline">}</code> and the trailing <code class="inline">t_list;</code> are reached. The
+    struct's own tag name, <code class="inline">s_list</code>, is always visible inside its own body
+    (this is one of the few places C allows a genuinely recursive, self-referential type), so
+    that's what must be used.</div>
+
+    <h3 class="subhead">1.3 — How Prototypes Become Implementations</h3>
+    <p>A prototype like</p>
+    <pre class="code"><span class="tp">char</span>    *ft_substr(<span class="tp">char</span> <span class="kw">const</span> *s, <span class="tp">unsigned int</span> start, <span class="tp">size_t</span> len);</pre>
+    <p>is a <b>promise</b>, not a function. It tells the compiler three things: the function's name,
+    the number and type of its parameters, and its return type — enough for the compiler to check
+    that every <em>call site</em> is using it correctly, without yet knowing what the function
+    actually does.</p>
+    <p>The real machinery happens at <b>link time</b>, after every <code class="inline">.c</code> file
+    has been compiled independently into a <code class="inline">.o</code> object file:</p>
+    <ol>
+      <li>When <code class="inline">gcc</code> compiles <code class="inline">ft_strjoin.c</code> and
+      encounters a call to <code class="inline">ft_substr(...)</code>, it checks the prototype from
+      <code class="inline">libft.h</code>, confirms the call is type-correct, and emits machine code
+      containing an <b>unresolved symbol reference</b> to the name <code class="inline">ft_substr</code>.</li>
+      <li>Separately, <code class="inline">ft_substr.c</code> compiles into <code class="inline">ft_substr.o</code>,
+      which contains the actual machine code for the function body, exported under the symbol
+      <code class="inline">ft_substr</code>.</li>
+      <li>When these object files are archived together into <code class="inline">libft.a</code> via
+      <code class="inline">ar</code>, and a program later links against that archive, the linker
+      matches every unresolved reference to its defining symbol — stitching <code class="inline">ft_strjoin.o</code>'s
+      <em>call</em> to <code class="inline">ft_substr.o</code>'s <em>body</em>.</li>
+    </ol>
+    <p>This is precisely why a <b>signature mismatch</b> between the header and the implementation
+    is a compile-time error rather than a silent bug: if <code class="inline">libft.h</code> promises
+    <code class="inline">const void *src</code> but the <code class="inline">.c</code> file defines the
+    parameter as <code class="inline">const char *src</code>, the compiler catches the contradiction
+    the moment it compiles that specific file — <code class="inline">error: conflicting types</code> —
+    long before the linker ever runs. The header is the single source of truth every
+    <code class="inline">.c</code> file is measured against.</p>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- PART 2 — THE AUTOMATOR                                         -->
+  <!-- ============================================================ -->
+  <section class="part">
+    <div class="part-header">
+      <span class="part-tag">Part 2 · The Automator</span>
+      <h1>Makefile</h1>
+      <p class="lede">A Makefile is a dependency graph disguised as a script. This chapter explains
+      what actually happens when you type <code class="inline">make</code>, why each variable exists,
+      and — critically for 42 evaluation — how this specific Makefile architecture guarantees that
+      running <code class="inline">make bonus</code> never wastes time recompiling work that's already done.</p>
+    </div>
+
+    <h3 class="subhead">2.1 — How Makefiles Work Under the Hood</h3>
+    <p><code class="inline">make</code> is not a compiler. It is a <b>dependency resolver</b>. Every
+    rule in a Makefile has the same three-part shape:</p>
+    <pre class="code"><span class="fn">target</span>: <span class="tp">prerequisite1</span> <span class="tp">prerequisite2</span>
+	recipe-line-1
+	recipe-line-2</pre>
+    <p>Read as: <i>"to produce <b>target</b>, every <b>prerequisite</b> must exist and be newer than
+    the target. If any prerequisite is missing or was modified more recently than the target, run
+    the recipe."</i> This is the entire engine. <code class="inline">make</code> compares file
+    <b>modification timestamps</b> on disk — nothing more exotic than that — which is exactly why
+    the tab character before each recipe line is mandatory (not stylistic): it's how <code class="inline">make</code>'s
+    parser distinguishes a recipe line from a new rule.</p>
+
+    <h3 class="subhead">2.2 — Core Variables, Explained</h3>
+    <table class="spec">
+      <tr><th>Variable</th><th>Value</th><th>Purpose</th></tr>
+      <tr><td><code>NAME</code></td><td><code>libft.a</code></td>
+        <td>The final artifact this Makefile exists to produce. Used as the default target so
+        <code class="inline">make</code> with no arguments builds exactly this.</td></tr>
+      <tr><td><code>CC</code></td><td><code>cc</code></td>
+        <td>The compiler invoked for every translation unit. Using the variable instead of hardcoding
+        <code class="inline">gcc</code> everywhere means switching compilers is a one-line change.</td></tr>
+      <tr><td><code>CFLAGS</code></td><td><code>-Wall -Wextra -Werror</code></td>
+        <td><code class="inline">-Wall</code> enables the broad "commonly useful" warning set;
+        <code class="inline">-Wextra</code> adds stricter checks <code class="inline">-Wall</code> omits
+        (unused parameters, sign-compare issues); <code class="inline">-Werror</code> escalates
+        every warning into a hard compile failure. Together they turn latent bugs — like the
+        <code class="inline">const char *</code> vs <code class="inline">const void *</code> mismatch
+        this project once had — into errors you cannot ignore.</td></tr>
+      <tr><td><code>AR</code></td><td><code>ar rcs</code></td>
+        <td>The archiver. <code class="inline">r</code> = insert/replace files in the archive,
+        <code class="inline">c</code> = create the archive if it doesn't exist (suppresses the
+        warning if it does), <code class="inline">s</code> = write an index of symbols, which is
+        what lets the linker later resolve function names without scanning every object file
+        linearly.</td></tr>
+      <tr><td><code>SRCS</code></td><td>43 filenames</td>
+        <td>The complete, explicit list of source files that make up the mandatory library.</td></tr>
+      <tr><td><code>OBJS</code></td><td><code>$(SRCS:.c=.o)</code></td>
+        <td>A <b>substitution reference</b> — Make's built-in text-replace syntax. It takes the
+        <code class="inline">SRCS</code> list and swaps every <code class="inline">.c</code> suffix
+        for <code class="inline">.o</code>, without maintaining a second hand-written list that
+        could silently drift out of sync with <code class="inline">SRCS</code>.</td></tr>
+    </table>
+
+    <h3 class="subhead">2.3 — The Pipeline: .c → .o → .a</h3>
+    <div class="diagram">ft_substr.c ──┐
+ft_split.c  ──┤   cc -Wall -Wextra -Werror -c file.c -o file.o
+ft_itoa.c   ──┤   (compile + assemble, NO linking yet)
+    ⋮         ├──►  ft_substr.o   ft_split.o   ft_itoa.o   ⋮
+ft_lstmap.c ──┘             │            │            │
+                             └────────────┼────────────┘
+                                          ▼
+                            ar rcs libft.a *.o
+                                          │
+                                          ▼
+                                    ┌───────────┐
+                                    │ libft.a   │  ◄── static archive,
+                                    └───────────┘      just a bundle of .o's
+<span class="cap">The -c flag is the whole story: it stops gcc after generating object code, before invoking the linker.</span></div>
+    <p>The pattern rule that drives this is:</p>
+    <pre class="code">%.o: %.c libft.h
+	$(CC) $(CFLAGS) -c $&lt; -o $@</pre>
+    <p><code class="inline">%</code> is Make's wildcard — it means "for any stem, a file
+    <code class="inline">stem.o</code> depends on <code class="inline">stem.c</code> and
+    <code class="inline">libft.h</code>." <code class="inline">$&lt;</code> expands to the first
+    prerequisite (the <code class="inline">.c</code> file), <code class="inline">$@</code> expands to
+    the target itself (the <code class="inline">.o</code> file). Listing <code class="inline">libft.h</code>
+    as a prerequisite is deliberate: if you edit the header — say, changing a function's signature —
+    every <code class="inline">.o</code> file depending on it is now considered stale and will be
+    recompiled on the next <code class="inline">make</code>, even though none of the <code class="inline">.c</code>
+    files themselves changed.</p>
+
+    <h3 class="subhead">2.4 — Relinking: The Rule That Catches Careless Students</h3>
+    <p>42's Common Instructions state plainly: <i>"your Makefile must not perform unnecessary
+    relinking."</i> Here's precisely what that means and how this architecture satisfies it.</p>
+    <p>A naive Makefile might rebuild <em>everything</em> on every invocation — recompiling all 43
+    files and re-archiving them, even if only one file changed, or even if nothing changed at all.
+    That's the failure mode "unnecessary relinking" refers to: wasted work performed because the
+    dependency graph wasn't expressed precisely enough for <code class="inline">make</code> to know
+    what's actually stale.</p>
+    <div class="diagram">Scenario: you edit ft_split.c, then run `make`
+
+ft_isalpha.o  (unchanged) ─┐
+ft_strlen.o   (unchanged) ─┤
+ft_split.o    (STALE) ─────┼──►  only ft_split.c is recompiled
+    ⋮                      │     the other 42 .o files are
+ft_lstmap.o   (unchanged) ─┘     left untouched on disk
+
+                    ▼
+        ar rcs libft.a *.o
+        (re-archives — cheap, not a recompile)
+<span class="cap">make compares mtimes per-file. One stale .o does not stale the other 42.</span></div>
+    <p>This Makefile achieves correct behavior through two structural choices:</p>
+    <ol>
+      <li><b>Per-file pattern rule.</b> Because <code class="inline">%.o: %.c libft.h</code> expresses
+      the dependency at the level of individual files rather than "rebuild everything," <code class="inline">make</code>'s
+      built-in timestamp comparison does the filtering automatically. Touching one <code class="inline">.c</code>
+      file marks exactly one <code class="inline">.o</code> file stale.</li>
+      <li><b>$(NAME) itself depends on $(OBJS), not on a phony always-run recipe.</b> <code class="inline">ar rcs libft.a $(OBJS)</code>
+      only executes if at least one <code class="inline">.o</code> in the list is newer than
+      <code class="inline">libft.a</code> — so if you run <code class="inline">make</code> twice in a
+      row with no edits in between, the second run prints nothing and does nothing. That's the
+      textbook definition of "no unnecessary relinking."</li>
+    </ol>
+    <div class="callout"><b>Verifying it yourself:</b> run <code class="inline">make</code>, then
+    immediately run <code class="inline">make</code> again. A correctly structured Makefile produces
+    zero output the second time — every target is already up to date. If it recompiles anything on
+    that second run, the dependency graph is broken somewhere.</div>
+    <p>The <code class="inline">bonus:</code> target follows the identical logic — it currently reads
+    <code class="inline">bonus: all</code>, so invoking it triggers the exact same up-to-date check
+    against <code class="inline">$(OBJS)</code> rather than an unconditional rebuild.</p>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- PART 3 — THE LIBRARY DEEP-DIVE                                 -->
+  <!-- ============================================================ -->
+  <section class="part">
+    <div class="part-header">
+      <span class="part-tag">Part 3 · The Library Deep-Dive</span>
+      <h1>43 Functions, One Discipline</h1>
+      <p class="lede">Every function below is graded on the same three axes: what it <em>does</em>
+      (Technical Logic), why it's <em>shaped this way</em> under 42's Norm (Norminette &amp; C
+      Standards), and how it <em>survives contact with bad input</em> (Memory Security). Functions
+      are grouped by the concept they teach, not alphabetically — the order tells its own story.</p>
+    </div>
+
+    <!-- ===================== 3.1 CHAR CLASSIFICATION ===================== -->
+    <h3 class="subhead">3.1 — Character Classification &amp; Case Conversion</h3>
+    <p>Seven functions, one shape: take an <code class="inline">int c</code>, test it against a
+    numeric range, return <code class="inline">1</code>/<code class="inline">0</code> or a
+    transformed character. This is the simplest category in the library, and deliberately so — it's
+    where 42 checks that you understand ASCII as <em>numbers</em>, not as opaque symbols.</p>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_isalpha</span><span class="concept">Concept: ASCII Range Testing</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="tp">int</span>    ft_isalpha(<span class="tp">int</span> c)
+{
+	<span class="kw">if</span> ((c >= <span class="cm">'a'</span> && c &lt;= <span class="cm">'z'</span>) || (c >= <span class="cm">'A'</span> && c &lt;= <span class="cm">'Z'</span>))
+		<span class="kw">return</span> (1);
+	<span class="kw">return</span> (0);
+}</pre>
+        <h4 class="microhead">Technical Logic</h4>
+        <p>ASCII places lowercase letters at codes 97–122 and uppercase at 65–90. The condition is
+        two independent range checks joined by <code class="inline">||</code> — the function never
+        needs to know <em>which</em> case matched, only that <code class="inline">c</code> falls in
+        either band. Because character literals like <code class="inline">'a'</code> are themselves
+        <code class="inline">int</code> constants in C, this comparison is pure integer arithmetic;
+        no character-table lookup occurs.</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p>Single <code class="inline">if</code>, two explicit <code class="inline">return</code>
+        statements, no ternary (forbidden by Norm), no early-exit chains. This "guard, then fall
+        through to a final return" shape is the canonical Norm-compliant pattern for a boolean-style
+        function — it reads top-to-bottom with exactly one decision point.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p>Stateless and read-only — takes a value, not a pointer, so there is nothing to leak and
+        nothing to dereference. The parameter is <code class="inline">int</code>, not
+        <code class="inline">char</code>, precisely so that <code class="inline">EOF</code> (-1) or any
+        out-of-range integer can be passed safely without triggering the signed-<code class="inline">char</code>
+        promotion bugs that plague naive reimplementations.</p>
+      </div>
+    </div>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_isdigit</span><span class="concept">Concept: ASCII Range Testing</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="tp">int</span>    ft_isdigit(<span class="tp">int</span> c)
+{
+	<span class="kw">if</span> (c >= <span class="cm">'0'</span> && c &lt;= <span class="cm">'9'</span>)
+		<span class="kw">return</span> (1);
+	<span class="kw">return</span> (0);
+}</pre>
+        <h4 class="microhead">Technical Logic</h4>
+        <p>Identical shape to <code class="inline">ft_isalpha</code>, testing the single contiguous
+        ASCII band 48–57. This contiguity is what allows <code class="inline">c - '0'</code> to
+        convert a digit character to its numeric value elsewhere in the library (notably inside
+        <code class="inline">ft_atoi</code>) — the range check here is effectively a bounds guard for
+        that conversion.</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p>Same guard-then-return structure. Norm rewards this repetition of a known-safe pattern
+        rather than "clever" one-liners — predictability is the point of a style standard.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p>No pointers, no allocation, no failure mode. The full input domain of <code class="inline">int</code>
+        is handled correctly, including negative values and values above 255.</p>
+      </div>
+    </div>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_isalnum</span><span class="concept">Concept: Function Composition</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="tp">int</span>    ft_isalnum(<span class="tp">int</span> c)
+{
+	<span class="kw">if</span> (ft_isalpha(c) || ft_isdigit(c))
+		<span class="kw">return</span> (1);
+	<span class="kw">return</span> (0);
+}</pre>
+        <h4 class="microhead">Technical Logic</h4>
+        <p>This is the first function in the library that <b>composes</b> rather than reimplements.
+        Instead of writing three separate range checks (lower, upper, digit), it delegates to the
+        two functions that already encode those ranges. This is a direct, deliberate application of
+        the subject's own hint: "some of the functions from Part 1 may be useful for implementing
+        the functions below."</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p>Composition over duplication is not just cleaner — it's a Norm-adjacent virtue, since
+        every duplicated range check is a second place a future bug (or a future edit) can diverge
+        from the first. One source of truth per concept.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p>Inherits the safety properties of both dependencies. No new failure surface is introduced
+        by composition.</p>
+      </div>
+    </div>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_isascii</span><span class="concept">Concept: ASCII Range Testing</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="tp">int</span>    ft_isascii(<span class="tp">int</span> c)
+{
+	<span class="kw">if</span> (c >= 0 && c &lt;= 127)
+		<span class="kw">return</span> (1);
+	<span class="kw">return</span> (0);
+}</pre>
+        <h4 class="microhead">Technical Logic</h4>
+        <p>The full 7-bit ASCII table spans 0–127 inclusive — this is the widest range of any
+        classification function in the library, deliberately including control characters (0–31)
+        and <code class="inline">DEL</code> (127), which <code class="inline">ft_isprint</code>
+        explicitly excludes. Conflating these two functions is the single most common student bug
+        in this part of the subject.</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p>Identical structural template to its siblings — the value of a style standard is exactly
+        this: once you've internalized the shape, every function in the category reads
+        interchangeably.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p>Correctly returns <code class="inline">0</code> for negative input and for anything ≥128,
+        rather than relying on undefined or implementation-specific char-signedness behavior.</p>
+      </div>
+    </div>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_isprint</span><span class="concept">Concept: ASCII Range Testing</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="tp">int</span>    ft_isprint(<span class="tp">int</span> c)
+{
+	<span class="kw">if</span> (c >= 32 && c &lt;= 126)
+		<span class="kw">return</span> (1);
+	<span class="kw">return</span> (0);
+}</pre>
+        <h4 class="microhead">Technical Logic</h4>
+        <p>32 is the space character; 126 is <code class="inline">~</code> — the narrowest,
+        "displayable ink on a page" band of ASCII. Everything below 32 is a control character (tab,
+        newline, escape…), and 127 (<code class="inline">DEL</code>) is explicitly excluded, which is
+        why this range's upper bound is 126, not 127 like <code class="inline">ft_isascii</code>.</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p>The consistent template across all five classification functions is itself a demonstration
+        of Norm discipline — a reviewer can verify all five correctly at a glance because they share
+        one silhouette.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p>No pointer dereferencing; behavior is fully defined across the entire <code class="inline">int</code> domain.</p>
+      </div>
+    </div>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_toupper / ft_tolower</span><span class="concept">Concept: Bitwise Distance in ASCII</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="tp">int</span>    ft_toupper(<span class="tp">int</span> c)
+{
+	<span class="kw">if</span> (c >= <span class="cm">'a'</span> && c &lt;= <span class="cm">'z'</span>)
+		<span class="kw">return</span> (c - 32);
+	<span class="kw">return</span> (c);
+}
+
+<span class="tp">int</span>    ft_tolower(<span class="tp">int</span> c)
+{
+	<span class="kw">if</span> (c >= <span class="cm">'A'</span> && c &lt;= <span class="cm">'Z'</span>)
+		<span class="kw">return</span> (c + 32);
+	<span class="kw">return</span> (c);
+}</pre>
+        <h4 class="microhead">Technical Logic</h4>
+        <p>The magic number 32 is not arbitrary: in the ASCII table, every uppercase letter sits
+        exactly 32 codepoints below its lowercase counterpart (<code class="inline">'A'</code>=65,
+        <code class="inline">'a'</code>=97). Because this offset is <em>constant across the entire
+        alphabet</em>, one subtraction converts any lowercase letter to uppercase, and one addition
+        reverses it — no lookup table needed. Non-letter input is returned completely unmodified,
+        which matters because callers (like <code class="inline">ft_strmapi</code> callback examples)
+        may apply these functions to punctuation or digits without checking first.</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p>The guard-and-fallthrough shape persists even here, where the "fallthrough" case is an
+        identity transform rather than a boolean default — consistency of pattern over cleverness of
+        implementation.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p>Pure value transforms, no aliasing risk, no allocation. Safe against every possible
+        <code class="inline">int</code> input including negative values and values from
+        <code class="inline">EOF</code>.</p>
+      </div>
+    </div>
+
+    <!-- ===================== 3.2 MEMORY PRIMITIVES ===================== -->
+    <h3 class="subhead">3.2 — Memory Primitives</h3>
+    <p>This is where the library stops treating memory as "a string" and starts treating it as
+    <em>bytes</em>. Every function below operates through <code class="inline">unsigned char *</code>
+    — the only pointer type in C guaranteed to let you inspect memory one raw byte at a time,
+    regardless of what type actually lives there.</p>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_memset</span><span class="concept">Concept: Byte-Level Iteration</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="tp">void</span>    *ft_memset(<span class="tp">void</span> *b, <span class="tp">int</span> c, <span class="tp">size_t</span> len)
+{
+	<span class="tp">unsigned char</span>    *ptr;
+	<span class="tp">size_t</span>            i;
+
+	ptr = (<span class="tp">unsigned char</span> *)b;
+	i = 0;
+	<span class="kw">while</span> (i &lt; len)
+	{
+		ptr[i] = (<span class="tp">unsigned char</span>)c;
+		i++;
+	}
+	<span class="kw">return</span> (b);
+}</pre>
+        <h4 class="microhead">Technical Logic</h4>
+        <p>The incoming <code class="inline">void *b</code> carries no size information for
+        indexing — you cannot write <code class="inline">b[i]</code> on a <code class="inline">void *</code>.
+        The cast to <code class="inline">unsigned char *</code> gives the compiler a concrete,
+        one-byte stride, so <code class="inline">ptr[i]</code> advances exactly one byte per
+        iteration. <code class="inline">c</code> is truncated to <code class="inline">unsigned char</code>
+        before the write — this matches the real <code class="inline">memset</code>'s documented
+        behavior of only using the low 8 bits of its <code class="inline">int</code> argument, even
+        if a caller passes something larger.</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p>Two declarations at the top of the block, separated by a blank line from the executable
+        statements — the mandatory Norm layout. The function returns <code class="inline">b</code>
+        (the original, untouched pointer) rather than <code class="inline">ptr</code>, matching the
+        real <code class="inline">memset</code> contract exactly, even though internally the function
+        works through <code class="inline">ptr</code>.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p>Writes exactly <code class="inline">len</code> bytes — never more. If <code class="inline">len</code>
+        exceeds the actual allocated size of <code class="inline">b</code>, that's a caller error
+        (buffer overflow) no reimplementation can protect against without the size being passed
+        correctly in the first place; this mirrors real <code class="inline">memset</code>'s contract
+        precisely.</p>
+      </div>
+    </div>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_bzero</span><span class="concept">Concept: Byte-Level Iteration</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="tp">void</span>    ft_bzero(<span class="tp">void</span> *s, <span class="tp">size_t</span> n)
+{
+	<span class="tp">unsigned char</span>    *ptr;
+	<span class="tp">size_t</span>            i;
+
+	ptr = (<span class="tp">unsigned char</span> *)s;
+	i = 0;
+	<span class="kw">while</span> (i &lt; n)
+	{
+		ptr[i] = 0;
+		i++;
+	}
+}</pre>
+        <h4 class="microhead">Technical Logic</h4>
+        <p>Structurally identical to <code class="inline">ft_memset</code> with the fill byte fixed
+        at <code class="inline">0</code> and no return value — <code class="inline">bzero</code> was
+        historically a BSD convenience wrapper for exactly this common case. This implementation is
+        reused internally by <code class="inline">ft_calloc</code> to zero freshly allocated memory.</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p>Consistent byte-iteration template shared with <code class="inline">ft_memset</code> —
+        two functions that look nearly identical because they <em>are</em> nearly identical in
+        purpose, which is exactly what a reader should expect.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p>Same contract as <code class="inline">ft_memset</code>: writes exactly <code class="inline">n</code>
+        bytes, no more. Used correctly by <code class="inline">ft_calloc</code> with a
+        pre-overflow-checked size (see 3.4).</p>
+      </div>
+    </div>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_memcpy</span><span class="concept">Concept: Non-Overlapping Byte Copy</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="tp">void</span>    *ft_memcpy(<span class="tp">void</span> *dst, <span class="tp">const void</span> *src, <span class="tp">size_t</span> n)
+{
+	<span class="tp">unsigned char</span>          *d;
+	<span class="tp">const unsigned char</span>    *s;
+	<span class="tp">size_t</span>                  i;
+
+	i = 0;
+	d = (<span class="tp">unsigned char</span> *)dst;
+	s = (<span class="tp">const unsigned char</span> *)src;
+	<span class="kw">while</span> (i &lt; n)
+	{
+		d[i] = s[i];
+		i++;
+	}
+	<span class="kw">return</span> (dst);
+}</pre>
+        <div class="diagram">src:  [A][B][C][D][E]
+       │  │  │  │  │
+       ▼  ▼  ▼  ▼  ▼
+dst:  [.][.][.][.][.]  ──►  [A][B][C][D][E]
+
+<span class="cap">Left-to-right, one byte at a time. Safe ONLY when src and dst do not overlap.</span></div>
+        <h4 class="microhead">Technical Logic</h4>
+        <p>Two typed pointers are derived from the two <code class="inline">void *</code> parameters
+        — note <code class="inline">s</code> is declared <code class="inline">const unsigned char *</code>,
+        preserving the read-only guarantee the caller made about <code class="inline">src</code>. The
+        loop is a straightforward forward copy. Unlike <code class="inline">ft_memmove</code>, this
+        function performs <b>no overlap detection</b> — that's not a bug, it's the documented contract
+        of <code class="inline">memcpy</code> itself: behavior is undefined if the regions overlap,
+        and the caller is responsible for choosing <code class="inline">memmove</code> instead when
+        overlap is possible.</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p><b>Historical note on this exact function:</b> an earlier revision of this file declared
+        the second parameter as <code class="inline">const char *src</code> instead of
+        <code class="inline">const void *src</code> — a signature mismatch against the header that the
+        compiler caught immediately as <code class="inline">error: conflicting types for 'ft_memcpy'</code>.
+        This is a useful case study in why <code class="inline">-Werror</code> exists: the fix was a
+        single word, but the header contract makes such mismatches impossible to ship silently.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p>Copies exactly <code class="inline">n</code> bytes. The single documented caveat — overlap
+        — is explicitly the reason <code class="inline">ft_memmove</code> exists as a separate,
+        slower-but-safer function. Calling <code class="inline">ft_memcpy</code> on overlapping
+        regions is undefined behavior by design, matching the real libc function precisely.</p>
+      </div>
+    </div>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_memmove</span><span class="concept">Concept: Direction-Aware Copying</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="tp">void</span>    *ft_memmove(<span class="tp">void</span> *dst, <span class="tp">const void</span> *src, <span class="tp">size_t</span> len)
+{
+	<span class="tp">unsigned char</span>          *d;
+	<span class="tp">const unsigned char</span>    *s;
+
+	<span class="kw">if</span> (!dst && !src)
+		<span class="kw">return</span> (<span class="tp">NULL</span>);
+	d = (<span class="tp">unsigned char</span> *)dst;
+	s = (<span class="tp">const unsigned char</span> *)src;
+	<span class="kw">if</span> (d > s)
+	{
+		<span class="kw">while</span> (len > 0)
+		{
+			len--;
+			d[len] = s[len];
+		}
+	}
+	<span class="kw">else</span>
+	{
+		<span class="kw">while</span> (len--)
+			*d++ = *s++;
+	}
+	<span class="kw">return</span> (dst);
+}</pre>
+        <div class="diagram">Case: dst is AHEAD of src (d > s) — copy BACKWARD, high index first
+
+src: [A][B][C][D][E]
+dst:     [.][.][.][.][.]
+          ▲              (copying index 4 first prevents it being
+          └── last write overwritten before it's read)
+
+Case: dst is BEHIND src (d <= s) — copy FORWARD, low index first
+
+src:     [A][B][C][D][E]
+dst: [.][.][.][.][.]
+      ▲                  (copying index 0 first is safe — src[0]
+      └── first write    is never touched by an earlier dst write)
+<span class="cap">The direction of traversal is chosen so no byte is overwritten before it's been read.</span></div>
+        <h4 class="microhead">Technical Logic</h4>
+        <p>This is the most conceptually important function in the memory-primitives group. When
+        <code class="inline">dst</code> and <code class="inline">src</code> overlap and dst sits at a
+        <em>higher</em> address, a naive forward copy would overwrite <code class="inline">src[k]</code>
+        with <code class="inline">src[k - offset]</code> before the original <code class="inline">src[k]</code>
+        has been read — corrupting the tail of the copy. The fix is to detect this case
+        (<code class="inline">d > s</code>) and copy <b>backward</b>, from the last byte to the first,
+        so every byte is read before the write that could clobber it ever happens. When
+        <code class="inline">d &lt;= s</code>, a forward copy is always safe regardless of overlap,
+        so the function takes the simpler, faster pointer-increment path
+        (<code class="inline">*d++ = *s++</code>).</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p>The <code class="inline">if (!dst && !src) return (NULL)</code> guard is a defensive
+        addition beyond the strict letter of the man page (real <code class="inline">memmove</code>
+        has undefined behavior on null pointers regardless of <code class="inline">len</code>) — a
+        reasonable, Norm-legal judgment call that costs one branch and avoids a crash in the specific
+        double-null case.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p>This function is precisely what makes safe self-overlapping shifts possible — for example,
+        shifting an array's contents left or right in place. Getting the direction check backward
+        (using <code class="inline">&gt;=</code> instead of <code class="inline">&gt;</code>, or
+        inverting the branches) is the single most common way students silently corrupt data in this
+        function while it still "compiles fine" — there's no compiler warning for a logically
+        reversed overlap check.</p>
+      </div>
+    </div>
+
+    <!-- ===================== 3.3 STRING INSPECTION ===================== -->
+    <h3 class="subhead">3.3 — String Inspection &amp; Comparison</h3>
+    <p>Eight functions that read strings without modifying them — searching, comparing, and
+    converting. This is the category most dependent on getting loop <em>termination conditions</em>
+    exactly right, since an off-by-one here means reading past a buffer's end.</p>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_strlen</span><span class="concept">Concept: Sentinel-Terminated Traversal</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="tp">size_t</span>    ft_strlen(<span class="kw">const</span> <span class="tp">char</span> *s)
+{
+	<span class="tp">size_t</span>    len;
+
+	len = 0;
+	<span class="kw">while</span> (s[len] != <span class="cm">'\0'</span>)
+	{
+		len++;
+	}
+	<span class="kw">return</span> (len);
+}</pre>
+        <h4 class="microhead">Technical Logic</h4>
+        <p>C strings carry no length field — length is determined entirely by scanning forward until
+        the null terminator <code class="inline">'\0'</code> (byte value 0) is found. This function is
+        the foundation every other string function in the library is built on top of, directly or
+        indirectly (via <code class="inline">ft_strlcpy</code>).</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p>Return type is <code class="inline">size_t</code> — an unsigned type — matching the real
+        <code class="inline">strlen</code> exactly, which matters because it means length can never
+        be negative, but also means subtracting two lengths carelessly can silently wrap around to a
+        huge positive number (a trap several other functions, like <code class="inline">ft_strlcat</code>,
+        must guard against explicitly).</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p>Relies entirely on the caller passing a properly null-terminated buffer — there's no way
+        for any string function to verify this from inside; passing a non-terminated
+        <code class="inline">char *</code> is undefined behavior in C generally, not a
+        libft-specific limitation.</p>
+      </div>
+    </div>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_strlcpy / ft_strlcat</span><span class="concept">Concept: Bounded Writes</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="tp">size_t</span>    ft_strlcpy(<span class="tp">char</span> *dst, <span class="kw">const</span> <span class="tp">char</span> *src, <span class="tp">size_t</span> dstsize)
+{
+	<span class="tp">size_t</span>    src_len;
+	<span class="tp">size_t</span>    i;
+
+	src_len = 0;
+	<span class="kw">while</span> (src[src_len] != <span class="cm">'\0'</span>)
+		src_len++;
+	<span class="kw">if</span> (dstsize == 0)
+		<span class="kw">return</span> (src_len);
+	i = 0;
+	<span class="kw">while</span> (src[i] != <span class="cm">'\0'</span> && i &lt; (dstsize - 1))
+	{
+		dst[i] = src[i];
+		i++;
+	}
+	dst[i] = <span class="cm">'\0'</span>;
+	<span class="kw">return</span> (src_len);
+}</pre>
+        <h4 class="microhead">Technical Logic</h4>
+        <p>The entire point of the "l" in <code class="inline">strlcpy</code> ("length-bounded") is
+        that it <b>never writes past <code class="inline">dstsize</code></b>, unlike the notoriously
+        unsafe <code class="inline">strcpy</code>. The copy loop stops at <code class="inline">dstsize - 1</code>
+        to always reserve one byte for the terminating <code class="inline">'\0'</code>. Critically,
+        the <b>return value is the full source length</b>, not the number of bytes actually copied —
+        this lets a caller detect truncation by checking <code class="inline">if (ft_strlcpy(...) >= dstsize)</code>.</p>
+        <p><code class="inline">ft_strlcat</code> follows the same discipline in its own file: it
+        first measures how much of <code class="inline">dst</code> is already used (bounded by
+        <code class="inline">dstsize</code>), and — this is the detail most reimplementations miss —
+        if <code class="inline">dst</code> is <em>already</em> at or past its capacity
+        (<code class="inline">dst_len >= dstsize</code>), it returns immediately without touching
+        <code class="inline">dst</code> at all, rather than attempting a partial, corrupting write.</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p><code class="inline">dstsize == 0</code> is checked as an explicit early branch before any
+        indexing occurs — necessary because with <code class="inline">dstsize</code> as an unsigned
+        <code class="inline">size_t</code>, computing <code class="inline">dstsize - 1</code> when
+        <code class="inline">dstsize</code> is already <code class="inline">0</code> would wrap around
+        to <code class="inline">SIZE_MAX</code>, turning a bounded loop into an unbounded one.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p>This pairing (<code class="inline">strlcpy</code>/<code class="inline">strlcat</code>) is
+        the primary defense the rest of the library relies on for building strings without overflow —
+        <code class="inline">ft_strjoin</code>, <code class="inline">ft_strtrim</code>, and
+        <code class="inline">ft_substr</code> all delegate their actual byte-copying to
+        <code class="inline">ft_strlcpy</code> rather than reimplementing bounds logic each time.</p>
+      </div>
+    </div>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_strchr / ft_strrchr</span><span class="concept">Concept: Forward vs. Reverse Search</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="tp">char</span>    *ft_strchr(<span class="kw">const</span> <span class="tp">char</span> *s, <span class="tp">int</span> c)
+{
+	<span class="tp">size_t</span>    i;
+
+	i = 0;
+	<span class="kw">while</span> (s[i] != <span class="cm">'\0'</span>)
+	{
+		<span class="kw">if</span> (s[i] == (<span class="tp">char</span>)c)
+			<span class="kw">return</span> ((<span class="tp">char</span> *)&s[i]);
+		i++;
+	}
+	<span class="kw">if</span> ((<span class="tp">char</span>)c == <span class="cm">'\0'</span>)
+		<span class="kw">return</span> ((<span class="tp">char</span> *)&s[i]);
+	<span class="kw">return</span> (<span class="tp">NULL</span>);
+}</pre>
+        <div class="diagram">s:  h  e  l  l  o  \0
+    │              │
+    │◄── strchr ───┘   scans LEFT → RIGHT, stops at first match
+    │
+    └──── strrchr ──►  scans full length first, then RIGHT → LEFT
+<span class="cap">Same signature, opposite traversal direction — hence 'r' for reverse.</span></div>
+        <h4 class="microhead">Technical Logic</h4>
+        <p>The subtle, easy-to-miss detail in both functions: <b>the null terminator itself is a
+        valid search target.</b> Real <code class="inline">strchr(s, '\0')</code> is defined to
+        return a pointer to the terminating null byte, not <code class="inline">NULL</code> — this
+        implementation explicitly checks for that case <em>after</em> the main loop exits, rather
+        than treating loop-exit as automatic failure.</p>
+        <p><code class="inline">ft_strrchr</code> takes a different approach: it first walks forward
+        to find the string's length (landing exactly on the null terminator), then walks
+        <em>backward</em> from there. Because the initial position <em>is</em> the null terminator,
+        the very first check inside the descending loop naturally also handles the
+        <code class="inline">c == '\0'</code> case, without a separate branch.</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p>Both cast <code class="inline">c</code> to <code class="inline">char</code> before
+        comparison — necessary because <code class="inline">c</code> arrives as <code class="inline">int</code>
+        (matching the real prototype, which allows passing values like <code class="inline">EOF</code>
+        without truncation warnings at the call site), but string bytes are compared as
+        <code class="inline">char</code>.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p>Both return a pointer <em>into</em> the original string, never an allocation — callers must
+        not <code class="inline">free()</code> the result, exactly matching real libc behavior. No
+        bounds are exceeded because the loop conditions are anchored to the null terminator itself.</p>
+      </div>
+    </div>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_strncmp / ft_memcmp</span><span class="concept">Concept: Byte-Difference Return Convention</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="tp">int</span>    ft_strncmp(<span class="kw">const</span> <span class="tp">char</span> *s1, <span class="kw">const</span> <span class="tp">char</span> *s2, <span class="tp">size_t</span> n)
+{
+	<span class="tp">size_t</span>    i;
+
+	i = 0;
+	<span class="kw">if</span> (n == 0)
+		<span class="kw">return</span> (0);
+	<span class="kw">while</span> (s1[i] != <span class="cm">'\0'</span> && s1[i] == s2[i] && i &lt; (n - 1))
+		i++;
+	<span class="kw">return</span> ((<span class="tp">unsigned char</span>)s1[i] - (<span class="tp">unsigned char</span>)s2[i]);
+}</pre>
+        <h4 class="microhead">Technical Logic</h4>
+        <p>Both functions share the same return-value contract: not just "equal or not," but the
+        actual <em>signed numeric difference</em> between the first mismatching byte pair — a
+        negative result means <code class="inline">s1</code> sorts before <code class="inline">s2</code>,
+        positive means after, zero means the compared region is identical. The loop condition in
+        <code class="inline">ft_strncmp</code> stops early on three independent conditions: hitting the
+        end of <code class="inline">s1</code>, finding a mismatch, or exhausting <code class="inline">n - 1</code>
+        comparisons — after which the final line computes the difference at whichever position the
+        loop stopped, whether that's a real mismatch or the natural end of the string.</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p>The <code class="inline">n == 0</code> guard exists for the same reason as in
+        <code class="inline">ft_strlcpy</code>: with <code class="inline">n</code> unsigned, an
+        unguarded <code class="inline">n - 1</code> would wrap to <code class="inline">SIZE_MAX</code>.
+        Both bytes are cast to <code class="inline">unsigned char</code> before subtraction — required
+        because plain <code class="inline">char</code> may be signed on a given platform, which would
+        make the sign of the returned difference platform-dependent for byte values above 127.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p>Read-only, bounded strictly by <code class="inline">n</code> — never reads past the shorter
+        of the two strings or past <code class="inline">n</code> bytes, whichever comes first.</p>
+      </div>
+    </div>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_memchr</span><span class="concept">Concept: Byte-Level Search</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="tp">void</span>    *ft_memchr(<span class="kw">const void</span> *s, <span class="tp">int</span> c, <span class="tp">size_t</span> n)
+{
+	<span class="tp">size_t</span>                  i;
+	<span class="kw">const</span> <span class="tp">unsigned char</span>    *ptr;
+
+	ptr = (<span class="kw">const</span> <span class="tp">unsigned char</span> *)s;
+	i = 0;
+	<span class="kw">while</span> (i &lt; n)
+	{
+		<span class="kw">if</span> (ptr[i] == (<span class="tp">unsigned char</span>)c)
+			<span class="kw">return</span> ((<span class="tp">void</span> *)&ptr[i]);
+		i++;
+	}
+	<span class="kw">return</span> (<span class="tp">NULL</span>);
+}</pre>
+        <h4 class="microhead">Technical Logic</h4>
+        <p>Unlike <code class="inline">ft_strchr</code>, this function has no concept of a null
+        terminator stopping the search — it operates purely on <code class="inline">n</code> raw bytes,
+        making it usable on binary data that may legitimately contain zero bytes in the middle. This
+        is the defining difference between the "mem" and "str" families throughout the library.</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p>Returns <code class="inline">void *</code>, not <code class="inline">char *</code> — matching
+        the real signature, since the function is defined to operate on arbitrary memory, not
+        specifically text.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p>Bounded strictly by <code class="inline">n</code>; will never read past the caller-specified
+        length regardless of what bytes actually live in memory.</p>
+      </div>
+    </div>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_strnstr</span><span class="concept">Concept: Nested Bounded Search</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="tp">char</span>    *ft_strnstr(<span class="kw">const</span> <span class="tp">char</span> *haystack, <span class="kw">const</span> <span class="tp">char</span> *needle, <span class="tp">size_t</span> len)
+{
+	<span class="tp">size_t</span>    i;
+	<span class="tp">size_t</span>    j;
+
+	i = 0;
+	<span class="kw">if</span> (needle[0] == <span class="cm">'\0'</span>)
+		<span class="kw">return</span> ((<span class="tp">char</span> *)haystack);
+	<span class="kw">while</span> (haystack[i] != <span class="cm">'\0'</span> && i &lt; len)
+	{
+		j = 0;
+		<span class="kw">while</span> (haystack[i + j] == needle[j] && (i + j) &lt; len)
+		{
+			<span class="kw">if</span> (needle[j + 1] == <span class="cm">'\0'</span>)
+				<span class="kw">return</span> ((<span class="tp">char</span> *)&haystack[i]);
+			j++;
+		}
+		i++;
+	}
+	<span class="kw">return</span> (<span class="tp">NULL</span>);
+}</pre>
+        <h4 class="microhead">Technical Logic</h4>
+        <p>A nested-loop substring search: the outer loop <code class="inline">i</code> tries each
+        starting position in <code class="inline">haystack</code>; the inner loop
+        <code class="inline">j</code> checks whether <code class="inline">needle</code> matches
+        starting there. The match is confirmed the instant <code class="inline">needle[j + 1] == '\0'</code>
+        — meaning every character of <code class="inline">needle</code> matched up to and including its
+        last — rather than waiting to separately verify needle's length first.</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p>The empty-needle case (<code class="inline">needle[0] == '\0'</code>) is handled as an
+        explicit early return matching the documented real behavior: an empty needle is defined to
+        match at the very start of haystack, immediately.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p>Both loop conditions independently enforce the <code class="inline">len</code> bound
+        (<code class="inline">i &lt; len</code> and <code class="inline">(i + j) &lt; len</code>), so the
+        function can never read past position <code class="inline">len</code> in
+        <code class="inline">haystack</code> even if <code class="inline">needle</code> is long and
+        <code class="inline">haystack</code> lacks a null terminator within that range.</p>
+      </div>
+    </div>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_atoi</span><span class="concept">Concept: Manual Lexical Parsing</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="tp">int</span>    ft_atoi(<span class="kw">const</span> <span class="tp">char</span> *str)
+{
+	<span class="tp">size_t</span>    i;
+	<span class="tp">int</span>       sign;
+	<span class="tp">int</span>       result;
+
+	i = 0;
+	sign = 1;
+	result = 0;
+	<span class="kw">while</span> (str[i] == <span class="cm">' '</span> || (str[i] >= 9 && str[i] &lt;= 13))
+		i++;
+	<span class="kw">if</span> (str[i] == <span class="cm">'-'</span> || str[i] == <span class="cm">'+'</span>)
+	{
+		<span class="kw">if</span> (str[i] == <span class="cm">'-'</span>)
+			sign = -1;
+		i++;
+	}
+	<span class="kw">while</span> (str[i] >= <span class="cm">'0'</span> && str[i] &lt;= <span class="cm">'9'</span>)
+	{
+		result = (result * 10) + (str[i] - <span class="cm">'0'</span>);
+		i++;
+	}
+	<span class="kw">return</span> (result * sign);
+}</pre>
+        <div class="diagram">"   -42abc"
+    ▲▲▲▲▲▲▲▲
+    ││││││└┴─ digits consumed: '4','2' → result builds 4, then 42
+    ││││││
+    │││││└─── sign consumed: '-' → sign = -1
+    │└┴┴┴──── whitespace skipped (space + \t\n\v\f\r, codes 9-13)
+    └──────── parsing stops the instant a non-digit ('a') appears
+<span class="cap">Three sequential phases: skip whitespace → read optional sign → accumulate digits.</span></div>
+        <h4 class="microhead">Technical Logic</h4>
+        <p>Three sequential, non-overlapping phases, matching the real <code class="inline">atoi</code>'s
+        documented grammar exactly. Phase one skips any mix of spaces and the whitespace control codes
+        9 through 13 (tab, newline, vertical tab, form feed, carriage return). Phase two consumes at
+        most one <code class="inline">+</code> or <code class="inline">-</code>. Phase three
+        accumulates digits via the classic <code class="inline">result = result * 10 + digit</code>
+        pattern, which is simply long multiplication performed one digit at a time — and simply
+        <em>stops</em>, without error, the moment a non-digit character appears (including a
+        second sign, or letters).</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p>Three separate, purpose-named variables (<code class="inline">i</code>,
+        <code class="inline">sign</code>, <code class="inline">result</code>) declared together at
+        the top, each with a single clear responsibility — exactly the kind of variable hygiene Norm
+        is designed to enforce, since a reviewer can understand the function's state just from the
+        declaration block before reading a single line of logic.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p><b>Edge case worth naming explicitly: <code class="inline">INT_MIN</code>.</b> For the input
+        <code class="inline">"-2147483648"</code>, digits accumulate as a <em>positive</em>
+        <code class="inline">int</code> up to <code class="inline">2147483648</code> before the final
+        multiplication by <code class="inline">sign</code> — but <code class="inline">2147483648</code>
+        itself overflows a 32-bit signed <code class="inline">int</code> (max
+        <code class="inline">2147483647</code>) one step before the sign is even applied. This is
+        technically undefined behavior per the C standard for a strictly conforming reimplementation,
+        but it is the exact same behavior the real glibc <code class="inline">atoi</code> exhibits on
+        this input in practice (the overflow wraps consistently to <code class="inline">INT_MIN</code>
+        on twos-complement hardware), so this implementation's behavior matches the reference it's
+        being graded against.</p>
+      </div>
+    </div>
+
+    <!-- ===================== 3.4 HEAP ALLOCATION ===================== -->
+    <h3 class="subhead">3.4 — Heap Allocation</h3>
+    <p>The first two functions in the library that call <code class="inline">malloc</code> directly.
+    Everything from here on must be paired with a corresponding <code class="inline">free()</code> by
+    the caller — this is the boundary where memory-leak discipline starts to matter.</p>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_calloc</span><span class="concept">Concept: Overflow-Checked Multiplication</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="tp">void</span>    *ft_calloc(<span class="tp">size_t</span> count, <span class="tp">size_t</span> size)
+{
+	<span class="tp">void</span>      *ptr;
+	<span class="tp">size_t</span>    total_size;
+
+	<span class="kw">if</span> (count != 0 && size > (<span class="tp">size_t</span>)-1 / count)
+		<span class="kw">return</span> (<span class="tp">NULL</span>);
+	total_size = count * size;
+	ptr = malloc(total_size);
+	<span class="kw">if</span> (ptr == <span class="tp">NULL</span>)
+		<span class="kw">return</span> (<span class="tp">NULL</span>);
+	ft_bzero(ptr, total_size);
+	<span class="kw">return</span> (ptr);
+}</pre>
+        <h4 class="microhead">Technical Logic</h4>
+        <p>The entire reason <code class="inline">calloc</code> exists as a separate function from
+        <code class="inline">malloc</code> + manual zeroing is this exact overflow check. If
+        <code class="inline">count * size</code> were computed directly and it overflowed
+        <code class="inline">size_t</code>, the wrapped-around result could be a <em>small</em> number
+        — <code class="inline">malloc</code> would happily succeed with a tiny buffer, and the caller,
+        believing they have <code class="inline">count * size</code> usable bytes, would write far
+        past its end. The guard rearranges the multiplication into a division
+        (<code class="inline">size > SIZE_MAX / count</code>) specifically so the overflow check
+        itself cannot overflow — <code class="inline">(size_t)-1</code> is a standard, portable way to
+        obtain <code class="inline">SIZE_MAX</code> without needing to
+        <code class="inline">#include &lt;limits.h&gt;</code>.</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p>Reuses <code class="inline">ft_bzero</code> rather than a hand-rolled zeroing loop —
+        consistent with the library's composition-over-duplication discipline established back in
+        <code class="inline">ft_isalnum</code>.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p>Handles the documented edge case explicitly: when <code class="inline">count</code> or
+        <code class="inline">size</code> is <code class="inline">0</code>, the overflow guard is
+        skipped (<code class="inline">count != 0</code> short-circuits), <code class="inline">total_size</code>
+        becomes <code class="inline">0</code>, and <code class="inline">malloc(0)</code> is called —
+        which on this platform returns a unique, non-NULL pointer that is safely passable to
+        <code class="inline">free()</code>, exactly matching the behavior the subject explicitly
+        mandates.</p>
+      </div>
+    </div>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_strdup</span><span class="concept">Concept: Measure-Then-Allocate</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="tp">char</span>    *ft_strdup(<span class="kw">const</span> <span class="tp">char</span> *s1)
+{
+	<span class="tp">char</span>      *dest;
+	<span class="tp">size_t</span>    len;
+
+	len = 0;
+	<span class="kw">while</span> (s1[len] != <span class="cm">'\0'</span>)
+		len++;
+	dest = (<span class="tp">char</span> *)malloc(<span class="kw">sizeof</span>(<span class="tp">char</span>) * (len + 1));
+	<span class="kw">if</span> (dest == <span class="tp">NULL</span>)
+		<span class="kw">return</span> (<span class="tp">NULL</span>);
+	ft_strlcpy(dest, s1, len + 1);
+	<span class="kw">return</span> (dest);
+}</pre>
+        <h4 class="microhead">Technical Logic</h4>
+        <p>The canonical two-phase allocation pattern used throughout the rest of the library: first
+        <b>measure</b> exactly how much space is needed (here, a manual length scan identical in
+        shape to <code class="inline">ft_strlen</code>), then <b>allocate exactly that much</b> —
+        <code class="inline">len + 1</code> to include room for the terminator — and finally copy.
+        Delegating the actual copy to <code class="inline">ft_strlcpy</code> means the bounds-safety
+        logic lives in exactly one place in the entire library.</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p><code class="inline">sizeof(char)</code> is technically always <code class="inline">1</code>
+        by the C standard's own guarantee, making it redundant multiplicatively — but it's included
+        for self-documentation, a defensible and common style choice that costs nothing at runtime.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p>The <code class="inline">malloc</code> failure path is checked before any write occurs, and
+        <code class="inline">NULL</code> is propagated rather than dereferenced — matching the
+        subject's explicit contract that this function returns <code class="inline">NULL</code> if the
+        allocation fails. The caller is responsible for eventually calling
+        <code class="inline">free()</code> on the returned pointer; this function has no way to leak
+        memory itself, only to correctly hand ownership to its caller.</p>
+      </div>
+    </div>
+
+    <!-- ===================== 3.5 STRING CONSTRUCTION ===================== -->
+    <h3 class="subhead">3.5 — String Construction</h3>
+    <p>Five functions that build <em>new</em> strings on the heap from existing ones. This is the
+    category where edge-case handling around bounds — start indices past the string's end, lengths
+    that overshoot — separates a technically-compiling function from a genuinely correct one.</p>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_substr</span><span class="concept">Concept: Clamped Range Extraction</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="tp">char</span>    *ft_substr(<span class="tp">char</span> <span class="kw">const</span> *s, <span class="tp">unsigned int</span> start, <span class="tp">size_t</span> len)
+{
+	<span class="tp">char</span>      *sub;
+	<span class="tp">size_t</span>    s_len;
+
+	<span class="kw">if</span> (!s)
+		<span class="kw">return</span> (<span class="tp">NULL</span>);
+	s_len = ft_strlen(s);
+	<span class="kw">if</span> (start >= s_len)
+		<span class="kw">return</span> (ft_strdup(<span class="cm">""</span>));
+	<span class="kw">if</span> (len > s_len - start)
+		len = s_len - start;
+	sub = (<span class="tp">char</span> *)malloc(<span class="kw">sizeof</span>(<span class="tp">char</span>) * (len + 1));
+	<span class="kw">if</span> (!sub)
+		<span class="kw">return</span> (<span class="tp">NULL</span>);
+	ft_strlcpy(sub, s + start, len + 1);
+	<span class="kw">return</span> (sub);
+}</pre>
+        <div class="diagram">s = "hello world"   start=6   len=100 (deliberately too large)
+
+index:  0    5 6          10
+        h e l l o _ w o r l d \0
+                  └────┬────┘
+              actual available = s_len - start = 5
+              len gets CLAMPED from 100 down to 5
+
+result → "world"  (never reads past s's actual end)</div>
+        <h4 class="microhead">Technical Logic</h4>
+        <p>Two defensive clamps, in order. First: if <code class="inline">start</code> is already
+        beyond the string's end, there is nothing to extract — return an empty (but valid, allocated)
+        string rather than attempting arithmetic that would underflow. Second: even when
+        <code class="inline">start</code> is valid, the caller-requested <code class="inline">len</code>
+        may ask for more characters than actually remain — <code class="inline">len</code> is silently
+        reduced to <code class="inline">s_len - start</code>, the true remaining length, before any
+        allocation happens.</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p>The clamping logic is expressed as two independent, sequential <code class="inline">if</code>
+        guards rather than one compound condition — each guard protects exactly one downstream
+        computation (the first protects the subtraction on the next line; the second protects the
+        allocation size), which keeps each condition readable in isolation.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p>This is the exact function that, in an earlier revision of this project, was accidentally
+        replaced by a copy-pasted body of <code class="inline">ft_strdup</code> — a bug invisible to
+        both the compiler and Norminette, since the swapped-in code was itself valid, norm-compliant
+        C. It only surfaced when a real program tried to link against <code class="inline">ft_substr</code>
+        and the linker had no symbol by that name. The lesson generalizes: <b>a clean compile and a
+        clean Norm check are necessary but not sufficient evidence of correctness</b> — only running
+        the function proves it does what its name claims.</p>
+      </div>
+    </div>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_strjoin</span><span class="concept">Concept: Two-Phase Concatenation</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="tp">char</span>    *ft_strjoin(<span class="tp">char</span> <span class="kw">const</span> *s1, <span class="tp">char</span> <span class="kw">const</span> *s2)
+{
+	<span class="tp">char</span>      *joined;
+	<span class="tp">size_t</span>    s1_len;
+	<span class="tp">size_t</span>    s2_len;
+
+	<span class="kw">if</span> (!s1 || !s2)
+		<span class="kw">return</span> (<span class="tp">NULL</span>);
+	s1_len = 0;
+	<span class="kw">while</span> (s1[s1_len] != <span class="cm">'\0'</span>)
+		s1_len++;
+	s2_len = 0;
+	<span class="kw">while</span> (s2[s2_len] != <span class="cm">'\0'</span>)
+		s2_len++;
+	joined = (<span class="tp">char</span> *)malloc(<span class="kw">sizeof</span>(<span class="tp">char</span>) * (s1_len + s2_len + 1));
+	<span class="kw">if</span> (joined == <span class="tp">NULL</span>)
+		<span class="kw">return</span> (<span class="tp">NULL</span>);
+	ft_strlcpy(joined, s1, s1_len + 1);
+	ft_strlcat(joined, s2, s1_len + s2_len + 1);
+	<span class="kw">return</span> (joined);
+}</pre>
+        <h4 class="microhead">Technical Logic</h4>
+        <p>Measure both input lengths first, allocate exactly <code class="inline">s1_len + s2_len + 1</code>
+        bytes in one call, then use <code class="inline">ft_strlcpy</code> to place
+        <code class="inline">s1</code> and <code class="inline">ft_strlcat</code> to append
+        <code class="inline">s2</code> — note the third argument to
+        <code class="inline">ft_strlcat</code> is the <em>total</em> buffer size
+        (<code class="inline">s1_len + s2_len + 1</code>), not just <code class="inline">s2</code>'s
+        length, since <code class="inline">strlcat</code>'s contract requires the full destination
+        capacity to correctly bound its internal scan.</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p>A single allocation sized precisely, rather than an oversized buffer with slack — this
+        matters both for Norm's implicit expectation of deliberate, justified sizing and for memory
+        efficiency at scale.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p><code class="inline">NULL</code>-checks both inputs before any length computation — calling
+        <code class="inline">ft_strlen</code>-style scanning on a <code class="inline">NULL</code>
+        pointer would itself be undefined behavior, so the guard must come first, not after.</p>
+      </div>
+    </div>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_strtrim</span><span class="concept">Concept: Bidirectional Boundary Search</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="tp">char</span>    *ft_strtrim(<span class="tp">char</span> <span class="kw">const</span> *s1, <span class="tp">char</span> <span class="kw">const</span> *set)
+{
+	<span class="tp">size_t</span>    start;
+	<span class="tp">size_t</span>    end;
+	<span class="tp">char</span>      *trimmed;
+
+	<span class="kw">if</span> (!s1 || !set)
+		<span class="kw">return</span> (<span class="tp">NULL</span>);
+	start = 0;
+	<span class="kw">while</span> (s1[start] != <span class="cm">'\0'</span> && ft_strchr(set, s1[start]))
+		start++;
+	end = ft_strlen(s1);
+	<span class="kw">while</span> (end > start && ft_strchr(set, s1[end - 1]))
+		end--;
+	trimmed = (<span class="tp">char</span> *)malloc(<span class="kw">sizeof</span>(<span class="tp">char</span>) * (end - start + 1));
+	<span class="kw">if</span> (trimmed == <span class="tp">NULL</span>)
+		<span class="kw">return</span> (<span class="tp">NULL</span>);
+	ft_strlcpy(trimmed, &s1[start], end - start + 1);
+	<span class="kw">return</span> (trimmed);
+}</pre>
+        <div class="diagram">s1  = "xxhelloxx"    set = "x"
+
+start ─►│ x x h e l l o x x │◄─ end (walked backward from length)
+         └─┬─┘             └─┬─┘
+      skipped while      skipped while
+    ft_strchr(set,c)    ft_strchr(set,c)
+      is truthy            is truthy
+
+result = s1[start .. end)  =  "hello"</div>
+        <h4 class="microhead">Technical Logic</h4>
+        <p>Two independent boundary searches, each reusing <code class="inline">ft_strchr</code> as a
+        membership test against <code class="inline">set</code>: "is this character one of the ones
+        I should trim?" <code class="inline">start</code> advances from the front while the current
+        character is a member of <code class="inline">set</code>; <code class="inline">end</code>
+        retreats from the back under the same test. The critical guard is
+        <code class="inline">end > start</code> in the second loop — without it, a string made
+        <em>entirely</em> of trim characters would let <code class="inline">end</code> walk backward
+        past <code class="inline">start</code> and underflow past index <code class="inline">0</code>.</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p>Reuses <code class="inline">ft_strchr</code> for membership testing rather than writing a
+        custom character-set scan — the same composition discipline seen throughout the library,
+        applied here to avoid a third string-scanning idiom.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p>Handles the "entire string is trim characters" edge case correctly: <code class="inline">start</code>
+        and <code class="inline">end</code> converge to the same index, the allocation size becomes
+        exactly <code class="inline">1</code> (room for just <code class="inline">'\0'</code>), and
+        the result is a valid, empty, freeable string — not a crash.</p>
+      </div>
+    </div>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_split</span><span class="concept">Concept: Two-Pass Tokenization</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="kw">static</span> <span class="tp">size_t</span>    count_words(<span class="tp">char</span> <span class="kw">const</span> *s, <span class="tp">char</span> c)
+{
+	<span class="tp">size_t</span>    count;
+	<span class="tp">size_t</span>    i;
+
+	count = 0;
+	i = 0;
+	<span class="kw">while</span> (s[i] != <span class="cm">'\0'</span>)
+	{
+		<span class="kw">if</span> (s[i] != c && (s[i + 1] == c || s[i + 1] == <span class="cm">'\0'</span>))
+			count++;
+		i++;
+	}
+	<span class="kw">return</span> (count);
+}
+
+<span class="kw">static</span> <span class="tp">char</span>    *alloc_word(<span class="tp">char</span> <span class="kw">const</span> *s, <span class="tp">char</span> c, <span class="tp">size_t</span> *index)
+{
+	<span class="tp">size_t</span>    len;
+	<span class="tp">size_t</span>    i;
+	<span class="tp">char</span>      *word;
+
+	len = 0;
+	<span class="kw">while</span> (s[*index] == c && s[*index] != <span class="cm">'\0'</span>)
+		(*index)++;
+	<span class="kw">while</span> (s[*index + len] != c && s[*index + len] != <span class="cm">'\0'</span>)
+		len++;
+	word = (<span class="tp">char</span> *)malloc(<span class="kw">sizeof</span>(<span class="tp">char</span>) * (len + 1));
+	<span class="kw">if</span> (word == <span class="tp">NULL</span>)
+		<span class="kw">return</span> (<span class="tp">NULL</span>);
+	i = 0;
+	<span class="kw">while</span> (i &lt; len)
+	{
+		word[i] = s[*index];
+		(*index)++;
+		i++;
+	}
+	word[i] = <span class="cm">'\0'</span>;
+	<span class="kw">return</span> (word);
+}
+
+<span class="tp">char</span>    **ft_split(<span class="tp">char</span> <span class="kw">const</span> *s, <span class="tp">char</span> c)
+{
+	<span class="tp">char</span>      **result;
+	<span class="tp">size_t</span>    words;
+	<span class="tp">size_t</span>    i;
+	<span class="tp">size_t</span>    s_idx;
+
+	<span class="kw">if</span> (s == <span class="tp">NULL</span>)
+		<span class="kw">return</span> (<span class="tp">NULL</span>);
+	words = count_words(s, c);
+	result = (<span class="tp">char</span> **)malloc(<span class="kw">sizeof</span>(<span class="tp">char</span> *) * (words + 1));
+	<span class="kw">if</span> (result == <span class="tp">NULL</span>)
+		<span class="kw">return</span> (<span class="tp">NULL</span>);
+	i = 0;
+	s_idx = 0;
+	<span class="kw">while</span> (i &lt; words)
+	{
+		result[i] = alloc_word(s, c, &s_idx);
+		<span class="kw">if</span> (result[i] == <span class="tp">NULL</span>)
+			<span class="kw">return</span> (<span class="tp">NULL</span>);
+		i++;
+	}
+	result[i] = <span class="tp">NULL</span>;
+	<span class="kw">return</span> (result);
+}</pre>
+        <div class="diagram">s = "a,,b,c"    delimiter = ','
+
+pass 1 (count_words):  scans once, counts transitions INTO a word
+                        → finds 3 words: "a" "b" "c"  (empty gaps skipped)
+
+pass 2 (per word):     alloc_word() called 3 times, s_idx threaded
+                        through by pointer so each call resumes
+                        exactly where the previous one stopped
+
+result:  ┌─────┬─────┬─────┬──────┐
+         │ "a" │ "b" │ "c" │ NULL │   ◄── NULL-terminated array
+         └─────┴─────┴─────┴──────┘
+<span class="cap">Word count must be known BEFORE the array is sized — hence two passes.</span></div>
+        <h4 class="microhead">Technical Logic</h4>
+        <p>The most structurally complex function in the library, and the only one requiring
+        <code class="inline">static</code> helper functions — mandated by the subject specifically to
+        keep each function under the 25-line limit while breaking a genuinely multi-step algorithm
+        into named, testable pieces. <code class="inline">count_words</code> performs a single forward
+        scan, incrementing its counter only at the exact character that is <em>the last character of
+        a word</em> — detected as "not the delimiter, AND the next character is either the delimiter
+        or the end of string." This detects word boundaries without needing a "was I inside a word"
+        state flag.</p>
+        <p><code class="inline">alloc_word</code> receives <code class="inline">s_idx</code> as a
+        <code class="inline">size_t *</code> — a pointer to the caller's index variable — so that each
+        successive call to <code class="inline">alloc_word</code> resumes scanning exactly where the
+        previous call left off, rather than re-scanning from the start each time. It first skips any
+        run of delimiter characters, then measures the word length, then allocates and copies.</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p>Two <code class="inline">static</code> functions confine their scope to this translation
+        unit only, exactly as the subject instructs: <i>"define them as static functions to restrict
+        their scope to the appropriate file."</i> Splitting the algorithm this way keeps every single
+        function — including the public <code class="inline">ft_split</code> itself — comfortably
+        under 25 lines.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p>The partial-failure path deserves scrutiny: if <code class="inline">alloc_word</code> fails
+        on, say, the third of five words, <code class="inline">result[0]</code> and
+        <code class="inline">result[1]</code> were already successfully allocated but the function
+        returns <code class="inline">NULL</code> without freeing them — a genuine, narrow memory leak
+        that only triggers under simultaneous system-level allocation failure. This is a defensible
+        simplification for a student project (the subject only requires returning
+        <code class="inline">NULL</code> "if any allocation fails," not a full rollback), but a
+        production-grade version would track and free <code class="inline">result[0..i-1]</code>
+        and the array itself before returning <code class="inline">NULL</code>. Worth knowing the
+        gap exists even if you choose not to close it.</p>
+      </div>
+    </div>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_itoa</span><span class="concept">Concept: Reverse Digit Extraction</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="kw">static</span> <span class="tp">size_t</span>    get_num_len(<span class="tp">int</span> n)
+{
+	<span class="tp">size_t</span>    len;
+
+	len = 0;
+	<span class="kw">if</span> (n &lt;= 0)
+		len++;
+	<span class="kw">while</span> (n != 0)
+	{
+		n /= 10;
+		len++;
+	}
+	<span class="kw">return</span> (len);
+}
+
+<span class="tp">char</span>    *ft_itoa(<span class="tp">int</span> n)
+{
+	<span class="tp">char</span>          *str;
+	<span class="tp">size_t</span>        len;
+	<span class="tp">long int</span>      num;
+
+	num = n;
+	len = get_num_len(n);
+	str = (<span class="tp">char</span> *)malloc(<span class="kw">sizeof</span>(<span class="tp">char</span>) * (len + 1));
+	<span class="kw">if</span> (str == <span class="tp">NULL</span>)
+		<span class="kw">return</span> (<span class="tp">NULL</span>);
+	str[len] = <span class="cm">'\0'</span>;
+	<span class="kw">if</span> (num == 0)
+		str[0] = <span class="cm">'0'</span>;
+	<span class="kw">if</span> (num &lt; 0)
+	{
+		str[0] = <span class="cm">'-'</span>;
+		num = -num;
+	}
+	<span class="kw">while</span> (num > 0)
+	{
+		len--;
+		str[len] = (num % 10) + <span class="cm">'0'</span>;
+		num /= 10;
+	}
+	<span class="kw">return</span> (str);
+}</pre>
+        <div class="diagram">n = -42            num promoted to `long` FIRST → -42L
+
+get_num_len(-42):  n<=0 → len starts at 1 (for the '-')
+                    -42→-4→0 : two divisions → len becomes 3
+                    total len = 3   ("-42" is 3 characters)
+
+build phase (num negated to +42, written back-to-front):
+  index:  0   1   2
+  str:   [-] [4] [2] \0
+          ▲    ▲   ▲
+          │    │   └─ written FIRST (num%10=2, num→4)
+          │    └───── written SECOND (num%10=4, num→0)
+          └────────── sign written directly, untouched by the loop</div>
+        <h4 class="microhead">Technical Logic</h4>
+        <p>The classic "digits come out backward" problem: <code class="inline">num % 10</code> always
+        yields the <em>least significant</em> digit first, so the write index must start at the
+        <em>end</em> of the buffer and move toward the front, one <code class="inline">len--</code>
+        per digit. <code class="inline">get_num_len</code> mirrors this exactly by counting divisions
+        by 10 until <code class="inline">n</code> reaches zero, plus one extra slot reserved up front
+        if the number is zero or negative (for the digit <code class="inline">'0'</code> itself, or for
+        the <code class="inline">'-'</code> sign).</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p>A dedicated <code class="inline">static</code> helper for length calculation, matching the
+        same "measure then allocate" two-phase discipline seen in
+        <code class="inline">ft_strdup</code> and <code class="inline">ft_substr</code> — a pattern
+        that recurs throughout this library specifically because Norm's declarations-at-top rule
+        makes interleaving "figure out the size" logic with "write the bytes" logic awkward inside a
+        single function.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p><b>The defining edge case of this function is <code class="inline">INT_MIN</code></b>
+        (<code class="inline">-2147483648</code>). Negating <code class="inline">INT_MIN</code> as a
+        plain <code class="inline">int</code> overflows, because the positive equivalent
+        (<code class="inline">2147483648</code>) exceeds <code class="inline">INT_MAX</code>
+        (<code class="inline">2147483647</code>) — undefined behavior in C. This implementation
+        sidesteps the entire problem by immediately promoting <code class="inline">n</code> into
+        <code class="inline">num</code>, a <code class="inline">long int</code>, <em>before</em> any
+        negation happens. On any platform where <code class="inline">long</code> is wider than
+        <code class="inline">int</code> (the standard case on 64-bit Linux, where
+        <code class="inline">long</code> is 64 bits), <code class="inline">-num</code> when
+        <code class="inline">num == INT_MIN</code> is computed entirely within
+        <code class="inline">long</code>'s much larger range and never overflows. This single design
+        decision — promote before negate — is what separates a correct <code class="inline">ft_itoa</code>
+        from one that silently corrupts on exactly one specific input out of four billion.</p>
+      </div>
+    </div>
+
+    <!-- ===================== 3.6 FUNCTION POINTERS & I/O ===================== -->
+    <h3 class="subhead">3.6 — Function Pointers &amp; File-Descriptor I/O</h3>
+    <p>The library's most "meta" category: functions that take <em>other functions</em> as arguments,
+    plus the small family of output primitives every one of them is ultimately built from.</p>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_strmapi / ft_striteri</span><span class="concept">Concept: Callback-Driven Transformation</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="tp">char</span>    *ft_strmapi(<span class="tp">char</span> <span class="kw">const</span> *s, <span class="tp">char</span> (*f)(<span class="tp">unsigned int</span>, <span class="tp">char</span>))
+{
+	<span class="tp">size_t</span>    len;
+	<span class="tp">size_t</span>    i;
+	<span class="tp">char</span>      *str;
+
+	<span class="kw">if</span> (!s || !f)
+		<span class="kw">return</span> (<span class="tp">NULL</span>);
+	len = ft_strlen(s);
+	str = (<span class="tp">char</span> *)malloc(<span class="kw">sizeof</span>(<span class="tp">char</span>) * (len + 1));
+	<span class="kw">if</span> (str == <span class="tp">NULL</span>)
+		<span class="kw">return</span> (<span class="tp">NULL</span>);
+	i = 0;
+	<span class="kw">while</span> (i &lt; len)
+	{
+		str[i] = f(i, s[i]);
+		i++;
+	}
+	str[i] = <span class="cm">'\0'</span>;
+	<span class="kw">return</span> (str);
+}</pre>
+        <h4 class="microhead">Technical Logic</h4>
+        <p><code class="inline">char (*f)(unsigned int, char)</code> declares
+        <code class="inline">f</code> as a pointer to a function taking an index and a character,
+        returning a transformed character — the classic C mechanism for letting a caller inject
+        custom per-character logic (uppercasing, ROT13, digit-shifting) without
+        <code class="inline">ft_strmapi</code> itself knowing or caring what the transformation is.
+        The loop calls <code class="inline">f(i, s[i])</code> for every index, writing the result into
+        a freshly allocated buffer — <code class="inline">s</code> itself is never mutated.
+        <code class="inline">ft_striteri</code> is the in-place sibling: same calling convention, but
+        <code class="inline">f</code> receives a <em>pointer</em> to the character
+        (<code class="inline">char *</code>) so it can modify the original string directly, and the
+        function returns nothing because there's no new buffer to hand back.</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p>Function-pointer parameter syntax is inherently dense, but both declarations are still laid
+        out on one line at the parameter-list level, matching the exact prototype text from the
+        header — deviating from the header's declared spacing/parens here would be a signature
+        mismatch, not a style choice.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p>Both guard against <code class="inline">NULL</code> for <em>both</em> the string and the
+        function pointer — calling through a <code class="inline">NULL</code> function pointer is
+        undefined behavior (typically an immediate crash), so this check is not optional
+        defensiveness, it's the only thing standing between a bad call and a segfault.</p>
+      </div>
+    </div>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_putchar_fd / ft_putstr_fd / ft_putendl_fd / ft_putnbr_fd</span><span class="concept">Concept: The write() Syscall Boundary</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="tp">void</span>    ft_putchar_fd(<span class="tp">char</span> c, <span class="tp">int</span> fd)
+{
+	write(fd, &c, 1);
+}
+
+<span class="tp">void</span>    ft_putstr_fd(<span class="tp">char</span> *s, <span class="tp">int</span> fd)
+{
+	<span class="tp">size_t</span>    len;
+
+	<span class="kw">if</span> (!s || fd &lt; 0)
+		<span class="kw">return</span> ;
+	len = ft_strlen(s);
+	write(fd, s, len);
+}
+
+<span class="tp">void</span>    ft_putendl_fd(<span class="tp">char</span> *s, <span class="tp">int</span> fd)
+{
+	<span class="kw">if</span> (!s)
+		<span class="kw">return</span> ;
+	ft_putstr_fd(s, fd);
+	ft_putchar_fd(<span class="cm">'\n'</span>, fd);
+}
+
+<span class="tp">void</span>    ft_putnbr_fd(<span class="tp">int</span> n, <span class="tp">int</span> fd)
+{
+	<span class="tp">long int</span>    num;
+
+	num = n;
+	<span class="kw">if</span> (num &lt; 0)
+	{
+		ft_putchar_fd(<span class="cm">'-'</span>, fd);
+		num = -num;
+	}
+	<span class="kw">if</span> (num >= 10)
+		ft_putnbr_fd(num / 10, fd);
+	ft_putchar_fd((num % 10) + <span class="cm">'0'</span>, fd);
+}</pre>
+        <div class="diagram">ft_putnbr_fd(-123, 1)
+   │
+   ├─ num < 0 → print '-', num becomes 123
+   │
+   ├─ num >= 10 → RECURSE with num/10 = 12
+   │      ├─ num >= 10 → RECURSE with num/10 = 1
+   │      │      ├─ num < 10 → base case, print '1'
+   │      │      (unwind)
+   │      └─ AFTER recursive call returns, print '2'
+   │      (unwind)
+   └─ AFTER recursive call returns, print '3'
+
+output order:  -   1   2   3
+<span class="cap">Recursion happens BEFORE the print — that's what reverses %10's natural backward order.</span></div>
+        <h4 class="microhead">Technical Logic</h4>
+        <p>This whole family sits directly on top of the single system call
+        <code class="inline">write(fd, buffer, count)</code> — no buffering, no
+        <code class="inline">printf</code>-style formatting machinery underneath. <code class="inline">ft_putstr_fd</code>
+        writes a string in one syscall using its measured length. <code class="inline">ft_putendl_fd</code>
+        composes two lower-level calls (<code class="inline">ft_putstr_fd</code> then a newline via
+        <code class="inline">ft_putchar_fd</code>) rather than duplicating either. <code class="inline">ft_putnbr_fd</code>
+        is the most interesting: it solves the exact same "digits come out backward" problem as
+        <code class="inline">ft_itoa</code>, but through <b>recursion instead of a buffer</b> — the
+        recursive call for <code class="inline">num / 10</code> happens <em>before</em> the current
+        digit is printed, which means the most significant digit's print call is the deepest one on
+        the call stack, and printing naturally happens in the correct left-to-right order as the
+        stack unwinds.</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p>The recursive structure keeps <code class="inline">ft_putnbr_fd</code> under the 25-line
+        limit without needing a helper — recursion here isn't a stylistic flourish, it's the more
+        Norm-compact solution compared to an iterative version that would need an auxiliary digit
+        buffer.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p>Same promote-to-<code class="inline">long</code>-before-negate technique as
+        <code class="inline">ft_itoa</code>, for the identical reason: negating <code class="inline">INT_MIN</code>
+        as a plain <code class="inline">int</code> is undefined behavior, and this function faces the
+        exact same input. No heap allocation occurs anywhere in this family — every function writes
+        directly to the file descriptor, so there is nothing to <code class="inline">free()</code> and
+        no leak surface at all.</p>
+      </div>
+    </div>
+
+    <!-- ===================== 3.7 LINKED LIST ===================== -->
+    <h3 class="subhead">3.7 — The Linked List Engine</h3>
+    <p>Nine functions built entirely on the two-field <code class="inline">t_list</code> struct from
+    Part 1. This category is where pointer-to-pointer parameters (<code class="inline">t_list **lst</code>)
+    first appear in the library — the mechanism that lets a function reach back and modify the
+    caller's own head pointer, not just a local copy of it.</p>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_lstnew</span><span class="concept">Concept: Node Construction</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="tp">t_list</span>    *ft_lstnew(<span class="tp">void</span> *content)
+{
+	<span class="tp">t_list</span>    *new_node;
+
+	new_node = (<span class="tp">t_list</span> *)malloc(<span class="kw">sizeof</span>(<span class="tp">t_list</span>));
+	<span class="kw">if</span> (new_node == <span class="tp">NULL</span>)
+		<span class="kw">return</span> (<span class="tp">NULL</span>);
+	new_node->content = content;
+	new_node->next = <span class="tp">NULL</span>;
+	<span class="kw">return</span> (new_node);
+}</pre>
+        <h4 class="microhead">Technical Logic</h4>
+        <p>The atomic building block every other list function depends on. Note precisely what this
+        function does <em>not</em> do: it does not copy <code class="inline">content</code> — it
+        stores the pointer itself. The node and whatever <code class="inline">content</code> points to
+        are two entirely separate allocations with two separate lifetimes, a distinction that becomes
+        critical the moment <code class="inline">ft_lstdelone</code> enters the picture.</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p><code class="inline">new_node->next</code> is explicitly set to <code class="inline">NULL</code>
+        rather than left uninitialized — every list-traversal function in this library trusts that a
+        freshly constructed node's <code class="inline">next</code> is a well-defined sentinel, not
+        garbage stack/heap memory.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p><code class="inline">malloc</code> failure returns <code class="inline">NULL</code>
+        immediately, without touching <code class="inline">content</code> — correctly matching the
+        subject's contract and leaving the caller's <code class="inline">content</code> pointer
+        untouched (and therefore still safely freeable by the caller) on failure.</p>
+      </div>
+    </div>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_lstadd_front</span><span class="concept">Concept: Pointer-to-Pointer Mutation</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="tp">void</span>    ft_lstadd_front(<span class="tp">t_list</span> **lst, <span class="tp">t_list</span> *new)
+{
+	<span class="kw">if</span> (lst == <span class="tp">NULL</span> || new == <span class="tp">NULL</span>)
+		<span class="kw">return</span> ;
+	new->next = *lst;
+	*lst = new;
+}</pre>
+        <div class="diagram">Before:  lst ──► [A]──►[B]──►NULL
+                  new  ──► [X]──►???
+
+Step 1:  new->next = *lst     (X now points at the OLD head, A)
+              new  ──► [X]──►[A]──►[B]──►NULL
+
+Step 2:  *lst = new           (caller's head pointer itself is rewritten)
+              lst ──► [X]──►[A]──►[B]──►NULL
+<span class="cap">Two pointer writes, zero traversal — O(1) regardless of list length.</span></div>
+        <h4 class="microhead">Technical Logic</h4>
+        <p>This function is the reason the parameter is <code class="inline">t_list **lst</code>
+        (a pointer to the caller's pointer) rather than <code class="inline">t_list *lst</code>. If
+        the parameter were a plain <code class="inline">t_list *</code>, reassigning it inside the
+        function would only change a local copy — the caller's actual head-of-list variable would be
+        completely untouched once the function returns. By passing the <em>address</em> of that
+        variable, the line <code class="inline">*lst = new</code> reaches through the pointer and
+        overwrites the caller's own variable directly. This two-step sequence — first link the new
+        node forward to the old head, <em>then</em> repoint the head — must happen in exactly this
+        order, or the old head's address would be lost after the first line overwrote it.</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p>Both <code class="inline">lst</code> and <code class="inline">new</code> are checked for
+        <code class="inline">NULL</code> in one compound condition before either is dereferenced —
+        the mandatory guard-first shape, here protecting two independent pointers in a single line
+        rather than two separate checks, since both failure conditions produce the identical
+        no-op response.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p>No allocation occurs in this function — it only rewires existing pointers, so there is no
+        leak surface. The operation is O(1): the entire rest of the list is untouched and
+        un-traversed, which matters for larger lists compared to
+        <code class="inline">ft_lstadd_back</code>'s necessary O(n) traversal.</p>
+      </div>
+    </div>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_lstsize / ft_lstlast</span><span class="concept">Concept: Linear Traversal</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="tp">int</span>    ft_lstsize(<span class="tp">t_list</span> *lst)
+{
+	<span class="tp">int</span>    count;
+
+	count = 0;
+	<span class="kw">while</span> (lst != <span class="tp">NULL</span>)
+	{
+		count++;
+		lst = lst->next;
+	}
+	<span class="kw">return</span> (count);
+}</pre>
+        <h4 class="microhead">Technical Logic</h4>
+        <p>Both functions share the same walking idiom: <code class="inline">lst = lst->next</code>
+        inside a <code class="inline">while (lst != NULL)</code> loop. <code class="inline">ft_lstsize</code>
+        counts steps; <code class="inline">ft_lstlast</code> instead checks
+        <code class="inline">lst->next != NULL</code> and stops one node early, so it returns the last
+        <em>node itself</em> rather than walking off the end into
+        <code class="inline">NULL</code>. This distinction — testing the current node's
+        <code class="inline">next</code> versus testing the current node itself — is precisely why
+        <code class="inline">ft_lstlast</code>'s loop condition looks at
+        <code class="inline">lst->next</code> instead of <code class="inline">lst</code>.</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p>Notice the parameter <code class="inline">lst</code> is reassigned directly inside the loop
+        rather than introducing a second "current" variable — this is safe and Norm-legal specifically
+        because <code class="inline">lst</code> here is passed <b>by value</b> (a
+        <code class="inline">t_list *</code>, not a <code class="inline">t_list **</code>): the
+        function only ever holds a local copy of the caller's pointer, so walking it forward has zero
+        effect on the caller's own list variable.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p>Both correctly handle an empty list: <code class="inline">ft_lstsize(NULL)</code> returns
+        <code class="inline">0</code> without entering the loop, and
+        <code class="inline">ft_lstlast(NULL)</code> has an explicit early
+        <code class="inline">if (lst == NULL) return (NULL)</code> guard before the loop even starts —
+        without it, the first loop iteration's <code class="inline">lst->next</code> would
+        dereference a <code class="inline">NULL</code> pointer.</p>
+      </div>
+    </div>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_lstadd_back</span><span class="concept">Concept: Delegated Traversal</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="tp">void</span>    ft_lstadd_back(<span class="tp">t_list</span> **lst, <span class="tp">t_list</span> *new)
+{
+	<span class="tp">t_list</span>    *last_node;
+
+	<span class="kw">if</span> (lst == <span class="tp">NULL</span> || new == <span class="tp">NULL</span>)
+		<span class="kw">return</span> ;
+	<span class="kw">if</span> (*lst == <span class="tp">NULL</span>)
+	{
+		*lst = new;
+		<span class="kw">return</span> ;
+	}
+	last_node = ft_lstlast(*lst);
+	last_node->next = new;
+}</pre>
+        <h4 class="microhead">Technical Logic</h4>
+        <p>Two distinct cases, handled explicitly rather than hoping one code path covers both. If the
+        list is currently empty (<code class="inline">*lst == NULL</code>), the new node
+        <em>becomes</em> the list — assigned directly to
+        <code class="inline">*lst</code>. Otherwise, the function delegates the traversal-to-the-end
+        work entirely to <code class="inline">ft_lstlast</code> — a second demonstration of
+        composition, this time reusing a same-category function rather than reimplementing the walk.</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p>The empty-list case is written as its own guarded early return rather than folded into a
+        single unified expression — this keeps the "list currently has zero nodes" case
+        unambiguous and separately readable from the "append after the last node" case, even though
+        both ultimately just assign a <code class="inline">next</code> or a head pointer.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p>Reusing <code class="inline">ft_lstlast</code> here means the empty-list check must happen
+        <em>first</em> and separately — calling <code class="inline">ft_lstlast(NULL)</code> would
+        correctly return <code class="inline">NULL</code> per its own guard, but then
+        <code class="inline">last_node->next = new</code> would dereference that
+        <code class="inline">NULL</code>. The explicit early-return branch is exactly what prevents
+        this.</p>
+      </div>
+    </div>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_lstdelone / ft_lstclear</span><span class="concept">Concept: Ownership-Aware Deallocation</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="tp">void</span>    ft_lstdelone(<span class="tp">t_list</span> *lst, <span class="tp">void</span> (*del)(<span class="tp">void</span> *))
+{
+	<span class="kw">if</span> (lst == <span class="tp">NULL</span> || del == <span class="tp">NULL</span>)
+		<span class="kw">return</span> ;
+	del(lst->content);
+	free(lst);
+}
+
+<span class="tp">void</span>    ft_lstclear(<span class="tp">t_list</span> **lst, <span class="tp">void</span> (*del)(<span class="tp">void</span> *))
+{
+	<span class="tp">t_list</span>    *current;
+	<span class="tp">t_list</span>    *next_node;
+
+	<span class="kw">if</span> (lst == <span class="tp">NULL</span> || del == <span class="tp">NULL</span>)
+		<span class="kw">return</span> ;
+	current = *lst;
+	<span class="kw">while</span> (current != <span class="tp">NULL</span>)
+	{
+		next_node = current->next;
+		ft_lstdelone(current, del);
+		current = next_node;
+	}
+	*lst = <span class="tp">NULL</span>;
+}</pre>
+        <div class="diagram">*lst ──► [A]──►[B]──►[C]──►NULL
+           │
+current ───┘
+
+iteration 1: next_node = B  (SAVE the link before A is freed!)
+             ft_lstdelone(A, del)  →  del(A.content); free(A)
+             current = next_node  →  current now points at B
+
+             (repeat for B, then C)
+
+after loop:  *lst = NULL   ◄── caller's pointer explicitly nulled,
+                                preventing any future use-after-free
+<span class="cap">next_node MUST be saved before free(current) — freeing first would lose the chain.</span></div>
+        <h4 class="microhead">Technical Logic</h4>
+        <p><code class="inline">ft_lstdelone</code> frees exactly <em>one</em> node's content (via the
+        caller-supplied <code class="inline">del</code> function, since only the caller knows what
+        type <code class="inline">content</code> actually points to) and then the node struct itself —
+        explicitly <em>not</em> touching <code class="inline">next</code>, per the subject's own
+        contract. <code class="inline">ft_lstclear</code> builds the full-list version on top of it,
+        but must solve one specific ordering hazard: <code class="inline">current->next</code> cannot
+        be read <em>after</em> <code class="inline">current</code> has been freed — that would be a
+        use-after-free read. The fix is to capture <code class="inline">next_node = current->next</code>
+        <em>before</em> calling <code class="inline">ft_lstdelone(current, del)</code>, so the chain's
+        continuation is safely preserved in a local variable that survives the free.</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p><code class="inline">ft_lstclear</code> reuses <code class="inline">ft_lstdelone</code>
+        rather than inlining <code class="inline">del(current->content); free(current)</code> directly
+        — the same composition instinct applied consistently across every category in this library.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p>The final line, <code class="inline">*lst = NULL</code>, is not cosmetic — it's what
+        prevents a classic <b>dangling pointer</b> bug. After this function returns, every node the
+        caller's variable used to point to has been freed; if the caller's own head pointer weren't
+        explicitly reset, calling any list function on it again would operate on freed memory. Setting
+        it to <code class="inline">NULL</code> converts a silent use-after-free hazard into a
+        harmless, well-defined empty list.</p>
+      </div>
+    </div>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_lstiter</span><span class="concept">Concept: Side-Effecting Traversal</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="tp">void</span>    ft_lstiter(<span class="tp">t_list</span> *lst, <span class="tp">void</span> (*f)(<span class="tp">void</span> *))
+{
+	<span class="kw">if</span> (lst == <span class="tp">NULL</span> || f == <span class="tp">NULL</span>)
+		<span class="kw">return</span> ;
+	<span class="kw">while</span> (lst != <span class="tp">NULL</span>)
+	{
+		f(lst->content);
+		lst = lst->next;
+	}
+}</pre>
+        <h4 class="microhead">Technical Logic</h4>
+        <p>The simplest of the callback-based list functions: walk every node, call
+        <code class="inline">f</code> on its <code class="inline">content</code>, move on.
+        <code class="inline">f</code> is expected to mutate <code class="inline">content</code>
+        in place if it needs to (since <code class="inline">content</code> is itself a
+        <code class="inline">void *</code>, whatever it points to can be modified through that
+        pointer by a caller who knows the real type) — this function makes no copies and returns
+        nothing.</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p>Structurally near-identical to <code class="inline">ft_lstsize</code>'s traversal loop, with
+        one added function call per iteration — a clean illustration of how a small, consistent
+        traversal idiom scales across very different use cases just by varying what happens inside
+        the loop body.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p>No allocation, no freeing — purely a controlled way to apply an external effect across
+        every node. The <code class="inline">NULL</code> check on <code class="inline">f</code> is what
+        prevents a crash if a caller passes an empty callback by mistake.</p>
+      </div>
+    </div>
+
+    <div class="func-card">
+      <div class="func-head"><span class="name">ft_lstmap</span><span class="concept">Concept: Transform-and-Rollback</span></div>
+      <div class="func-body">
+        <pre class="code"><span class="tp">t_list</span>    *ft_lstmap(<span class="tp">t_list</span> *lst, <span class="tp">void</span> *(*f)(<span class="tp">void</span> *), <span class="tp">void</span> (*del)(<span class="tp">void</span> *))
+{
+	<span class="tp">t_list</span>    *new_list;
+	<span class="tp">t_list</span>    *new_node;
+	<span class="tp">void</span>      *new_content;
+
+	<span class="kw">if</span> (lst == <span class="tp">NULL</span> || f == <span class="tp">NULL</span> || del == <span class="tp">NULL</span>)
+		<span class="kw">return</span> (<span class="tp">NULL</span>);
+	new_list = <span class="tp">NULL</span>;
+	<span class="kw">while</span> (lst != <span class="tp">NULL</span>)
+	{
+		new_content = f(lst->content);
+		new_node = ft_lstnew(new_content);
+		<span class="kw">if</span> (new_node == <span class="tp">NULL</span>)
+		{
+			del(new_content);
+			ft_lstclear(&new_list, del);
+			<span class="kw">return</span> (<span class="tp">NULL</span>);
+		}
+		ft_lstadd_back(&new_list, new_node);
+		lst = lst->next;
+	}
+	<span class="kw">return</span> (new_list);
+}</pre>
+        <div class="diagram">old: [1]──►[2]──►[3]──►NULL
+
+step i=0:  new_content = f(1)         → e.g. 1
+           new_node = ft_lstnew(new_content)
+           IF new_node alloc FAILS:
+               del(new_content)          ◄─ free the orphaned content
+               ft_lstclear(&new_list, del) ◄─ free every node built SO FAR
+               return NULL                ◄─ leave nothing half-built
+
+           ELSE: ft_lstadd_back(&new_list, new_node)
+
+new: [1]──►[4]──►[9]──►NULL     (after all 3 iterations succeed)
+<span class="cap">Every allocation is checked mid-loop — a failure anywhere unwinds everything already built.</span></div>
+        <h4 class="microhead">Technical Logic</h4>
+        <p>The most sophisticated function in the library, and the one that ties every other list
+        function together: it applies <code class="inline">f</code> to each node's content to produce
+        <code class="inline">new_content</code>, wraps that in a fresh node via
+        <code class="inline">ft_lstnew</code>, and appends it to a brand-new list via
+        <code class="inline">ft_lstadd_back</code> — leaving the original
+        <code class="inline">lst</code> completely untouched. This is a genuine map operation in the
+        functional-programming sense: input list unmodified, new list returned.</p>
+        <h4 class="microhead">Norminette &amp; C Standards</h4>
+        <p>Reuses three other library functions in nine lines of actual logic
+        (<code class="inline">ft_lstnew</code>, <code class="inline">ft_lstadd_back</code>,
+        <code class="inline">ft_lstclear</code>) — the single clearest example in the entire codebase
+        of why the composition discipline established back in
+        <code class="inline">ft_isalnum</code> matters at scale: without those three building blocks
+        already existing and already correct, this function would need to reimplement node
+        allocation, list appending, <em>and</em> cleanup-on-failure all inline, which would blow well
+        past the 25-line limit.</p>
+        <h4 class="microhead">Memory Security</h4>
+        <p>This is the only function in the library with a genuine <b>rollback path</b>, and it's
+        worth tracing exactly why each line of the failure branch exists. If
+        <code class="inline">ft_lstnew</code> fails partway through the loop,
+        <code class="inline">new_content</code> was already successfully produced by
+        <code class="inline">f</code> but has no node to live in — so
+        <code class="inline">del(new_content)</code> frees it directly, by hand, before it becomes
+        unreachable. Then <code class="inline">ft_lstclear(&new_list, del)</code> frees every node
+        <em>successfully</em> built in earlier iterations — without this line, a failure on, say, the
+        fourth node out of ten would silently leak the three nodes already built. Only after both
+        cleanup steps does the function return <code class="inline">NULL</code>, guaranteeing that on
+        failure, the function's net heap footprint is exactly zero — no partial, half-built list is
+        ever handed back to the caller.</p>
+      </div>
+    </div>
+
+  </section>
+
+  <footer class="pagefoot">Libft — The Complete Textbook · 42 School Curriculum · Generated for iismail-</footer>
+
+</div>
+</body>
+</html>
