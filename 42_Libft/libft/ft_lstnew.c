@@ -1,31 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memcpy.c                                        :+:      :+:    :+:   */
+/*   ft_lstnew.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: iismail- <iismail-@student.42warsaw.pl>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/07/15 17:26:58 by iismail-          #+#    #+#             */
-/*   Updated: 2026/07/15 18:47:56 by iismail-         ###   ########.fr       */
+/*   Created: 2026/07/17 01:10:32 by iismail-          #+#    #+#             */
+/*   Updated: 2026/07/17 01:11:08 by iismail-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_memcpy(void *dst, const void *src, size_t n)
+t_list	*ft_lstnew(void *content)
 {
-	unsigned char			*d;
-	const unsigned char		*s;
-	size_t					i;
-	if (!dst && !src)
-		return (dst);
-	i = 0;
-	d = (unsigned char *)dst;
-	s = (const unsigned char *)src;
-	while (i < n)
-	{
-		d[i] = s[i];
-		i++;
-	}
-	return (dst);
+	t_list	*new_node;
+
+	new_node = (t_list *)malloc(sizeof(t_list));
+	if (new_node == NULL)
+		return (NULL);
+	new_node->content = content;
+	new_node->next = NULL;
+	return (new_node);
 }
