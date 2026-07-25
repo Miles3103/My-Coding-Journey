@@ -19,3 +19,8 @@ eval_bin
 .attempts
 .streak
 .best
+
+# Secrets and environment files
+.env
+.env.*
+!.env.example
