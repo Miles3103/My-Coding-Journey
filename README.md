@@ -2,179 +2,137 @@
 
 # My Coding Journey
 
-**C · C++ · Python · Assembly — built from the ground up**
+**C · C++ · Python — built from the ground up**
 
-[![Primary language](https://img.shields.io/badge/primary-C-00599C?style=flat&logo=c&logoColor=white)](#-learning-tracks)
-[![42 Norm](https://img.shields.io/badge/style-42%20Norm-black?style=flat)](#-42-school)
-[![Libft](https://img.shields.io/badge/libft-43%20functions-informational?style=flat)](42-school/libft)
-[![Tests](https://img.shields.io/badge/libft%20tests-86%20passing-brightgreen?style=flat)](42-school/libft/tests)
-[![License](https://img.shields.io/badge/license-MIT-blue?style=flat)](LICENSE)
+[![Language](https://img.shields.io/badge/primary-C-00599C?style=flat&logo=c&logoColor=white)]()
+[![Status](https://img.shields.io/badge/status-active-brightgreen?style=flat)]()
+[![Exam](https://img.shields.io/badge/exam-60%20levels-blueviolet?style=flat)]()
+[![42 Style](https://img.shields.io/badge/style-42%20Norm-black?style=flat)]()
+[![Piscine](https://img.shields.io/badge/piscine-reloaded-orange?style=flat)]()
+[![Libft](https://img.shields.io/badge/libft-43%20functions-informational?style=flat)]()
+[![Piscine 2026](https://img.shields.io/badge/C%20Piscine-2026-yellow?style=flat)]()
 
-> Every file is written with deep comments — not just *what* the code does,
-> but *why* and *how* it works at a low level.
+> Every file in this repo is written with deep comments —  
+> not just *what* the code does, but *why* and *how* it works at a low level.
 
 </div>
 
 ---
 
-## Table of contents
+## 📁 Repository Structure
 
-- [What is this?](#what-is-this)
-- [Repository layout](#-repository-layout)
-- [Requirements](#-requirements)
-- [Build and run](#-build-and-run)
-- [42 School](#-42-school)
-- [Learning tracks](#-learning-tracks)
-- [Exam system](#-exam-system)
-- [Roadmap and skills checklist](#-2-month-c-mastery-roadmap)
-- [Repository hygiene](#-repository-hygiene)
-- [License](#license)
-
-## What is this?
-
-A monorepo documenting my path through programming: the **42 School**
-curriculum (Piscine, Libft, exams) and my own structured **learning tracks**
-for C, C++, Python and x86-64 assembly — lessons, small projects, and a
-self-grading exam written in Bash.
-
-## 📁 Repository layout
-
-```text
+```
 My-Coding-Journey/
-├── 42-school/
-│   ├── libft/               # 43-function C library: include/ src/ tests/ docs/ Makefile
-│   ├── piscine-2026/        # C Piscine: Shell00/01 + C00–C13 (subjects + exercises)
-│   ├── piscine-reloaded/    # 28 exercises (ex00–ex27), one README each
-│   ├── discovery-python/    # Python Discovery Piscine (modules 1–9)
-│   └── exams/               # exam submissions (rendu/)
-├── learning/
-│   ├── c/                   # 00_Hello … 13_Projects, games/, exam/, exam-py/, practice/
-│   ├── cpp/                 # 00_Intro … 11_Projects (OOP, templates, STL, modern C++)
-│   ├── python/              # 00_Basics … 10_Projects (OOP, decorators, task manager)
-│   └── assembly/            # x86-64 NASM: hello, input, number game, small game
-├── docs/                    # git-notes.md and other reference notes
-├── resources/               # local-only books/PDFs — git-ignored, never committed
-├── .editorconfig  .gitignore  LICENSE  README.md
+│
+├── Piscine_2026/           ← 42 C Piscine — Shell00/01 + C00–C14
+│   ├── Shell00/ Shell01/   ← shell basics → scripting
+│   └── C00/ – C14/         ← output, pointers, strings, recursion, argv, ...
+│
+├── Learning_C/
+│   ├── 00_Hello/           ← write() syscall, printf, puts
+│   ├── 01_Variables/       ← types, scope, lifetime, static, XOR swap
+│   ├── 02_DataTypes/       ← sizes, limits, overflow, signed vs unsigned
+│   ├── 03_Operators/       ← arithmetic, bitwise, logical, ternary, bit flags
+│   ├── 04_Conditionals/    ← if/else, switch, ternary, guard clauses
+│   ├── 05_Functions_Intro/ ← syntax, prototypes, return values, void
+│   ├── 06_Scope/           ← local, global, static, shadowing
+│   ├── 07_Loops/           ← while, for, do-while, Collatz, Fibonacci
+│   ├── 08_Arrays/          ← 1D/2D, statistics, bubble sort
+│   ├── 09_Strings/         ← all of string.h reimplemented from scratch
+│   ├── 10_Pointers/        ← basics, arithmetic, double ptrs, func ptrs
+│   ├── 11_Functions/       ← recursion, pass-by-ref, ft_* functions
+│   ├── 12_Memory/          ← stack vs heap, malloc/free, valgrind
+│   ├── 13_Projects/        ← showcase projects combining everything
+│   ├── c_exam/             ← 60-level self-grading exam system
+│   ├── Games_c/            ← snake, random walk — real programs in C
+│   └── C_books/            ← K&R, Modern C, Beej's Guide
+│
+├── Piscine_Reloaded/       ← 42 Piscine Reloaded — 28 exercises (ex00–ex27)
+│   ├── ex00/ – ex05/       ← Shell 01: permissions, links, timestamps, one-liners
+│   └── ex06/ – ex27/       ← C Module: loops, pointers, recursion, arrays,
+│                              function pointers, macros, headers, Makefile
+│
+├── Libft/                  ← 42's first real C library project — 43 hand-built
+│                              functions (libc reimplementations, string/array
+│                              utilities, and a singly linked list toolkit)
+│
+├── Learning_C++/           ← OOP, classes, templates (coming soon)
+├── Learning_Python/        ← scripts, automation, algorithms
+└── Discovery_Pscin/        ← 42 piscine discovery exercises
 ```
 
-## 🧰 Requirements
+---
 
-| Tool | Needed for |
-|------|-----------|
-| `cc` / `gcc` or `clang`, `make` | everything in C |
-| `g++` (C++17) | `learning/cpp` |
-| `python3` (3.8+) | `learning/python`, `42-school/discovery-python` |
-| `nasm`, `ld` | `learning/assembly` (Linux x86-64) |
-| `libsdl2-dev`, `libsdl2-mixer-dev` | the SDL games in `learning/c/games` |
-| `valgrind` *(optional)* | leak checks on Linux |
+## 🧪 Piscine 2026 (C Piscine)
 
-## 🔧 Build and run
+The `Piscine_2026/` folder tracks the **42 C Piscine** itself — the intro
+Shell and C modules that come before Piscine Reloaded and Libft.
 
-**Libft**
+| Module | Status | Notes |
+|--------|--------|-------|
+| `Shell00` | 🟡 In progress | ex00, ex01, ex02, ex04 |
+| `Shell01` | ⬜ Not started | — |
+| `C00` | ✅ Complete | Output basics — `ft_putchar`, alphabet, digits, combinations |
+| `C01` | ✅ Complete | Pointers — `ft_ft`, `ft_swap`, div/mod, `ft_putstr`, array reverse/sort |
+| `C02` | 🟡 In progress | String basics — `ft_strcpy`, `ft_strncpy`, `ft_str_is_alpha` |
+| `C03` | ✅ Complete | `ft_strcmp`, `ft_strncmp`, `ft_strcat`, `ft_strstr`, `ft_strlcat` |
+| `C04` | ✅ Complete | `ft_atoi`, `ft_putnbr`, base conversion |
+| `C05` | ✅ Complete | Recursion & math — factorial, power, Fibonacci, `ft_sqrt` |
+| `C06` | ✅ Complete | `argv` handling — print, reverse, sort |
+| `C07` – `C14` | ⬜ Not started | Subjects only, no exercises yet |
+
+> See `Piscine_2026/README.md` for the full per-module breakdown and a
+> cleanup checklist (stray binaries, editor swap files, a couple of
+> filename typos) to resolve before submission.
+
+---
+
+## 🌊 Piscine Reloaded
+
+The `Piscine_Reloaded/` folder contains the **42 Piscine Reloaded** — a full re-run of the classic 42 shell and C fundamentals, done from scratch to solidify the basics before Libft.
+
+28 exercises across two tracks:
+
+| Range | Track | Topics |
+|-------|-------|--------|
+| ex00 – ex05 | Shell 01 | File types/permissions/links from `ls -l`, single-command scripts (`clean`, `find_sh.sh`, `MAC.sh`), shell-escaping tricky filenames |
+| ex06 – ex08 | C 00 | Output basics — alphabet, digits, sign checking |
+| ex09 – ex11 | C 01 | Pointers — dereferencing, swap, div/mod via pointers |
+| ex12 – ex14 | C Module | Recursion vs iteration, factorial, integer square root |
+| ex15 – ex20 | C Module | `ft_putstr`, `ft_strlen`, `ft_strcmp`, argument printing/sorting, `ft_strdup` |
+| ex21 – ex23 | C Module | Dynamic ranges, macros (`ABS`), custom structs (`t_point`) |
+| ex24 | C Module | First hand-written `Makefile` (builds `libft.a` from `srcs/`/`includes/`) |
+| ex25 – ex27 | C Module | Function pointers as callbacks (`ft_foreach`, `ft_count_if`), file display |
+
+> All exercises written in strict **42 Norm** style: no `for` where disallowed, no forbidden functions, proper header comments, `cc -Wall -Wextra -Werror`.
+
+---
+
+## 📚 Libft
+
+The `Libft/` folder is the first "real" 42 project: a personal C library of 43
+functions, split into three parts, built to be reused across every later
+project in the curriculum.
+
+| Part | Count | Contents |
+|------|-------|----------|
+| Part 1 — Libc reimplementations | 23 | `ft_isalpha` → `ft_strdup`: char classification, memory ops, string ops, `ft_atoi` |
+| Part 2 — Additional utilities | 11 | `ft_substr`, `ft_split`, `ft_itoa`, `ft_strmapi`, `ft_putnbr_fd`, and more |
+| Part 3 — Linked list | 9 | `t_list`-based singly linked list: create, add, size, map, iterate, clear |
 
 ```bash
-cd 42-school/libft
-make            # builds libft.a (objects in build/)
-make test       # runs the 86-check test suite under ASan + UBSan
-make fclean     # remove build output
+cd Libft
+make            # builds libft.a
+make clean      # removes .o files
+make fclean     # removes .o files + libft.a
+make re         # full rebuild
 ```
 
-**A single exercise or lesson file** (most files contain their own `main`)
+Every function is covered by a personal (non-submitted) numbered test harness
+comparing behavior against the real libc where applicable, plus manual edge
+cases for the Part 2/3 functions that have no libc equivalent.
 
-```bash
-cc -Wall -Wextra -Werror 42-school/piscine-2026/C05/ex00/ft_iterative_factorial.c -o /tmp/demo
-/tmp/demo
-```
-
-**Against Libft**
-
-```bash
-cc -Wall -Wextra -Werror -I42-school/libft/include my_file.c \
-   -L42-school/libft -lft -o my_program
-```
-
-**C++ lessons**
-
-```bash
-g++ -std=c++17 -Wall -Wextra learning/cpp/03_OOP_Classes/classes_complete.cpp -o /tmp/demo && /tmp/demo
-```
-
-**Python lessons**
-
-```bash
-python3 learning/python/10_Projects/task_manager.py          # demo
-python3 learning/python/10_Projects/task_manager.py --help   # CLI options
-```
-
-**SDL games** (Linux; needs the SDL2 packages above)
-
-```bash
-cd learning/c/games/snake_c
-cc -Wall -Wextra snake.c $(sdl2-config --cflags --libs) -lSDL2_mixer -lm -o snake && ./snake
-
-cd ../random_walk
-cc -Wall -Wextra random-walk.c $(sdl2-config --cflags --libs) -lm -o random-walk && ./random-walk
-```
-
-**Check everything compiles (what CI would do)**
-
-```bash
-find . -name '*.c' -not -path './learning/c/games/*' -not -path './42-school/libft/*' -not -path './resources/*' \
-  -exec sh -c 'cc -Wall -Wextra -Werror -fsyntax-only "$1" || echo "FAILED: $1"' _ {} \;
-```
-
-**Memory check**
-
-```bash
-cc -g -fsanitize=address,undefined my_file.c -o /tmp/demo && /tmp/demo
-valgrind --leak-check=full /tmp/demo        # Linux
-```
-
-## 🏫 42 School
-
-| Project | Status | Notes |
-|---------|--------|-------|
-| [`libft`](42-school/libft) | ✅ Complete | 43 functions in 3 parts (libc, utilities, linked list) with a sanitizer-backed test suite |
-| [`piscine-reloaded`](42-school/piscine-reloaded) | ✅ Complete | 28 exercises: shell tricks → pointers → recursion → function pointers → a first `Makefile` |
-| [`piscine-2026`](42-school/piscine-2026) | 🟡 In progress | Shell00 and C00–C06 done; C07+ have subjects only |
-| [`discovery-python`](42-school/discovery-python) | 🟡 In progress | Python Discovery Piscine: modules 1 and 4–9 present |
-| [`exams`](42-school/exams) | 🟡 In progress | exam `rendu/` submissions |
-
-Per-project details live in each folder's own `README.md`.
-
-## 📚 Learning tracks
-
-| Track | Contents |
-|-------|----------|
-| [`learning/c`](learning/c) | `00_Hello` → `13_Projects`: write/printf, types, operators, control flow, functions, scope, loops, arrays, strings from scratch, pointers, memory (`malloc`/`free`), projects, SDL games |
-| [`learning/cpp`](learning/cpp) | classes, inheritance, polymorphism, templates, STL, memory, exceptions, modern C++, an RPG-inventory project |
-| [`learning/python`](learning/python) | control flow, functions, data structures, OOP, modules/files, comprehensions, decorators/generators, libraries, a CLI task manager |
-| [`learning/assembly`](learning/assembly) | x86-64 NASM programs: hello, input, random-number game, a small game |
-
-## 🏆 Exam system
-
-`learning/c/exam/` holds a **60-level self-grading exam** written in Bash. It
-compiles your code, compares output line by line, shows a diff on failure, and
-tracks score, streak and progress between sessions (progress files are
-git-ignored).
-
-```bash
-cd learning/c/exam
-./miles3103_v15.sh
-```
-
-| Levels | Topic |
-|--------|-------|
-| 0–8 | C intro, syntax, output, comments |
-| 9–17 | Variables, data types, type conversion |
-| 18–26 | Constants, operators, booleans |
-| 27–35 | if/else, switch, while loop |
-| 36–44 | for loop, break/continue, arrays |
-| 45–53 | Strings, user input, memory addresses |
-| 54–59 | **Pointers — final boss** |
-
-Companion exams: `learning/c/exam-py/miles3103.py` (Python port) and
-`learning/cpp/miles3103_cpp_exam.sh` (C++).
+---
 
 ## 🗓️ 2-Month C Mastery Roadmap
 
@@ -186,7 +144,7 @@ Companion exams: `learning/c/exam-py/miles3103.py` (Python port) and
 | 1–2 | `write()` vs `printf` vs `puts`, compilation pipeline | `00_Hello/` |
 | 3–4 | Variables, types, addresses, `sizeof` | `01_Variables/` `02_DataTypes/` |
 | 5–6 | Operators — bitwise, ternary, bit flags | `03_Operators/` |
-| 7 | Review + exam levels 0–8 | `exam/` |
+| 7 | Review + exam levels 0–8 | `c_exam/` |
 
 **Goal:** Write any expression, know what every type stores, understand `&` and `*`.
 
@@ -201,7 +159,7 @@ Companion exams: `learning/c/exam-py/miles3103.py` (Python port) and
 | 10–11 | Function syntax, prototypes, return values | `05_Functions_Intro/` |
 | 12–13 | Scope: local, global, static, shadowing | `06_Scope/` |
 | 14 | All loop types, break/continue, Collatz | `07_Loops/` |
-| 15 | Exam levels 9–26 | `exam/` |
+| 15 | Exam levels 9–26 | `c_exam/` |
 
 **Goal:** Write any algorithm — FizzBuzz, Fibonacci, Collatz, factorial — without looking anything up.
 
@@ -214,7 +172,7 @@ Companion exams: `learning/c/exam-py/miles3103.py` (Python port) and
 |------|-------|--------|
 | 16–19 | 1D/2D arrays, bubble sort, pointer equivalence | `08_Arrays/` |
 | 20–23 | Strings, null terminator, `ft_strlen` → `ft_atoi` | `09_Strings/` |
-| 24 | Exam levels 27–50 | `exam/` |
+| 24 | Exam levels 27–50 | `c_exam/` |
 
 **Goal:** Reimplement any function from `<string.h>`. Know why `char *` and `char []` differ.
 
@@ -228,7 +186,7 @@ Companion exams: `learning/c/exam-py/miles3103.py` (Python port) and
 | 25–30 | Pointer basics, arithmetic, double ptrs, func ptrs | `10_Pointers/` |
 | 31–32 | `malloc`/`free`, `ft_strdup`, valgrind | `12_Memory/` |
 | 33–34 | Recursion, pass-by-ref, `ft_*` functions | `11_Functions/` |
-| 35–36 | Structs + real projects + exam final boss | `13_Projects/` `exam/` |
+| 35–36 | Structs + real projects + exam final boss | `13_Projects/` `c_exam/` |
 
 **Goal:** Use `malloc`, detect leaks with valgrind, write function pointer dispatch tables, build real programs with structs.
 
@@ -253,30 +211,65 @@ Companion exams: `learning/c/exam-py/miles3103.py` (Python port) and
 
 ---
 
+## 🏆 Exam System
+
+The `c_exam/` folder contains a **60-level self-grading exam** built from scratch in Bash.
+It compiles your code, checks your output line-by-line, shows a diff on failure, tracks your score and streak, and saves progress between sessions.
+
+```bash
+cd Learning_C/c_exam
+chmod +x miles3103_v15.sh
+./miles3103_v15.sh
+```
+
+| Levels | Topic |
+|--------|-------|
+| 0–8 | C Intro, Syntax, Output, Comments |
+| 9–17 | Variables, Data Types, Type Conversion |
+| 18–26 | Constants, Operators, Booleans |
+| 27–35 | If/Else, Switch, While Loop |
+| 36–44 | For Loop, Break/Continue, Arrays |
+| 45–53 | Strings, User Input, Memory Addresses |
+| 54–59 | **Pointers — Final Boss** |
+
 ---
 
-## 🧹 Repository hygiene
+## 🔧 How to Compile
 
-- **Build output is never tracked.** `.gitignore` covers objects, archives,
-  extension-less binaries, `__pycache__`, editor swap/backup files and the
-  exam's runtime save files.
-- **Third-party books/PDFs are not tracked.** Keep them in `resources/`
-  (git-ignored). Publishing copyrighted books in a public repo is a
-  take-down risk.
-- **Style:** C follows the 42 Norm (tabs); see `.editorconfig`. Python is
-  checked with `flake8 --select=E9,F`.
-- **Large history?** Earlier commits contain ~150 MB of PDFs and binaries. To
-  shrink the repository, rewrite history with
-  [`git filter-repo`](https://github.com/newren/git-filter-repo) (coordinate
-  first, it changes commit hashes).
+```bash
+# Basic
+gcc -Wall -Wextra -Werror filename.c -o output
 
-## License
+# With math library
+gcc -Wall -Wextra -Werror filename.c -o output -lm
 
-Released under the [MIT License](LICENSE).
+# Against Libft
+gcc -Wall -Wextra -Werror filename.c Libft/libft.a -I Libft -o output
+
+# Memory check
+valgrind --leak-check=full ./output
+
+# Test all files in a folder
+for f in *.c; do gcc -Wall -Wextra -Werror "$f" -o test && echo "$f: OK" && rm test; done
+```
+
+---
+
+## 📚 Resources
+
+| Book | Location |
+|------|----------|
+| *The C Programming Language* — K&R (2nd Ed.) | `C_books/` |
+| *Modern C* — Jens Gustedt | `C_books/` |
+| *Beej's Guide to C* — beej.us/guide/bgc | `C_books/` |
+| man pages — `man 2 write`, `man 3 malloc` | terminal |
+| cs50.harvard.edu | online, free |
+
+---
 
 <div align="center">
 
 *"The only way to learn a new programming language is by writing programs in it."*
-— Brian Kernighan
+**— Brian Kernighan, co-author of C**
 
 </div>
