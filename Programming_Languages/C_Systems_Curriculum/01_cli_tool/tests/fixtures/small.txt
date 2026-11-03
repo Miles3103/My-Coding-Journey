@@ -1,0 +1,4 @@
+foo bar
+hello world
+FOO again
+last foo line
