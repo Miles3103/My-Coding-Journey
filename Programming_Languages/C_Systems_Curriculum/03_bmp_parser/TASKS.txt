@@ -1,0 +1,62 @@
+PROJECT 3: bmpkit  --  TASK LIST
+Mark each task [x] when done. Do them IN ORDER. Details: see README.md.
+
+STEP 0: READ FIRST (about 2 hours)
+[ ] 0.1  Generate a BMP: convert -size 4x2 xc:red BMP3:tests/fixtures/red_4x2.bmp
+[ ] 0.2  xxd the file; label by hand in notes.md: "BM", data offset, width, height, padding bytes
+[ ] 0.3  Understand: row stride = ((width*24 + 31)/32)*4; BGR order; bottom-up rows
+[ ] 0.4  Understand: struct padding, endianness, why (uint32_t)p[3] << 24 needs the cast
+
+PART 1: HEADERS
+[ ] 1.1  include/endian_io.h: rd_u16le, rd_u32le, rd_i32le
+[ ] 1.2  include/bmp.h: Image struct, BmpStatus enum, load/save/free declarations
+[ ] 1.3  Read the file size with fseek/ftell
+[ ] 1.4  Decode the 14-byte file header and the 40-byte info header
+[ ] 1.5  Validate EVERY field: signature, header_size, planes, bpp=24, compression=0,
+         width>0, height!=0 and != INT32_MIN, data_offset in [54, file_size]
+[ ] 1.6  Row stride and total size with overflow checks (checked_mul_size)
+[ ] 1.7  "bmpkit info": print size, orientation, stride, padding bytes
+[ ] 1.8  Generate fixtures of widths 1,2,3,4,5 to cover all padding amounts
+DONE WHEN: info is right on good files and bad_magic / truncated files give a clean error.
+
+PART 2: LOAD AND SAVE
+[ ] 2.1  Cap dimensions (for example 20000 x 20000) so a lying header can't force a huge malloc
+[ ] 2.2  bmp_load: read each padded row, copy into a tight top-down buffer, flip if bottom-up
+[ ] 2.3  Short fread on any row means BMP_ERR_CORRUPT
+[ ] 2.4  Free everything on every error path (goto cleanup)
+[ ] 2.5  bmp_save: write headers (computed sizes) + rows bottom-up with zeroed padding
+[ ] 2.6  Round trip: load, save, load, compare pixels on every fixture
+DONE WHEN: "bmpkit copy in out" gives identical pixels, and byte-identical files where possible.
+
+PART 3: PIXEL FILTERS
+[ ] 3.1  image_map() with a PixelOp function pointer
+[ ] 3.2  invert
+[ ] 3.3  grayscale with integer math: (77*r + 150*g + 29*b) >> 8
+[ ] 3.4  brightness with saturating clamp to 0..255
+[ ] 3.5  Hand-compute expected output for a 2x2 image and test each filter
+DONE WHEN: filters pass hand-computed tests and invert twice equals identity.
+
+PART 4: GEOMETRY
+[ ] 4.1  flip vertical (swap rows with memcpy) and horizontal (swap pixels)
+[ ] 4.2  crop with the overflow-safe check: w > src->width - x
+[ ] 4.3  rotate 90 degrees: derive the index mapping on paper first
+[ ] 4.4  Tests: flip twice, rotate four times, full-image crop all equal the original
+DONE WHEN: all geometry tests pass, and an off-by-one crop is rejected.
+
+PART 5: BLUR AND PERFORMANCE
+[ ] 5.1  Naive box blur into a SEPARATE output buffer, with clamped borders
+[ ] 5.2  Separable two-pass blur (horizontal, then vertical)
+[ ] 5.3  Time both with clock_gettime on a 1000x800 image (BUILD=release)
+[ ] 5.4  Swap the loop order, measure the cache effect, record in notes.md
+
+MALFORMED INPUT AND FUZZING
+[ ] M.1  Fixtures: empty file, 13-byte file, wrong magic, offset past EOF, width 0,
+         width -5, huge width, truncated pixels, bpp 8 / 32, compression != 0
+[ ] M.2  tests/fuzz_corrupt.sh: 2000 random byte flips in the header; no exit code >= 128
+[ ] M.3  Keep every crashing file as a regression fixture
+
+FINISH
+[ ] F.1  Zero sanitizer reports; valgrind clean
+[ ] F.2  Output matches ImageMagick (compare -metric AE) within a small tolerance
+[ ] F.3  notes.md: padding math, why each header field is validated, blur benchmark
+[ ] F.4  Bonus: ELF header reader, compare with readelf -h /bin/ls

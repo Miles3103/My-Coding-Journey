@@ -1,0 +1,61 @@
+PROJECT 4: tinyhttpd  --  TASK LIST
+Mark each task [x] when done. Do them IN ORDER. Details: see README.md.
+
+STEP 0: READ FIRST (about 3 hours)
+[ ] 0.1  Beej's Guide to Network Programming, chapters 1-7
+[ ] 0.2  HTTP/1.1 basics: request line, headers, CRLF, blank line, status codes
+[ ] 0.3  Condition variables: why wait must be in a WHILE loop; what a lost wakeup is
+[ ] 0.4  man 7 signal-safety; why a handler may only set a flag
+[ ] 0.5  Explain in notes.md: TIME_WAIT and SO_REUSEADDR; htons
+
+PART 1: SINGLE-THREADED SERVER
+[ ] 1.1  listen_socket(): socket, SO_REUSEADDR, bind, listen (save errno on failure)
+[ ] 1.2  write_all(): loop on partial sends, retry on EINTR, use MSG_NOSIGNAL
+[ ] 1.3  Accept loop: reply with a fixed 200 "hello", close the connection
+[ ] 1.4  Ignore SIGPIPE
+[ ] 1.5  --port option
+DONE WHEN: curl -v localhost:8080 prints hello, and restarting does not give "Address in use".
+
+PART 2: REQUEST PARSER
+[ ] 2.1  read_request(): loop recv until \r\n\r\n; cap at 8 KB
+[ ] 2.2  Parse the request line into Slices (pointer + length, no copies)
+[ ] 2.3  Parse headers into a fixed array; case-insensitive names
+[ ] 2.4  Reject: NUL bytes, bare \n, too many headers, over-long lines
+[ ] 2.5  Status codes: 400 malformed, 405 bad method, 431 too large, 505 bad version
+[ ] 2.6  tests/test_http_parse.c with good and nasty requests
+DONE WHEN: printf 'GARBAGE\r\n\r\n' | nc localhost 8080 returns 400 and no input crashes it.
+
+PART 3: STATIC FILES
+[ ] 3.1  URL-decode %XX, reject %00
+[ ] 3.2  resolve_path(): realpath, then verify the prefix PLUS a "/" separator
+[ ] 3.3  open(), then fstat() the fd; reject non-regular files
+[ ] 3.4  MIME types by extension; Content-Length; Date; Connection: close
+[ ] 3.5  Stream the body in 64 KB chunks (never load the whole file)
+[ ] 3.6  HEAD returns headers only; "/" maps to index.html
+[ ] 3.7  Traversal tests: /../etc/passwd, /%2e%2e/etc/passwd, a symlink out of root
+DONE WHEN: sha256 of a downloaded big file matches the original and every traversal attempt fails.
+
+PART 4: THREAD POOL
+[ ] 4.1  FdQueue: ring buffer + mutex + not_empty + not_full condvars
+[ ] 4.2  push/pop with WHILE loops; fdq_close wakes everyone with broadcast
+[ ] 4.3  Queue stress test: 4 producers, 4 consumers, 1M items, nothing lost or duplicated
+[ ] 4.4  N worker threads: pop, handle, close
+[ ] 4.5  Thread-safe logging (one write per line; localtime_r, inet_ntop)
+[ ] 4.6  Atomic request counter and a /status page
+[ ] 4.7  Queue full -> reply 503 and close
+DONE WHEN: ab -n 20000 -c 100 shows 0 failures and the fd count stays flat.
+
+PART 5: HARDENING
+[ ] 5.1  sigaction for SIGINT/SIGTERM (no SA_RESTART); handler only sets g_stop
+[ ] 5.2  Graceful shutdown: stop accepting, close queue, join workers, free everything
+[ ] 5.3  SO_RCVTIMEO / SO_SNDTIMEO (about 5 s) against slow clients
+[ ] 5.4  Handle EMFILE in the accept loop without spinning
+[ ] 5.5  Escape control characters in logged request data
+
+VERIFY
+[ ] V.1  50k requests at 200 concurrency: 0 failures, flat memory and fds
+[ ] V.2  Build with -fsanitize=thread; zero data races
+[ ] V.3  valgrind --tool=helgrind shows no lock-order problems
+[ ] V.4  100 idle connections: can other clients still be served? Write down why/why not
+[ ] V.5  Introduce a deadlock and a lost wakeup on purpose; diagnose with gdb "thread apply all bt"
+[ ] V.6  notes.md: fd ownership, lock order, findings from V.4 and V.5

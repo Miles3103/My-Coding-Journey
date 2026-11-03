@@ -1,12 +1,38 @@
-# C Systems Programming: Five Projects from Fundamentals to Allocators
+# C Programming: From Zero to Hero
+
+**A complete path in two phases:** 12 foundation lessons that teach C from nothing, then 5 progressively harder projects that turn it into real systems-programming skill.
 
 A hands-on curriculum for mastering C by building five progressively harder programs. Each project introduces new language features **and** a new layer of the system underneath them (files, heap, binary formats, sockets, threads, the allocator itself).
 
-> **How to use this repo:** Do the projects in order. Each project folder has its own `README.md` containing the full lesson plan. Do **not** copy the skeleton code blindly. The skeletons are scaffolding; the learning happens when you fill in the gaps and debug your own mistakes.
+> **How to use this repo:** Start at **Phase 0** unless you already write C comfortably. Then do the projects in order. Every lesson and project has a `README.md` with the explanation, tasks, pitfalls and tests. Do **not** copy skeleton code blindly: the learning happens when you fill in the gaps and debug your own mistakes.
+
+## Start here
+1. Check your tools: `bash tools/doctor.sh`
+2. Read [`docs/PROGRESS.md`](docs/PROGRESS.md) for the study plan and skill ladder.
+3. Begin [`00_foundations/`](00_foundations/README.md), Lesson 1.
+4. Keep [`docs/CHEATSHEET.md`](docs/CHEATSHEET.md), [`docs/GLOSSARY.md`](docs/GLOSSARY.md) and [`docs/DEBUGGING.md`](docs/DEBUGGING.md) open while you work.
 
 ---
 
-## Projects
+## Phase 0: Foundations (start here if you're new)
+
+| # | Lesson | Key idea |
+|---|---|---|
+| 1 | [Hello, World & the compiler](00_foundations/01_hello_world/README.md) | what compiling does; exit codes |
+| 2 | [Types & operators](00_foundations/02_types_and_operators/README.md) | sizes, overflow, bits |
+| 3 | [Control flow](00_foundations/03_control_flow/README.md) | truthiness, loops, short-circuit |
+| 4 | [Functions & scope](00_foundations/04_functions_and_scope/README.md) | pass-by-value, the stack |
+| 5 | [Arrays & strings](00_foundations/05_arrays_and_strings/README.md) | no bounds checks, `'\0'` |
+| 6 | [Pointers](00_foundations/06_pointers/README.md) | addresses, `&` and `*` |
+| 7 | [Pointers, arrays & const](00_foundations/07_pointers_arrays_const/README.md) | arithmetic, function pointers |
+| 8 | [Structs, enums, unions](00_foundations/08_structs_enums_unions/README.md) | padding and layout |
+| 9 | [The heap](00_foundations/09_heap_memory/README.md) | `malloc`/`free`, ownership |
+| 10 | [Files & arguments](00_foundations/10_files_and_args/README.md) | `FILE *`, `errno`, `argv` |
+| 11 | [Modules & Make](00_foundations/11_modules_and_make/README.md) | headers, linking, Makefiles |
+| 12 | [Debugging & UB](00_foundations/12_debugging_and_ub/README.md) | gdb, sanitizers, valgrind |
+| ★ | [Capstone: contacts book](00_foundations/capstone/README.md) | everything combined |
+
+## Phase 1: The Five Projects
 
 | # | Project | Level | Folder | Main Theme |
 |---|---------|-------|--------|-----------|
@@ -16,7 +42,16 @@ A hands-on curriculum for mastering C by building five progressively harder prog
 | 4 | **tinyhttpd**: multithreaded HTTP server | Intermediate → Advanced | [`04_http_server/`](04_http_server/README.md) | POSIX sockets, pthreads, mutex/condvar, signals, robust I/O |
 | 5 | **mymalloc**: `malloc`/`free`/`realloc` clone | Advanced | [`05_allocator/`](05_allocator/README.md) | `sbrk`/`mmap`, alignment, free lists, coalescing, UB-aware design |
 
-Suggested pacing (evenings/weekends): **1-2 weeks**, **2 weeks**, **2 weeks**, **3 weeks**, **3-4 weeks**.
+Suggested pacing (evenings/weekends): Phase 0 **4 to 6 weeks**, then **1-2**, **2**, **2**, **3**, **3-4 weeks** for the projects. See [`docs/PROGRESS.md`](docs/PROGRESS.md) for a 20-week plan.
+
+### Which Phase 0 lessons each project needs
+| Project | Make sure you've done |
+|---|---|
+| 1 mini-grep | Lessons 1 to 12 and the capstone |
+| 2 cask | 8 (structs), 9 (heap), 11 (headers), 10 (binary files) |
+| 3 bmpkit | 2 (bits, overflow), 8 (padding), 10 (`fread`) |
+| 4 tinyhttpd | 6 to 7 (pointers), 10 (errors), 12 (debugging) |
+| 5 mymalloc | 7 (pointer arithmetic), 8 (alignment), 9 (heap) |
 
 ---
 
@@ -25,9 +60,12 @@ Suggested pacing (evenings/weekends): **1-2 weeks**, **2 weeks**, **2 weeks**, *
 ```text
 c-systems-curriculum/
 ├── README.md                  # this file
+├── docs/                      # GLOSSARY, CHEATSHEET, DEBUGGING, PROGRESS
+├── tools/doctor.sh            # checks your toolchain
 ├── common/
 │   ├── Makefile.common        # shared compiler flags (see below)
 │   └── debug_checklist.md     # your personal "bugs I've hit" log
+├── 00_foundations/            # 12 lessons + capstone (runnable examples, bug demos)
 ├── 01_cli_tool/
 ├── 02_kv_store/
 ├── 03_bmp_parser/
@@ -69,7 +107,7 @@ brew install gdb cppcheck wget curl imagemagick
 
 ```make
 CC       ?= gcc
-STD      := -std=c11
+STD      := -std=gnu11
 WARN     := -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wstrict-prototypes
 DEBUG    := -g -O0 -fsanitize=address,undefined -fno-omit-frame-pointer
 RELEASE  := -O2 -DNDEBUG
@@ -84,6 +122,8 @@ else
   LDFLAGS += -fsanitize=address,undefined
 endif
 ```
+
+**Why `-std=gnu11` and not `-std=c11`?** Strict `c11` hides POSIX functions such as `getopt`, `getline` and the socket calls, giving `implicit declaration` errors. `gnu11` is C11 plus the usual Unix declarations.
 
 **Why these flags?**
 
@@ -125,6 +165,7 @@ endif
 
 ## Master Progress Checklist
 
+- [ ] **Phase 0: lessons 1 to 12 + capstone** (see [`docs/PROGRESS.md`](docs/PROGRESS.md))
 - [ ] **Project 1: mini-grep**: all milestones done, Valgrind clean
 - [ ] **Project 2: cask KV store**: all milestones done, survives crash-recovery test
 - [ ] **Project 3: bmpkit**: all milestones done, fuzz-tested with corrupted files
@@ -145,4 +186,17 @@ endif
 8. Testing & verification exercises
 9. Stretch goals & definition of done
 
-Start here → **[Project 1: mini-grep](01_cli_tool/README.md)**
+## Troubleshooting
+| Problem | Fix |
+|---|---|
+| `implicit declaration of function 'getopt'` | Use `-std=gnu11` (already set in `common/Makefile.common`) |
+| `make: *** No makefile found` | You're in the wrong folder; `cd` to the one containing the `Makefile` |
+| `undefined reference to 'main'` | `src/main.c` is empty or missing |
+| `ISO C forbids an empty translation unit` | A `.c` file has no code yet (warning only) |
+| Sanitizer says `LeakSanitizer ... not supported` | Run in a normal terminal (not a restricted container), or use valgrind |
+
+More in [`docs/DEBUGGING.md`](docs/DEBUGGING.md).
+
+---
+
+Start here → **[Phase 0, Lesson 1](00_foundations/01_hello_world/README.md)** (or, if you already know C, **[Project 1: mini-grep](01_cli_tool/README.md)**)

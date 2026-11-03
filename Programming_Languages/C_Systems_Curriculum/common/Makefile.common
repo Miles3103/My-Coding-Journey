@@ -1,8 +1,12 @@
 CC       ?= gcc
-STD      := -std=c11
+# gnu11 = C11 + the Unix functions (getopt, getline, sockets). Strict c11 hides them.
+STD      := -std=gnu11
 WARN     := -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wstrict-prototypes
 DEBUG    := -g -O0 -fsanitize=address,undefined -fno-omit-frame-pointer
 RELEASE  := -O2 -DNDEBUG
+
+# make                -> debug build (default, sanitizers ON)
+# make BUILD=release  -> optimized build
 BUILD    ?= debug
 ifeq ($(BUILD),release)
   CFLAGS := $(STD) $(WARN) $(RELEASE)
