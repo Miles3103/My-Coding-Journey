@@ -1,0 +1,12 @@
+CC       ?= gcc
+STD      := -std=c11
+WARN     := -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wstrict-prototypes
+DEBUG    := -g -O0 -fsanitize=address,undefined -fno-omit-frame-pointer
+RELEASE  := -O2 -DNDEBUG
+BUILD    ?= debug
+ifeq ($(BUILD),release)
+  CFLAGS := $(STD) $(WARN) $(RELEASE)
+else
+  CFLAGS := $(STD) $(WARN) $(DEBUG)
+  LDFLAGS += -fsanitize=address,undefined
+endif
