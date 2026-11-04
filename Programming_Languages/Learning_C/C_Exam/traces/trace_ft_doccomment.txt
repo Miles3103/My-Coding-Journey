@@ -1,4 +1,0 @@
-=== Level 10 | Sun Jun  7 05:06:51 AM CEST 2026 ===
-Length: 5
-IsAlpha: 0
-IsAlpha: 1
